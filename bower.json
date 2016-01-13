@@ -1,0 +1,36 @@
+{
+  "name": "template-text",
+  "version": "0.0.1",
+  "authors": [
+    "Tetsuya Mori <t2y3141592@gmail.com>"
+  ],
+  "description": "Parameterized text template for localization",
+  "main": "template-text.html",
+  "keywords": [
+    "polymer",
+    "web-component",
+    "web-components",
+    "i18n",
+    "internationalization",
+    "l10n",
+    "localization",
+    "template",
+    "pluralization"
+  ],
+  "license": "BSD-2-Clause",
+  "homepage": "https://t2ym.github.io/template-text/",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "polymer": "^1.2.0",
+    "make-plural": "^3.0.3"
+  },
+  "devDependencies": {
+    "web-component-tester": "^3.4.0",
+    "iron-component-page": "PolymerElements/iron-component-page#~1.1.2",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#~1.0.3"
+  }
+}
