@@ -1,0 +1,45 @@
+<!--
+@license https://github.com/t2ym/my-seed-element/blob/master/LICENSE.md
+Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
+-->
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../../iron-selector/iron-selector.html">
+
+<dom-module id="bound-my-seed-element">
+  <template>
+    <span id="placeholder">
+      <my-seed-element id="num">{{number}}</my-seed-element>
+      <my-seed-element id="num2">{{number2}}</my-seed-element>
+      <my-seed-element id="empty"></my-seed-element>
+      <my-seed-element id="currency" options="{{options}}">123456.789</my-seed-element>
+      <iron-selector id="currencySelector" attr-for-selected="value" selected="{{options.currency}}">
+        <div name="USD" iron-selected>USD</div>
+        <div name="JPY">JPY</div>
+      </iron-selector>
+    </span>
+  </template>
+  <script>
+  Polymer({
+    is: 'bound-my-seed-element',
+    properties: {
+      number: {
+        type: String,
+        value: '',
+        notify: true
+      },
+      number2: {
+        type: String,
+        value: '12.34',
+        notify: true
+      },
+      options: {
+        type: Object,
+        value: function () {
+          return { 'style': 'currency', 'currency': 'USD' };
+        },
+        notify: true
+      }
+    }
+  });
+  </script>
+</dom-module>
