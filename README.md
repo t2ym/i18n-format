@@ -2,7 +2,7 @@
 
 Parameterized text template for localization
 
-[Demo](http://t2ym.github.io/template-text/components/template-text/demo) and [API Docs](http://t2ym.github.io/template-text/components/template-text/)
+[Demo](https://t2ym.github.io/template-text/components/template-text/demo) and [API Docs](https://t2ym.github.io/template-text/components/template-text/)
 
 ### Install
 
