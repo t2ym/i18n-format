@@ -144,29 +144,62 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
       <h1><code>&lt;template-text&gt;</code> Demo</h1>
 
       <div class="vertical-section-container">
-        <h2>Number in English (en) locale</h2>
+        <h2>Simple Template</h2>
         <demo-snippet class="centered-demo">
           <template>
-            <template-text lang="en">123456.78</template-text>
+            <template-text>
+              <span>$1$ element is effective for UI localization with $2$.</span>
+              <code>&lt;template-text&gt;</code>
+              <b>parameters</b>
+            </template-text>
           </template>
           <script type="text/markdown">
-            <template-text lang="en">123456.78</template-text>
+            <template-text>
+              <span>$1$ element is effective for UI localization with $2$.</span>
+              <code>&lt;template-text&gt;</code>
+              <b>parameters</b>
+            </template-text>
           </script>
         </demo-snippet>
 
-        <h2>Currency - USD in English (en) locale</h2>
+        <h2>Bound Text Values</h2>
         <demo-snippet class="centered-demo">
           <template>
-            <template-text 
-              lang="en"
-              options='{ "style": "currency", "currency": "USD" }' 
-              >123456.78</template-text>
+            <template is="dom-bind" id="demo">
+              <p>
+                <template-text>
+                  <span>{{text.example.0}}</span>
+                  <code>{{text.example.1}}</code>
+                  <a href="https://www.google.com/">{{text.example.2}}</a>
+                </template-text>
+              </p>
+            </template>
           </template>
           <script type="text/markdown">
-            <template-text 
-              lang="en"
-              options='{ "style": "currency", "currency": "USD" }' 
-              >123456.78</template-text>
+            <p>
+              <template-text>
+                <span>{{text.example.0}}</span>
+                <code>{{text.example.1}}</code>
+                <a href="https://www.google.com/">{{text.example.2}}</a>
+              </template-text>
+            </p>
+
+            this.text.example = [
+              "A $1$ element can represent a sentence with $2$.",
+              "template-text",
+              "localizable parameters"
+            ];
+          </script>
+          <script>
+            window.addEventListener('dom-change', function () {
+              window.demo.text = {
+                example: [
+                  "A $1$ element can represent a sentence with $2$.",
+                  "template-text",
+                  "localizable parameters"
+                ]
+              };
+            });
           </script>
         </demo-snippet>
 
