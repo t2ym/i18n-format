@@ -15,7 +15,8 @@
     "l10n",
     "localization",
     "template",
-    "pluralization"
+    "pluralization",
+    "cldr"
   ],
   "license": "BSD-2-Clause",
   "homepage": "https://t2ym.github.io/template-text/",
@@ -26,7 +27,8 @@
   ],
   "dependencies": {
     "polymer": "^1.2.0",
-    "make-plural": "^3.0.3"
+    "make-plural": "^3.0.3",
+    "i18n-number": "^0.1.2"
   },
   "devDependencies": {
     "web-component-tester": "^3.4.0",
