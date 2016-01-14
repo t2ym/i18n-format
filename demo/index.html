@@ -184,15 +184,18 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
               </template-text>
             </p>
 
-            this.text.example = [
-              "A $1$ element can represent a sentence with $2$.",
-              "template-text",
-              "localizable parameters"
-            ];
+            // In real cases, text values are dynamically loaded from JSON
+            this.text = {
+              example: [
+                "A $1$ element can represent a sentence with $2$.",
+                "template-text",
+                "localizable parameters"
+              ]
+            };
           </script>
           <script>
             window.addEventListener('dom-change', function () {
-              window.demo.text = {
+              demo.text = {
                 example: [
                   "A $1$ element can represent a sentence with $2$.",
                   "template-text",
