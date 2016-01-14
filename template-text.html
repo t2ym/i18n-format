@@ -376,7 +376,7 @@ Polymer({
         if (param.tagName.toLowerCase() === 'i18n-number') {
           // plural selector
           var category = this._getPluralCategory(param.number);
-          if (!param.number) {
+          if (typeof param.number === 'undefined') {
             // i18n-number is not ready
             //console.log('tempalte-text: i18n-number is not ready');
             templateObject = '';
