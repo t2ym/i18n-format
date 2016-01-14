@@ -21,17 +21,19 @@ Parameterized text template for localization
 #### Simple Template
 
 ```html
-    <template-text>
-      <span>$1$ element is effective for UI localization with $2$.</span>
-      <code>template-text</code>
-      <a href="https://www.google.com/">parameters</a>
-    </template-text>
+    <p>
+      <template-text>
+        <span>$1$ element is effective for UI localization with $2$.</span>
+        <code>template-text</code>
+        <a href="https://www.google.com/">parameters</a>
+      </template-text>
+    </p>
 ```
 
 This renders as follows:
 
 ```html
-    <span><code>template-text</code> element is effective for UI localization with <a href="https://www.google.com/">parameters</a>.</span>
+    <p><code>template-text</code> element is effective for UI localization with <a href="https://www.google.com/">parameters</a>.</p>
 ```
 
 #### Compound Template
