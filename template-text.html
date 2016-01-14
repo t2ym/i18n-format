@@ -8,8 +8,8 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
 <script src="../../bower_components/make-plural/plurals.min.js"></script>
 
 <!--
-`<template-text>` provides a template of a parameterized text string (typically a sentence) and serves as an adaptor for UI localization.
-Parameters can be any elements like `<span>`, `<a>`, etc. See `BehaviorsStore.I18nBehavior` for more details in application.
+`<template-text>` provides a template for a parameterized text string (typically a sentence) and can assist grammatical UI localization.
+Parameters can be any elements like `<span>`, `<a>`, etc. See `BehaviorsStore.I18nBehavior` (work in progress) for more details in application.
 
     <template-text>
       <span>The $1$ element is effective for UI localization with $2$.</span>
@@ -40,7 +40,7 @@ So the above example renders the following `<p>` paragraph.
 
 ### Bindings
 
-The `<template-text>` element is effective when the UI texts are bound to localizable variables as below.
+`<template-text>` element is effective when the UI texts are bound to localizable variables as below.
 The "`this`" object here is the containing element of the `<template-text>` element.
 
     <p>
@@ -122,8 +122,8 @@ parameters is significant since the JSON is traversed according to the parameter
 
 ### Plural forms
 
-An `<i18n-number>` element as a parameter detects the plural categories for the specified locale
-in the `lang` attribute. CLDR plural rules (http://cldr.unicode.org/index/cldr-spec/plural-rules) are 
+An [`<i18n-number>`](https://github.com/t2ym/i18n-number) element as a parameter detects the plural categories for the specified locale
+in the `lang` attribute. [CLDR plural rules](http://cldr.unicode.org/index/cldr-spec/plural-rules) are 
 supported in the plural categories.
 
 In the above example, the value of `this.recipients.length` in the 1st `<i18n-number>` parameter
@@ -139,13 +139,13 @@ If no matching value is defined in the compound template, the category '`other`'
 
 List of parameters and their values in the above example.
 
-| Param #    | Value               | Shown Value in $n$      | Note            |
-|:----------:|:--------------------|:------------------------|:----------------|
-| 1          | recipients.length   | recipients.length - 1   |                 |
-| 2          | recipients.0.gender | 'male'/'female'/'other' | Not shown in UI |
-| 3          | sender.name         | Sender's Name           |                 |
-| 4          | recipients.0.name   | Recipients[0]'s Name    |                 |
-| 5          | 'a gift'            | 'a gift'                |                 |
+| Param #    | Value               | Shown Value for $n$        | Note            |
+|:----------:|:--------------------|:---------------------------|:----------------|
+| 1          | recipients.length   | recipients.length - offset |                 |
+| 2          | recipients.0.gender | 'male'/'female'/'other'    | Not shown in UI |
+| 3          | sender.name         | Sender's Name              |                 |
+| 4          | recipients.0.name   | Recipients[0]'s Name       |                 |
+| 5          | 'a gift'            | 'a gift'                   |                 |
 
 ### Selected Template Paths in the example
 
