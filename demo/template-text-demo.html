@@ -8,207 +8,113 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
 <link rel="import" href="../../paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../paper-menu/paper-menu.html">
 <link rel="import" href="../../paper-item/paper-item.html">
+<link rel="import" href="../../paper-button/paper-button.html">
 <link rel="import" href="../../paper-styles/demo-pages.html">
 <link rel="import" href="../template-text.html">
 
 <dom-module id="template-text-demo">
   <template>
     <style>
-    .number {
+    .text {
       font-size: 18px;
     }
     .input {
       display: inline-block;
-      width: 200px;
+      width: 180px;
     }
     .dropdown-menu {
       display: inline-block;
-      width: 200px;
+      width: 180px;
     }
-    .parameter-button {
-      margin: 16px 0 0 0;
-      display: block;
-      text-transform: none;
+    .rotate-button {
+      width: 180px;
+      margin: 8px;
+      display: inline-block;
     }
     .parameters-panel {
-      padding: 15px;
-      border-top: none;
-      overflow-y: hidden;
-      @apply(--shadow-elevation-2dp);              
-    }
-    .parameters-content {
-    }
-    .parameters {
-      padding: 0 8px 0 8px;
-      margin: 4px 0px 4px 0px;
+      margin-top: 16px;
+      padding: 16px;
       @apply(--shadow-elevation-2dp);              
     }
     .subhead {
       margin: 8px 0 0 0;
     }
+    .model {
+      font-family: 'Roboto Mono', 'Consolas', 'Menlo', monospace;
+    }
     </style>
-    <template-text id="number" class="number" lang="{{lang}}" options="{{options}}" offset="{{offset}}">{{raw}}</template-text>
 
-    <paper-button class="parameter-button" raised on-tap="_toggleParameters">Parameters Control Panel
-      <iron-icon suffix
-              id="down"
-              class="icon-button"
-              icon="{{_iconName(opened)}}" alt="Parameters" title="Parameters">
-      </iron-icon>
-    </paper-button>
-    <iron-collapse id="parameters" class="parameters-panel" opened="{{opened}}">
-      <div class="parameters-content">
-        <h4 class="subhead">content</h4>
+    <span>Compound Template is compatible with 
+      <a href="http://cldr.unicode.org/index/cldr-spec/plural-rules">CLDR plural rules 
+      (http://cldr.unicode.org/index/cldr-spec/plural-rules)</a>
+    </span><br><br>
 
-        <paper-input id="raw"
-                    class="input"
-                    label="Raw number input"
-                    auto-validate
-                    pattern="[0-9]*([.][0-9]*)?"
-                    error-message="Number only!"
-                    value="{{raw}}"></paper-input>
+    <template-text id="text" class="text" lang="{{lang}}">
+      <json-data>{{template}}</json-data>
+      <i18n-number lang="{{lang}}" offset="{{offset}}">{{recipients.length}}</i18n-number>
+      <span>{{recipients.0.gender}}</span>
+      <span>{{sender.name}}</span>
+      <span>{{recipients.0.name}}</span>
+      <span>a gift</span>
+    </template-text>
 
-        <h4 class="subhead">attributes</h4>
+    <div id="parameters" class="parameters-panel">
+<!--
 
-        <paper-dropdown-menu id="lang"
-                            label="lang"
-                            class="dropdown-menu">
-          <paper-menu class="dropdown-content"
-                      selected="{{lang}}"
-                      attr-for-selected="name">
-            <template is="dom-repeat" items="{{langList}}">
-              <paper-item name="{{item.value}}">{{item.label}}</paper-item>
-            </template>
-          </paper-menu>
-        </paper-dropdown-menu>
+      <paper-input id="raw"
+                  class="input"
+                  label="Raw number input"
+                  auto-validate
+                  pattern="[0-9]*([.][0-9]*)?"
+                  error-message="Number only!"
+                  value="{{raw}}"></paper-input>
+      <h4 class="subhead">attributes</h4>
 
-        <paper-input id="offset"
-              class="input"
-              type="number"
-              min="0"
-              label="offset"
-              auto-validate
-              error-message="Expecting 0 or a positive integer"
-              value="{{offset}}"></paper-input>
+      <paper-dropdown-menu id="lang"
+                          label="lang"
+                          class="dropdown-menu">
+        <paper-menu class="dropdown-content"
+                    selected="{{lang}}"
+                    attr-for-selected="name">
+          <template is="dom-repeat" items="{{langList}}">
+            <paper-item name="{{item.value}}">{{item.label}}</paper-item>
+          </template>
+        </paper-menu>
+      </paper-dropdown-menu>
+-->
 
-        <h4 class="subhead">options</h4>
-        <div class="parameters">
+      <paper-input id="offset"
+            class="input"
+            type="number"
+            min="0"
+            max="3"
+            label="offset"
+            auto-validate
+            error-message="Expecting 0 to 3"
+            value="{{offset}}"></paper-input>
 
-          <paper-dropdown-menu id="localeMatcher"
-                              label="localeMatcher"
-                              class="dropdown-menu">
-            <paper-menu class="dropdown-content"
-                        selected="{{rawOptions.localeMatcher}}"
-                        attr-for-selected="name">
-              <template is="dom-repeat" items='[ "", "lookup", "best fit" ]'>
-                <paper-item name="{{item}}">{{item}}</paper-item>
-              </template>
-            </paper-menu>
-          </paper-dropdown-menu>
+      <paper-input id="length"
+            class="input"
+            type="number"
+            min="0"
+            max="3"
+            label="recipients.length"
+            auto-validate
+            error-message="Expecting 0 to 3"
+            value="{{recipientsLength}}"></paper-input>
 
-          <paper-dropdown-menu id="style"
-                              label="style"
-                              class="dropdown-menu">
-            <paper-menu class="dropdown-content"
-                        selected="{{rawOptions.style}}"
-                        attr-for-selected="name">
-              <template is="dom-repeat" items='[ "", "decimal", "currency", "percent" ]'>
-                <paper-item name="{{item}}">{{item}}</paper-item>
-              </template>
-            </paper-menu>
-          </paper-dropdown-menu>
+      <paper-button id="rotate"
+            class="rotate-button"
+            raised
+            on-tap="_rotateRecipients">Rotate Recipients</paper-button>
+      <br>
 
-          <paper-dropdown-menu id="currency"
-                              label="currency"
-                              class="dropdown-menu"
-                              disabled="{{_currencyOptionsDisabled(rawOptions.style)}}">
-            <paper-menu class="dropdown-content"
-                        selected="{{rawOptions.currency}}"
-                        attr-for-selected="name">
-              <template is="dom-repeat" items="{{currencyList}}" sort="_compareCurrency">
-                <paper-item name="{{item.value}}">{{item.label}}</paper-item>
-              </template>
-            </paper-menu>
-          </paper-dropdown-menu>
+      <div>
+        <pre class="model">sender = {{_getStringifiedUser(sender)}}</pre>
+        <pre class="model">recipients = {{_getStringifiedRecipients(recipients)}}</pre>
+      <div>
 
-          <paper-dropdown-menu id="currencyDislplay"
-                              label="currencyDisplay"
-                              class="dropdown-menu"
-                              disabled="{{_currencyOptionsDisabled(rawOptions.style)}}">
-            <paper-menu class="dropdown-content"
-                        selected="{{rawOptions.currencyDisplay}}"
-                        attr-for-selected="name">
-              <template is="dom-repeat" items='[ "", "symbol", "name" ]'>
-                <paper-item name="{{item}}">{{item}}</paper-item>
-              </template>
-            </paper-menu>
-          </paper-dropdown-menu>
-
-          <paper-dropdown-menu id="useGrouping"
-                              label="useGrouping"
-                              class="dropdown-menu">
-            <paper-menu class="dropdown-content"
-                        selected="{{rawOptions.useGrouping}}"
-                        attr-for-selected="name">
-              <template is="dom-repeat" items='[ "", "true", "false" ]'>
-                <paper-item name="{{item}}">{{item}}</paper-item>
-              </template>
-            </paper-menu>
-          </paper-dropdown-menu>
-
-          <paper-input id="minimumIntegerDigits"
-                      class="input"
-                      type="number"
-                      min="1"
-                      max="21"
-                      label="minimumIntegerDigits"
-                      auto-validate
-                      error-message="Expecting 1-21"
-                      value="{{rawOptions.minimumIntegerDigits}}"></paper-input>
-
-          <paper-input id="minimumFractionDigits"
-                      class="input"
-                      type="number"
-                      min="0"
-                      max="20"
-                      label="minimumFractionDigits"
-                      auto-validate
-                      error-message="Expecting 0-20"
-                      value="{{rawOptions.minimumFractionDigits}}"></paper-input>
-
-          <paper-input id="maximumFractionDigits"
-                      class="input"
-                      type="number"
-                      min="0"
-                      max="20"
-                      label="maximumFractionDigits"
-                      auto-validate
-                      error-message="Expecting 0-20"
-                      value="{{rawOptions.maximumFractionDigits}}"></paper-input>
-
-          <paper-input id="minimumSignificantDigits"
-                      class="input"
-                      type="number"
-                      min="1"
-                      max="21"
-                      label="minimumSignificantDigits"
-                      auto-validate
-                      error-message="Expecting 1-21"
-                      value="{{rawOptions.minimumSignificantDigits}}"></paper-input>
-
-          <paper-input id="maximumSignificantDigits"
-                      class="input"
-                      type="number"
-                      min="1"
-                      max="21"
-                      label="maximumSignificantDigits"
-                      auto-validate
-                      error-message="Expecting 1-21"
-                      value="{{rawOptions.maximumSignificantDigits}}"></paper-input>
-
-        </div>
-      </div>
-    </iron-collapse>
+    </div>
 
   </template>
   <script>
@@ -218,37 +124,61 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
       properties: {
         lang: {
           type: String,
-          value: 'fr'
+          value: 'en'
         },
-        raw: {
-          type: String,
-          value: '123456.78'
-        },
-        offset: {
-          type: String,
-          value: ''
-        },
-        rawOptions: {
+        rawTemplate: {
           type: Object,
-          value: {
-            localeMatcher: '',
-            style: 'currency',
-            currency: 'USD',
-            currencyDisplay: 'name',
-            useGrouping: '',
-            minimumIntegerDigits: '',
-            minimumFractionDigits: '',
-            maximumFractionDigits: '',
-            minimumSignificantDigits: '',
-            maximumSignificantDigits: ''
+          value: function () {
+            return {
+              '0': 'You ($3$) gave no gifts.',
+              '1': {
+                'male': 'You ($3$) gave him ($4$) $5$.',
+                'female': 'You ($3$) gave her ($4$) $5$.',
+                'other': 'You ($3$) gave them ($4$) $5$.'
+              },
+              'one': {
+                'male': 'You ($3$) gave him ($4$) and one other person $5$.',
+                'female': 'You ($3$) gave her ($4$) and one other person $5$.',
+                'other': 'You ($3$) gave them ($4$) and one other person $5$.'
+              },
+              'other': 'You ($3$) gave them ($4$) and $1$ other people gifts.'
+            };
           }
         },
-        options: {
-          type: Object
+        template: {
+          type: String,
+          computed: '_getTemplateJSON(rawTemplate)'
         },
-        currencyList: {
+        offset: {
+          type: Number,
+          value: 1
+        },
+        rawRecipients: {
           type: Array,
-          value: currencyList.labelList
+          value: function () {
+            return [
+              { name: 'Alice', gender: 'female' },
+              { name: 'Bob', gender: 'male' },
+              { name: 'Yoda', gender: 'other' }
+            ];
+          }
+        },
+        recipientsLength: {
+          type: Number,
+          value: 2
+        },
+        recipientsIndex: {
+          type: Number,
+          value: 0
+        },
+        recipients: {
+          type: Array
+        },
+        sender: {
+          type: Object,
+          value: function () {
+            return { name: 'Joe', gender: 'male' };
+          }
         },
         langList: {
           type: Array,
@@ -274,24 +204,16 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
       },
 
       observers: [
-        '_parameterChanged(raw,lang,offset)',
-        '_optionsChanged(rawOptions.*)',
+        '_update(lang,offset,recipientsLength,recipientsIndex)',
       ],
 
       attached: function () {
-        this.fire('markdown-changed', { markdown: this.markdown });
+        this.isAttached = true;
+        this.markdown = this._getMarkDown();
       },
 
-      _parameterChanged: function () {
-        this._update();
-      },
-
-      _optionsChanged: function () {
-        this._update();
-      },
-
-      _update: function () {
-        this.options = this._normalizeOptions(this.rawOptions);
+      _update: function (lang, offset, recipientsLength, recipientsIndex) {
+        this.recipients = this._getRecipients(this.rawRecipients, recipientsLength, recipientsIndex);
         this.markdown = this._getMarkDown();
       },
 
@@ -299,89 +221,65 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
         this.fire('markdown-changed', { markdown: markdown });
       },
 
+      _getStringifiedRecipients: function (recipients) {
+        var result;
+        if (recipients.length === 0) {
+          result = '[]';
+        }
+        else {
+          result = '[ \n' + 
+            recipients.map(function (item) {
+              return '  ' + this._getStringifiedUser(item);
+            }.bind(this)).join(',\n') + '\n]';
+        }
+        return result;
+      },
+
+      _getStringifiedUser: function (user) {
+        return JSON.stringify(user, null, 0).replace(/{/g, '{ ').replace(/:/g, ': ').replace(/,/g, ', ').replace(/}/g, ' }');
+      },
+
       _getMarkDown: function () {
-        var stringifiedOptions = JSON.stringify(this._normalizeOptions(this.rawOptions),null,4);
-        var markdown = '```\n\n' +
-          '<template-text \n' + 
+        var stringifiedRecipients = this._getStringifiedRecipients(this.rawRecipients,this.recipientsLength);
+        var markdown = this.isAttached ? '```\n\n' +
+          '<template-text' + 
           (this.lang ? 
-          '  lang="' + this.lang + '"\n' : '' ) +
-          (stringifiedOptions === '{}' ? '' : (
-          '  options=\'' +
-          stringifiedOptions.replace('}', '  }') + '\'\n' ) ) + 
-          (this.offset !== '' ? ('  offset="' + this.offset + '"\n') : '') +
-          '>' + this.raw + '</template-text>\n' +
-          '\n```';
+          ' lang="' + this.lang + '"' : '' ) +
+          '>\n' + 
+          '  <json-data>' +
+          JSON.stringify(this.rawTemplate, null, 2).replace(/\n/g, '\n  ') +
+          '</json-data>\n' +
+          '  <i18n-number' + 
+          (this.lang ? 
+          ' lang="' + this.lang + '"' : '' ) +
+          ' offset="' + this.offset + '"' +
+          '>' + this.recipients.length + '</i18n-number><!-- {{recipients.length}} -->\n' +
+          '  <span>' + ( this.recipients[0] ? this.recipients[0].gender : '' ) + '</span><!-- {{recipients.0.gender}} -->\n' +
+          '  <span>' + this.sender.name + '</span><!-- {{sender.name}} -->\n' +
+          '  <span>' + ( this.recipients[0] ? this.recipients[0].name : '' ) + '</span><!-- {{recipients.0.name}} -->\n' +
+          '  <span>a gift</span>\n' +
+          '</template-text>\n' +
+          '\n```' : '';
         return markdown;
       },
 
-      _normalizeOptions: function (rawOptions) {
-        var options = {};
-        if (!rawOptions) {
-          return options;
-        }
-        if (rawOptions.localeMatcher) {
-          options.localeMatcher = rawOptions.localeMatcher;
-        }
-        if (rawOptions.style) {
-          options.style = rawOptions.style;
-        }
-        if (options.style === 'currency') {
-          options.currency = rawOptions.currency;
-          if (rawOptions.currencyDisplay !== '') {
-            options.currencyDisplay = rawOptions.currencyDisplay;
+      _getRecipients: function (rawRecipients, recipientsLength, recipientsIndex) {
+        var recipients = [];
+        if (0 <= recipientsLength && recipientsLength <= 3) {
+          for (var i = 0; i < recipientsLength; i++) {
+            recipients[i] = rawRecipients[(i + recipientsIndex) % rawRecipients.length];
           }
         }
-        switch (rawOptions.useGrouping) {
-        case '':
-        default:
-          break;
-        case 'true':
-          options.useGrouping = true;
-          break;
-        case 'false':
-          options.useGrouping = false;
-          break;
-        }
-        if (!this.$.minimumIntegerDigits.invalid &&
-            rawOptions.minimumIntegerDigits) {
-          options.minimumIntegerDigits = new Number(rawOptions.minimumIntegerDigits);
-        }
-        if (!this.$.minimumFractionDigits.invalid &&
-            rawOptions.minimumFractionDigits) {
-          options.minimumFractionDigits = new Number(rawOptions.minimumFractionDigits);
-        }
-        if (!this.$.maximumFractionDigits.invalid &&
-            rawOptions.maximumFractionDigits) {
-          options.maximumFractionDigits = new Number(rawOptions.maximumFractionDigits);
-        }
-        if (!this.$.minimumSignificantDigits.invalid &&
-            rawOptions.minimumSignificantDigits) {
-          options.minimumSignificantDigits = new Number(rawOptions.minimumSignificantDigits);
-        }
-        if (!this.$.maximumSignificantDigits.invalid &&
-            rawOptions.maximumSignificantDigits) {
-          options.maximumSignificantDigits = new Number(rawOptions.maximumSignificantDigits);
-        }
 
-        return options;
+        return recipients;
       },
 
-      _currencyOptionsDisabled: function (style) {
-        return style !== 'currency';
+      _getTemplateJSON: function (rawTemplate) {
+        return JSON.stringify(rawTemplate,null,2);
       },
 
-      _compareCurrency: function (a, b) {
-        var la = a ? a.label : '';
-        var lb = b ? b.label : '';
-        return la.localeCompare(lb);
-      },
-
-      _toggleParameters: function () {
-        this.$.parameters.opened = !this.$.parameters.opened;
-      },
-
-      _iconName: function (opened) {
-        return opened ? 'arrow-drop-up' : 'arrow-drop-down';
+      _rotateRecipients: function () {
+        this.recipientsIndex = (this.recipientsIndex + 1) % this.rawRecipients.length;
       }
     });
   </script>
