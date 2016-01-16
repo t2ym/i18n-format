@@ -227,14 +227,14 @@ Polymer({
 
     /**
      * When the boolean attribute `observe-params` is specified, 
-     * the template is re-rendered on parameter mutations.
+     * the template is re-rendered on every parameter mutation.
      * If not specified, the template is re-rendered only on `lang` changes and template text changes.
      *
      * Note: If true, re-rendering may be performed muiltiple times redundantly on a locale change.
      */
     observeParams: {
       type: Boolean,
-      value: false
+      value: true // TODO: optimize re-rendering
     }
   },
 
@@ -243,28 +243,11 @@ Polymer({
   ],
 
   ready () {
-    //console.log('template-text: ready');
     this._setupParams();
   },
 
   attached () {
-    //console.log('template-text: attached');
-    if (!this.elements) {
-      this._setupParams();
-    }
-    if (this.elements) {
-      this.render();
-    }
-    //else {
-    //  console.log('template-text: skipping render()');
-    //}
-  },
-
-  detached () {
-    if (this.elements) {
-      this.observer.disconnect();
-      delete this.elements;
-    }
+    this.render();
   },
 
   /**
@@ -295,6 +278,9 @@ Polymer({
         if (needParamObservation) {
           // TODO: childNodes[0] may not be a text node
           this.observer.observe(Polymer.dom(this.elements[n]).childNodes[0], { characterData: true });
+          if (this.elements[n].tagName.toLowerCase() === 'i18n-number') {
+            this.listen(this.elements[n], 'rendered', 'render');
+          }
         }
       }
     }
@@ -310,8 +296,12 @@ Polymer({
     mutations.forEach(function(mutation) {
       switch (mutation.type) {
       case 'characterData':
-        //console.log('template-text: _templateMutated: data = ' + mutation.target.data);
-        this.render();
+        //console.log('template-text: _templateMutated: characterData: tag = ' + 
+        //            Polymer.dom(mutation.target).parentNode.tagName.toLowerCase() + 
+        //            ' data = ' + mutation.target.data);
+        if (Polymer.dom(mutation.target).parentNode.tagName.toLowerCase() !== 'i18n-number') {
+          this.render();
+        }
         break;
       default:
         break;
@@ -378,7 +368,7 @@ Polymer({
           var category = this._getPluralCategory(param.number);
           if (typeof param.number === 'undefined') {
             // i18n-number is not ready
-            //console.log('tempalte-text: i18n-number is not ready');
+            //console.log('template-text: i18n-number is not ready');
             templateObject = '';
           }
           else if (templateObject[param.rawNumber]) {
