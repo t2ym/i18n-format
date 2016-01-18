@@ -8,23 +8,24 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
 <script src="../make-plural/plurals.min.js"></script>
 
 <!--
-`<i18n-format>` provides a template for a parameterized text string (typically a sentence) and can assist grammatical UI localization.
-Parameters can be any elements like `<span>`, `<a>`, etc. See `BehaviorsStore.I18nBehavior` (work in progress) for more details in application.
+`<i18n-format>` renders a text string with parameters to make grammatical localization of parameterized sentences easier.
+The first child element (`<span>` or `<json-data>`), followed by parameter elements, provides the template for the target text with parameters.
+Its parameters can be any elements like `<span>`, `<a>`, etc. See `BehaviorsStore.I18nBehavior` (work in progress) for more details in its application.
 
     <i18n-format>
-      <span>The {1} element is effective for UI localization with {2}.</span>
+      <span>{1} element is helpful for UI localization with {2}.</span>
       <code>i18n-format</code>
       <b>parameters</b>
     </i18n-format>
 
-## Simple Template
+## Simple Template Format
 
-In a simple template case, the `<i18n-format>` element has these children.
+In a simple template format, `<i18n-format>` element has these children.
 
 - The first child is a `<span>` text element whose text content is a template text.
 - Parameter elements follow the `<span>` template text element. 
 
-In the first `<span>` element, {1}, {2}, ..., $n$ represent the first, second, ..., and n-th parameters, respectively.
+In the first `<span>` element, {1}, {2}, ..., {n} represent the 1st, 2nd, ..., and n-th parameters, respectively.
 
     <p>
       <i18n-format>
@@ -52,7 +53,7 @@ The "`this`" object here is the containing element of the `<i18n-format>` elemen
     </p>
     
     this.text.example = [
-      "A {1} element can represent a template with {2}.",
+      "An {1} element can represent a template with {2}.",
       "i18n-format",
       "parameters"
     ];
@@ -64,13 +65,13 @@ At runtime, `param="n"` attributes are automatically attached to identify parame
     <p>
       <i18n-format>
         #shadow-root
-          A
+          An
           <content select="[param='1']"></content>
            element can represent a template with 
           <content select="[param='2']"></content>
           .
 
-        <span>A {1} element can represent a template with {2}.</span>
+        <span>An {1} element can represent a template with {2}.</span>
         <code param="1">i18n-format</code>
         <a href="https://www.google.com/" param="2">parameters</a>
       </i18n-format>
@@ -78,25 +79,26 @@ At runtime, `param="n"` attributes are automatically attached to identify parame
 
 ### Shady DOM representation
 
-The same effect is achieved in Shady DOM as well. The local DOM is shaded, though.
+The same effect is achieved in Shady DOM as well. The light DOM is shaded, though.
 
     <p>
       <i18n-format>
-        A
+        An
         <code param="1">i18n-format</code>
-         element can represent a template with 
+        element can represent a template with 
         <a href="https://www.google.com/" param="2">parameters</a>
         .
       </i18n-format>
     </p>
 
-## Compound Template
+## Compound Template Format
 
-With a compound template, the `<i18n-format>` element can select an appropriate template text 
-according to parameter values so that it can render grammatical forms in plurals, gender, etc.
+With a compound template format, `<i18n-format>` element can select an appropriate template text 
+according to parameter values to render grammatical forms in plurals, gender, etc.
 A `<json-data>` element as the first child specifies a compound template in JSON.
 The JSON represents structured `switch (n-th parameter) case 'category'` logics. The order of 
-parameters is significant since the JSON is traversed according to the parameter values in the specified order.
+parameter elements is significant since the JSON is traversed from its root 
+according to the parameter values in the specified order.
 
     <i18n-format lang="{{effectiveLang}}">
       <json-data>{
@@ -122,11 +124,11 @@ parameters is significant since the JSON is traversed according to the parameter
 
 ### Plural forms
 
-An [`<i18n-number>`](https://github.com/t2ym/i18n-number) element as a parameter detects the plural categories for the specified locale
-in the `lang` attribute. [CLDR plural rules](http://cldr.unicode.org/index/cldr-spec/plural-rules) are 
-supported in the plural categories.
+[`<i18n-number>`](https://github.com/t2ym/i18n-number) element as a parameter specifies the plural categories for the specified locale
+in the `lang` attribute. [CLDR plural rules (http://cldr.unicode.org/index/cldr-spec/plural-rules)](http://cldr.unicode.org/index/cldr-spec/plural-rules) 
+are supported in the plural categories.
 
-In the above example, the value of `this.recipients.length` in the 1st `<i18n-number>` parameter
+In the above example, the value of `this.recipients.length` in the 1st parameter `<i18n-number>` 
 specifies the plural category. As the '`offset`' attribute has the value of 1 in this case, '`this.recipients.length - 1`'
 is effective for selecting the plural category.
 
@@ -139,7 +141,7 @@ If no matching value is defined in the compound template, the category '`other`'
 
 List of parameters and their values in the above example.
 
-| Param #    | Value               | Shown Value for $n$        | Note            |
+| Param #    | Value               | Shown Value for {n}        | Note            |
 |:----------:|:--------------------|:---------------------------|:----------------|
 | 1          | recipients.length   | recipients.length - offset |                 |
 | 2          | recipients.0.gender | 'male'/'female'/'other'    | Not shown in UI |
@@ -180,7 +182,7 @@ Styles can be specified for the containing element and the contained parameters 
       </i18n-format>
     </p>
 
-@group Localiable Behavior
+@group I18nBehavior
 @element i18n-format
 @hero hero.svg
 @demo demo/index.html
@@ -198,7 +200,7 @@ Polymer({
     /**
      * The locale for the template text.
      * The typical value is bound to `{{effectiveLang}}` when the containing element has
-     * `BehaviorsStore.LocalizableBehavior`.
+     * `BehaviorsStore.I18nBehavior`.
      */
     lang: {
       type: String,
@@ -330,7 +332,7 @@ Polymer({
 
   /**
    * Detect the CLDR plural category of a number 
-   * with `make-plural` library (https://github.com/eemeli/make-plural.js).
+   * with [`make-plural` library](https://github.com/eemeli/make-plural.js).
    *
    * @param {number} n The number to get the plural category for.
    * @return {string} Plural category of the number. 

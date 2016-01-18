@@ -1,6 +1,7 @@
 ## `<i18n-format>`
 
-Parameterized text template for localization
+Parameterized text formatter for easier grammatical localization 
+with [Unicode CLDR plural rules](http://cldr.unicode.org/index/cldr-spec/plural-rules) and gender support
 
 [Demo](https://t2ym.github.io/i18n-format/components/i18n-format/demo) and [API Docs](https://t2ym.github.io/i18n-format/components/i18n-format/)
 
@@ -18,12 +19,12 @@ Parameterized text template for localization
 
 ### Usage
 
-#### Simple Template
+#### Simple Template Format
 
 ```html
     <p>
       <i18n-format>
-        <span>$1$ element is effective for UI localization with $2$.</span>
+        <span>{1} element is effective for UI localization with {2}.</span>
         <code>i18n-format</code>
         <a href="https://www.google.com/">parameters</a>
       </i18n-format>
@@ -36,7 +37,7 @@ This renders as follows:
     <p><code>i18n-format</code> element is effective for UI localization with <a href="https://www.google.com/">parameters</a>.</p>
 ```
 
-#### Compound Template
+#### Compound Template Format
 
 An appropriate template can be dynamically picked up according to parameter values with plural categories, gender, etc.
 
