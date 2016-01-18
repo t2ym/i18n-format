@@ -1,11 +1,11 @@
 {
-  "name": "template-text",
+  "name": "i18n-format",
   "version": "0.0.1",
   "authors": [
     "Tetsuya Mori <t2y3141592@gmail.com>"
   ],
   "description": "Parameterized text template for localization",
-  "main": "template-text.html",
+  "main": "i18n-format.html",
   "keywords": [
     "polymer",
     "web-component",
@@ -19,7 +19,7 @@
     "cldr"
   ],
   "license": "BSD-2-Clause",
-  "homepage": "https://t2ym.github.io/template-text/",
+  "homepage": "https://t2ym.github.io/i18n-format/",
   "ignore": [
     "**/.*",
     "node_modules",

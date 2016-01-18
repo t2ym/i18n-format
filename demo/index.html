@@ -1,12 +1,12 @@
 <!--
-@license https://github.com/t2ym/template-text/blob/master/LICENSE.md
+@license https://github.com/t2ym/i18n-format/blob/master/LICENSE.md
 Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
 -->
 <html>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-    <title>template-text Demo</title>
+    <title>i18n-format Demo</title>
     <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
     <link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
     <link rel="import" href="../../paper-input/paper-input.html">
@@ -16,8 +16,8 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
     <link rel="import" href="../../paper-styles/demo-pages.html">
     <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
     <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-    <link rel="import" href="../template-text.html">
-    <link rel="import" href="template-text-demo.html">
+    <link rel="import" href="../i18n-format.html">
+    <link rel="import" href="i18n-format-demo.html">
     <style is="custom-style" include="demo-pages-shared-styles">
       .vertical-section-container {
         max-width: 768px;
@@ -139,24 +139,24 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
   <body unresolved>
     <div class="vertical-section-container centered">
 
-      <h1><code>&lt;template-text&gt;</code> Demo</h1>
+      <h1><code>&lt;i18n-format&gt;</code> Demo</h1>
 
       <div class="vertical-section-container">
         <h2>Simple Template</h2>
         <demo-snippet class="centered-demo">
           <template>
-            <template-text>
+            <i18n-format>
               <span>$1$ element is effective for UI localization with $2$.</span>
-              <code>&lt;template-text&gt;</code>
+              <code>&lt;i18n-format&gt;</code>
               <b>parameters</b>
-            </template-text>
+            </i18n-format>
           </template>
           <script type="text/markdown">
-            <template-text>
+            <i18n-format>
               <span>$1$ element is effective for UI localization with $2$.</span>
-              <code>&lt;template-text&gt;</code>
+              <code>&lt;i18n-format&gt;</code>
               <b>parameters</b>
-            </template-text>
+            </i18n-format>
           </script>
         </demo-snippet>
 
@@ -164,25 +164,25 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
         <demo-snippet class="centered-demo">
           <template>
             <template is="dom-bind" id="demo">
-              <template-text>
+              <i18n-format>
                 <span>{{text.example.0}}</span>
                 <code>{{text.example.1}}</code>
                 <a href="https://www.google.com/">{{text.example.2}}</a>
-              </template-text>
+              </i18n-format>
             </template>
           </template>
           <script type="text/markdown">
-            <template-text>
+            <i18n-format>
               <span>{{text.example.0}}</span>
               <code>{{text.example.1}}</code>
               <a href="https://www.google.com/">{{text.example.2}}</a>
-            </template-text>
+            </i18n-format>
 
             // In real cases, text values are dynamically loaded from JSON
             text = {
               "example": [
                 "A $1$ element can represent a sentence with $2$.",
-                "template-text",
+                "i18n-format",
                 "localizable parameters"
               ]
             }
@@ -192,7 +192,7 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
               window.demo.text = {
                 example: [
                   "A $1$ element can represent a sentence with $2$.",
-                  "template-text",
+                  "i18n-format",
                   "localizable parameters"
                 ]
               };
@@ -203,7 +203,7 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
         <h2>Compound Template</h2>
         <demo-snippet id="demo-snippet" class="left-aligned-demo" _markdown="{{markdown}}">
           <template>
-            <template-text-demo id="template-text-demo"></template-text-demo>
+            <i18n-format-demo id="i18n-format-demo"></i18n-format-demo>
           </template>
         </demo-snippet>
       </div>

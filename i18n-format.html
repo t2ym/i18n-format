@@ -1,5 +1,5 @@
 <!--
-@license https://github.com/t2ym/template-text/blob/master/LICENSE.md
+@license https://github.com/t2ym/i18n-format/blob/master/LICENSE.md
 Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
 -->
 
@@ -8,18 +8,18 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
 <script src="../make-plural/plurals.min.js"></script>
 
 <!--
-`<template-text>` provides a template for a parameterized text string (typically a sentence) and can assist grammatical UI localization.
+`<i18n-format>` provides a template for a parameterized text string (typically a sentence) and can assist grammatical UI localization.
 Parameters can be any elements like `<span>`, `<a>`, etc. See `BehaviorsStore.I18nBehavior` (work in progress) for more details in application.
 
-    <template-text>
+    <i18n-format>
       <span>The $1$ element is effective for UI localization with $2$.</span>
-      <code>template-text</code>
+      <code>i18n-format</code>
       <b>parameters</b>
-    </template-text>
+    </i18n-format>
 
 ## Simple Template
 
-In a simple template case, the `<template-text>` element has these children.
+In a simple template case, the `<i18n-format>` element has these children.
 
 - The first child is a `<span>` text element whose text content is a template text.
 - Parameter elements follow the `<span>` template text element. 
@@ -27,33 +27,33 @@ In a simple template case, the `<template-text>` element has these children.
 In the first `<span>` element, $1$, $2$, ..., $n$ represent the first, second, ..., and n-th parameters, respectively.
 
     <p>
-      <template-text>
+      <i18n-format>
         <span>A $1$ element can represent a template with $2$.</span>
-        <code>template-text</code>
+        <code>i18n-format</code>
         <a href="https://www.google.com/">parameters</a>
-      </template-text>
+      </i18n-format>
     </p>
 
 So the above example renders the following `<p>` paragraph.
 
-    <p>A <code>template-text</code> element can represent a template with <a href="https://www.google.com/">parameters</a>.</p>
+    <p>A <code>i18n-format</code> element can represent a template with <a href="https://www.google.com/">parameters</a>.</p>
 
 ### Bindings
 
-`<template-text>` element is effective when the UI texts are bound to localizable variables as below.
-The "`this`" object here is the containing element of the `<template-text>` element.
+`<i18n-format>` element is effective when the UI texts are bound to localizable variables as below.
+The "`this`" object here is the containing element of the `<i18n-format>` element.
 
     <p>
-      <template-text>
+      <i18n-format>
         <span>{{text.example.0}}</span>
         <code>{{text.example.1}}</code>
         <a href="https://www.google.com/">{{text.example.2}}</a>
-      </template-text>
+      </i18n-format>
     </p>
     
     this.text.example = [
       "A $1$ element can represent a template with $2$.",
-      "template-text",
+      "i18n-format",
       "parameters"
     ];
 
@@ -62,7 +62,7 @@ The "`this`" object here is the containing element of the `<template-text>` elem
 At runtime, `param="n"` attributes are automatically attached to identify parameters as distributed `content` elements.
 
     <p>
-      <template-text>
+      <i18n-format>
         #shadow-root
           A
           <content select="[param='1']"></content>
@@ -71,9 +71,9 @@ At runtime, `param="n"` attributes are automatically attached to identify parame
           .
 
         <span>A $1$ element can represent a template with $2$.</span>
-        <code param="1">template-text</code>
+        <code param="1">i18n-format</code>
         <a href="https://www.google.com/" param="2">parameters</a>
-      </template-text>
+      </i18n-format>
     </p>
 
 ### Shady DOM representation
@@ -81,24 +81,24 @@ At runtime, `param="n"` attributes are automatically attached to identify parame
 The same effect is achieved in Shady DOM as well. The local DOM is shaded, though.
 
     <p>
-      <template-text>
+      <i18n-format>
         A
-        <code param="1">template-text</code>
+        <code param="1">i18n-format</code>
          element can represent a template with 
         <a href="https://www.google.com/" param="2">parameters</a>
         .
-      </template-text>
+      </i18n-format>
     </p>
 
 ## Compound Template
 
-With a compound template, the `<template-text>` element can select an appropriate template text 
+With a compound template, the `<i18n-format>` element can select an appropriate template text 
 according to parameter values so that it can render grammatical forms in plurals, gender, etc.
 A `<json-data>` element as the first child specifies a compound template in JSON.
 The JSON represents structured `switch (n-th parameter) case 'category'` logics. The order of 
 parameters is significant since the JSON is traversed according to the parameter values in the specified order.
 
-    <template-text lang="{{effectiveLang}}">
+    <i18n-format lang="{{effectiveLang}}">
       <json-data>{
         "0": "You ($3$) gave no gifts.",
         "1": {
@@ -118,7 +118,7 @@ parameters is significant since the JSON is traversed according to the parameter
       <span>{{sender.name}}</span>
       <span>{{recipients.0.name}}</span>
       <span>a gift</span>
-    </template-text>
+    </i18n-format>
 
 ### Plural forms
 
@@ -172,27 +172,27 @@ categories such as '`one`', '`two`', '`other`' are matched for the value with th
 
 Styles can be specified for the containing element and the contained parameters as below.
 
-    <p class="style-for-template-text">
-      <template-text>
+    <p class="style-for-i18n-format">
+      <i18n-format>
         <span>A $1$ element can represent a template with $2$.</span>
-        <code class="style-for-parameter-1">template-text</code>
+        <code class="style-for-parameter-1">i18n-format</code>
         <a class="style-for-parameter-2" href="https://www.google.com/">parameters</a>
-      </template-text>
+      </i18n-format>
     </p>
 
 @group Localiable Behavior
-@element template-text
+@element i18n-format
 @hero hero.svg
 @demo demo/index.html
 -->
 
-<dom-module id="template-text">
+<dom-module id="i18n-format">
   <template>
   </template>
 </dom-module>
 <script>
 Polymer({
-  is: 'template-text',
+  is: 'i18n-format',
 
   properties: {
     /**
@@ -284,7 +284,7 @@ Polymer({
         }
       }
     }
-    //console.log('template-text: _setupParams: elements = ' + this.elements);
+    //console.log('i18n-format: _setupParams: elements = ' + this.elements);
   },
 
   /**
@@ -296,7 +296,7 @@ Polymer({
     mutations.forEach(function(mutation) {
       switch (mutation.type) {
       case 'characterData':
-        //console.log('template-text: _templateMutated: characterData: tag = ' + 
+        //console.log('i18n-format: _templateMutated: characterData: tag = ' + 
         //            Polymer.dom(mutation.target).parentNode.tagName.toLowerCase() + 
         //            ' data = ' + mutation.target.data);
         if (Polymer.dom(mutation.target).parentNode.tagName.toLowerCase() !== 'i18n-number') {
@@ -315,7 +315,7 @@ Polymer({
    * @param {string} lang New locale.
    */
   _langChanged (lang) {
-    //console.log('template-text: _langChanged lang = ' + lang);
+    //console.log('i18n-format: _langChanged lang = ' + lang);
     if (this.elements &&
         lang !== undefined &&
         lang !== null &&
@@ -324,7 +324,7 @@ Polymer({
       this.render();
     }
     //else {
-    //  console.log('template-text: skipping render()');
+    //  console.log('i18n-format: skipping render()');
     //}
   },
 
@@ -345,7 +345,7 @@ Polymer({
     else {
       category = window.plurals.en(n);
     }
-    //console.log('template-text: _getPluralCategory(' + n + ') = ' + category);
+    //console.log('i18n-format: _getPluralCategory(' + n + ') = ' + category);
     return category;
   },
 
@@ -368,7 +368,7 @@ Polymer({
           var category = this._getPluralCategory(param.number);
           if (typeof param.number === 'undefined') {
             // i18n-number is not ready
-            //console.log('template-text: i18n-number is not ready');
+            //console.log('i18n-format: i18n-number is not ready');
             templateObject = '';
           }
           else if (templateObject[param.rawNumber]) {
@@ -385,7 +385,7 @@ Polymer({
           else {
             // default
             templateObject = '';
-            console.warn('template-text: cannot find a template');
+            console.warn('i18n-format: cannot find a template');
           }
         }
         else {
@@ -401,7 +401,7 @@ Polymer({
           else {
             // default
             templateObject = '';
-            console.warn('template-text: cannot find a template');
+            console.warn('i18n-format: cannot find a template');
           }
         }
       }
@@ -410,7 +410,7 @@ Polymer({
       }
       else {
         templateText = '';
-        console.warn('template-text: cannot find a template');
+        console.warn('i18n-format: cannot find a template');
       }
     }
     else {
@@ -430,7 +430,7 @@ Polymer({
     var i;
 
     if (templateText === this.lastTemplateText) {
-      //console.log('template-text: skipping rendering as the templateText has not changed');
+      //console.log('i18n-format: skipping rendering as the templateText has not changed');
       return;
     }
     else {
@@ -460,7 +460,7 @@ Polymer({
     }
 
     //if (templateText) {
-    //  console.log('template-text: render: templateText = ' + templateText);
+    //  console.log('i18n-format: render: templateText = ' + templateText);
     //}
   }
 });
@@ -468,30 +468,30 @@ Polymer({
 <!--
     <p id="simpleChartDesc">A simple <code>google-chart</code> with <a href="link">google-advanced-chart</a> looks like <a href="link2">this</a>:</p>
     <p id="simpleChartDesc">
-      <template-text>
+      <i18n-format>
         <span>A simple $1$ with $2$ looks like $3$:</span>
         <code param="1">google-chart</code>
         <a param="2" href="link">google-advanced-chart</a>
         <a param="3" href="link2">this</a>
-      </template-text>
+      </i18n-format>
     </p>
     <p id="simpleChartDesc">
-      <template-text>
+      <i18n-format>
         <span>{{text.simpleChartDesc_$0}}</span>
         <code param="1">{{text.simpleChartDesc_$1}}</code>
         <a param="2" href="link">{{text.simpleChartDesc_$2}}</a>
         <a param="3" href="link2">{{text.simpleChartDesc_$3}}</a>
-      </template-text>
+      </i18n-format>
     </p>
     <p id="simpleChartDesc">
       #shadow
         A simple <code>google-chart</code> with <a href="link">google-advanced-chart</a> looks like <a href="link2">this</a>:
-      <template-text>
+      <i18n-format>
         <span>{{text.simpleChartDesc_$0}}</span>
         <code param="1">{{text.simpleChartDesc_$1}}</code>
         <a param="2" href="link">{{text.simpleChartDesc_$2}}</a>
         <a param="3" href="link2">{{text.simpleChartDesc_$3}}</a>
-      </template-text>
+      </i18n-format>
     </p>
     <script>
       {
@@ -508,7 +508,7 @@ Polymer({
       }
     </script>
 
-  <template-text lang="{{effectiveLang}}" observe-params text-id="sentence-with-plurals1">
+  <i18n-format lang="{{effectiveLang}}" observe-params text-id="sentence-with-plurals1">
     <json-data>{
       "0": "You ($3$) gave no gifts.",
       "1": {
@@ -528,16 +528,16 @@ Polymer({
     <span>{{text.sender.name}}</span>
     <span>{{text.recipients.0.name}}</span>
     <span>a gift</span>
-  </template-text>
+  </i18n-format>
 
-  <template-text lang="{{effectiveLang}}" text-id="sentence-with-plurals">
+  <i18n-format lang="{{effectiveLang}}" text-id="sentence-with-plurals">
     <json-data>{{serialize(text.sentence-with-plurals.0)}}</json-data>
     <i18n-number lang="{{effectiveLang}}" offset="1" options="{}">{{text.recipients.length}}</i18n-number>
     <span>{{text.recipients.0.gender}}</span>
     <span>{{text.sender.name}}</span>
     <span>{{text.recipients.0.name}}</span>
     <span>{{text.sentence-with-plurals.5}}</span>
-  </template-text>
+  </i18n-format>
   <template>
     <json-data text-id="sentence-with-plurals">[
       {

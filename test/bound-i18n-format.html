@@ -1,17 +1,17 @@
 <!--
-@license https://github.com/t2ym/my-seed-element/blob/master/LICENSE.md
+@license https://github.com/t2ym/i18n-format/blob/master/LICENSE.md
 Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
 -->
 <link rel="import" href="../../polymer/polymer.html">
 <link rel="import" href="../../iron-selector/iron-selector.html">
 
-<dom-module id="bound-my-seed-element">
+<dom-module id="bound-i18n-format">
   <template>
     <span id="placeholder">
-      <my-seed-element id="num">{{number}}</my-seed-element>
-      <my-seed-element id="num2">{{number2}}</my-seed-element>
-      <my-seed-element id="empty"></my-seed-element>
-      <my-seed-element id="currency" options="{{options}}">123456.789</my-seed-element>
+      <i18n-format id="num">{{number}}</i18n-format>
+      <i18n-format id="num2">{{number2}}</i18n-format>
+      <i18n-format id="empty"></i18n-format>
+      <i18n-format id="currency" options="{{options}}">123456.789</i18n-format>
       <iron-selector id="currencySelector" attr-for-selected="value" selected="{{options.currency}}">
         <div name="USD" iron-selected>USD</div>
         <div name="JPY">JPY</div>
@@ -20,7 +20,7 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
   </template>
   <script>
   Polymer({
-    is: 'bound-my-seed-element',
+    is: 'bound-i18n-format',
     properties: {
       number: {
         type: String,

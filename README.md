@@ -1,19 +1,19 @@
-## `<template-text>`
+## `<i18n-format>`
 
 Parameterized text template for localization
 
-[Demo](https://t2ym.github.io/template-text/components/template-text/demo) and [API Docs](https://t2ym.github.io/template-text/components/template-text/)
+[Demo](https://t2ym.github.io/i18n-format/components/i18n-format/demo) and [API Docs](https://t2ym.github.io/i18n-format/components/i18n-format/)
 
 ### Install
 
 ```
-    bower install --save template-text
+    bower install --save i18n-format
 ```
 
 ### Import
 
 ```html
-    <link rel="import" href="/path/to/bower_components/template-text/template-text.html">
+    <link rel="import" href="/path/to/bower_components/i18n-format/i18n-format.html">
 ```
 
 ### Usage
@@ -22,18 +22,18 @@ Parameterized text template for localization
 
 ```html
     <p>
-      <template-text>
+      <i18n-format>
         <span>$1$ element is effective for UI localization with $2$.</span>
-        <code>template-text</code>
+        <code>i18n-format</code>
         <a href="https://www.google.com/">parameters</a>
-      </template-text>
+      </i18n-format>
     </p>
 ```
 
 This renders as follows:
 
 ```html
-    <p><code>template-text</code> element is effective for UI localization with <a href="https://www.google.com/">parameters</a>.</p>
+    <p><code>i18n-format</code> element is effective for UI localization with <a href="https://www.google.com/">parameters</a>.</p>
 ```
 
 #### Compound Template
@@ -42,7 +42,7 @@ An appropriate template can be dynamically picked up according to parameter valu
 
 ```html
     <p>
-      <template-text lang="{{lang}}">
+      <i18n-format lang="{{lang}}">
         <json-data>{
           "0": "You ($3$) gave no gifts.",
           "1": {
@@ -62,7 +62,7 @@ An appropriate template can be dynamically picked up according to parameter valu
         <span>{{sender.name}}</span>
         <span>{{recipients.0.name}}</span>
         <span>a gift</span>
-      </template-text>
+      </i18n-format>
     </p>
 ```
 
@@ -87,4 +87,4 @@ So this example renders as follows:
 
 ### License
 
-[BSD-2-Clause](https://github.com/t2ym/template-text/blob/master/LICENSE.md)
+[BSD-2-Clause](https://github.com/t2ym/i18n-format/blob/master/LICENSE.md)

@@ -1,5 +1,5 @@
 <!--
-@license https://github.com/t2ym/template-text/blob/master/LICENSE.md
+@license https://github.com/t2ym/i18n-format/blob/master/LICENSE.md
 Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
 -->
 <link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
@@ -10,9 +10,9 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
 <link rel="import" href="../../paper-item/paper-item.html">
 <link rel="import" href="../../paper-button/paper-button.html">
 <link rel="import" href="../../paper-styles/demo-pages.html">
-<link rel="import" href="../template-text.html">
+<link rel="import" href="../i18n-format.html">
 
-<dom-module id="template-text-demo">
+<dom-module id="i18n-format-demo">
   <template>
     <style>
     .text {
@@ -49,14 +49,14 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
       (http://cldr.unicode.org/index/cldr-spec/plural-rules)</a>
     </span><br><br>
 
-    <template-text id="text" class="text" lang="{{lang}}">
+    <i18n-format id="text" class="text" lang="{{lang}}">
       <json-data>{{template}}</json-data>
       <i18n-number lang="{{lang}}" offset="{{offset}}">{{recipients.length}}</i18n-number>
       <span>{{recipients.0.gender}}</span>
       <span>{{sender.name}}</span>
       <span>{{recipients.0.name}}</span>
       <span>a gift</span>
-    </template-text>
+    </i18n-format>
 
     <div id="parameters" class="parameters-panel">
 <!--
@@ -120,7 +120,7 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
   <script>
     var currencyList = document.createElement('currency-list');
     Polymer({
-      is: 'template-text-demo',
+      is: 'i18n-format-demo',
       properties: {
         lang: {
           type: String,
@@ -242,7 +242,7 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
       _getMarkDown: function () {
         var stringifiedRecipients = this._getStringifiedRecipients(this.rawRecipients,this.recipientsLength);
         var markdown = this.isAttached ? '```\n\n' +
-          '<template-text' + 
+          '<i18n-format' + 
           (this.lang ? 
           ' lang="' + this.lang + '"' : '' ) +
           '>\n' + 
@@ -258,7 +258,7 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
           '  <span>' + this.sender.name + '</span><!-- {{sender.name}} -->\n' +
           '  <span>' + ( this.recipients[0] ? this.recipients[0].name : '' ) + '</span><!-- {{recipients.0.name}} -->\n' +
           '  <span>a gift</span>\n' +
-          '</template-text>\n' +
+          '</i18n-format>\n' +
           '\n```' : '';
         return markdown;
       },
