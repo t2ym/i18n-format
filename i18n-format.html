@@ -204,7 +204,7 @@ Polymer({
      */
     lang: {
       type: String,
-      value: '',
+      value: 'en',
       reflectToAttribute: true
     },
 
@@ -239,6 +239,11 @@ Polymer({
       value: true // TODO: optimize re-rendering
     }
   },
+
+  /**
+   * Default locale constant 'en'
+   */
+  DEFAULT_LANG: 'en',
 
   observers: [
     '_langChanged(lang)'
@@ -339,7 +344,7 @@ Polymer({
    */
   _getPluralCategory (n) {
     var category = 'other';
-    var lang = this.lang || 'en';
+    var lang = this.lang || this.DEFAULT_LANG;
     lang = lang.split(/[-_]/)[0];
     if (window.plurals[lang]) {
       category = window.plurals[lang](n);
@@ -358,7 +363,10 @@ Polymer({
    */
   _selectTemplateText () {
     var templateText = '';
-    if (this.templateElement.tagName.toLowerCase() === 'json-data') {
+    if (!this.templateElement) {
+      return templateText;
+    }
+    else if (this.templateElement.tagName.toLowerCase() === 'json-data') {
       var templateObject = JSON.parse(this.templateTextNode.data);
       var n;
       for (n = 1;
