@@ -12,7 +12,7 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
 Parameters can be any elements like `<span>`, `<a>`, etc. See `BehaviorsStore.I18nBehavior` (work in progress) for more details in application.
 
     <i18n-format>
-      <span>The $1$ element is effective for UI localization with $2$.</span>
+      <span>The {1} element is effective for UI localization with {2}.</span>
       <code>i18n-format</code>
       <b>parameters</b>
     </i18n-format>
@@ -24,11 +24,11 @@ In a simple template case, the `<i18n-format>` element has these children.
 - The first child is a `<span>` text element whose text content is a template text.
 - Parameter elements follow the `<span>` template text element. 
 
-In the first `<span>` element, $1$, $2$, ..., $n$ represent the first, second, ..., and n-th parameters, respectively.
+In the first `<span>` element, {1}, {2}, ..., $n$ represent the first, second, ..., and n-th parameters, respectively.
 
     <p>
       <i18n-format>
-        <span>A $1$ element can represent a template with $2$.</span>
+        <span>A {1} element can represent a template with {2}.</span>
         <code>i18n-format</code>
         <a href="https://www.google.com/">parameters</a>
       </i18n-format>
@@ -52,7 +52,7 @@ The "`this`" object here is the containing element of the `<i18n-format>` elemen
     </p>
     
     this.text.example = [
-      "A $1$ element can represent a template with $2$.",
+      "A {1} element can represent a template with {2}.",
       "i18n-format",
       "parameters"
     ];
@@ -70,7 +70,7 @@ At runtime, `param="n"` attributes are automatically attached to identify parame
           <content select="[param='2']"></content>
           .
 
-        <span>A $1$ element can represent a template with $2$.</span>
+        <span>A {1} element can represent a template with {2}.</span>
         <code param="1">i18n-format</code>
         <a href="https://www.google.com/" param="2">parameters</a>
       </i18n-format>
@@ -100,18 +100,18 @@ parameters is significant since the JSON is traversed according to the parameter
 
     <i18n-format lang="{{effectiveLang}}">
       <json-data>{
-        "0": "You ($3$) gave no gifts.",
+        "0": "You ({3}) gave no gifts.",
         "1": {
-          "male": "You ($3$) gave him ($4$) $5$.",
-          "female": "You ($3$) gave her ($4$) $5$.",
-          "other": "You ($3$) gave them ($4$) $5$."
+          "male": "You ({3}) gave him ({4}) {5}.",
+          "female": "You ({3}) gave her ({4}) {5}.",
+          "other": "You ({3}) gave them ({4}) {5}."
         },
         "one": {
-          "male": "You ($3$) gave him ($4$) and one other person $5$.",
-          "female": "You ($3$) gave her ($4$) and one other person $5$.",
-          "other": "You ($3$) gave them ($4$) and one other person $5$."
+          "male": "You ({3}) gave him ({4}) and one other person {5}.",
+          "female": "You ({3}) gave her ({4}) and one other person {5}.",
+          "other": "You ({3}) gave them ({4}) and one other person {5}."
         },
-        "other": "You ($3$) gave them ($4$) and $1$ other people gifts."
+        "other": "You ({3}) gave them ({4}) and {1} other people gifts."
       }</json-data>
       <i18n-number lang="{{effectiveLang}}" offset="1">{{recipients.length}}</i18n-number>
       <span>{{recipients.0.gender}}</span>
@@ -153,7 +153,7 @@ List of selected template paths in `<json-data>` in the above example.
 Exact numbers in plural categories are matched first and then named plural
 categories such as '`one`', '`two`', '`other`' are matched for the value with the offset.
 
-| Param 1 | $1$ | Plural Category | Param 2 (gender) | Selected Template Path |
+| Param 1 | {1} | Plural Category | Param 2 (gender) | Selected Template Path |
 |:-------:|:---:|:---------------:|:----------------:|:-----------------------|
 | 0       | -1  | 0               | -                | .0                     |
 | 1       | 0   | 1               | male             | .1.male                |
@@ -174,7 +174,7 @@ Styles can be specified for the containing element and the contained parameters 
 
     <p class="style-for-i18n-format">
       <i18n-format>
-        <span>A $1$ element can represent a template with $2$.</span>
+        <span>A {1} element can represent a template with {2}.</span>
         <code class="style-for-parameter-1">i18n-format</code>
         <a class="style-for-parameter-2" href="https://www.google.com/">parameters</a>
       </i18n-format>
@@ -222,7 +222,7 @@ Polymer({
      */
     paramFormat: {
       type: String,
-      value: '$n$'
+      value: '{n}'
     },
 
     /**
@@ -469,7 +469,7 @@ Polymer({
     <p id="simpleChartDesc">A simple <code>google-chart</code> with <a href="link">google-advanced-chart</a> looks like <a href="link2">this</a>:</p>
     <p id="simpleChartDesc">
       <i18n-format>
-        <span>A simple $1$ with $2$ looks like $3$:</span>
+        <span>A simple {1} with {2} looks like {3}:</span>
         <code param="1">google-chart</code>
         <a param="2" href="link">google-advanced-chart</a>
         <a param="3" href="link2">this</a>
@@ -495,13 +495,13 @@ Polymer({
     </p>
     <script>
       {
-        "simpleChartDesc_$0": "A simple $1$ with $2$ looks like $3$:",
+        "simpleChartDesc_$0": "A simple {1} with {2} looks like {3}:",
         "simpleChartDesc_$1": "google-chart",
         "simpleChartDesc_$2": "google-advanced-chart",
         "simpleChartDesc_$3": "this"
       }
       {
-        "simpleChartDesc_$0": "$2$ とともにシンプルな $1$ を用いると、$3$ようになります:",
+        "simpleChartDesc_$0": "{2} とともにシンプルな {1} を用いると、{3}ようになります:",
         "simpleChartDesc_$1": "google-chart",
         "simpleChartDesc_$2": "google-advanced-chart",
         "simpleChartDesc_$3": "この"
@@ -510,18 +510,18 @@ Polymer({
 
   <i18n-format lang="{{effectiveLang}}" observe-params text-id="sentence-with-plurals1">
     <json-data>{
-      "0": "You ($3$) gave no gifts.",
+      "0": "You ({3}) gave no gifts.",
       "1": {
-        "male": "You ($3$) gave him ($4$) $5$.",
-        "female": "You ($3$) gave her ($4$) $5$.",
-        "other": "You ($3$) gave them ($4$) $5$."
+        "male": "You ({3}) gave him ({4}) {5}.",
+        "female": "You ({3}) gave her ({4}) {5}.",
+        "other": "You ({3}) gave them ({4}) {5}."
       },
       "one": {
-        "male": "You ($3$) gave him ($4$) and one other person $5$.",
-        "female": "You ($3$) gave her ($4$) and one other person $5$.",
-        "other": "You ($3$) gave them ($4$) and one other person $5$."
+        "male": "You ({3}) gave him ({4}) and one other person {5}.",
+        "female": "You ({3}) gave her ({4}) and one other person {5}.",
+        "other": "You ({3}) gave them ({4}) and one other person {5}."
       },
-      "other": "You ($3$) gave them ($4$) and $1$ other people gifts."
+      "other": "You ({3}) gave them ({4}) and {1} other people gifts."
     }</json-data>
     <i18n-number lang="{{effectiveLang}}" offset="1" options="{}">{{text.recipients.length}}</i18n-number>
     <span>{{text.recipients.0.gender}}</span>
@@ -541,18 +541,18 @@ Polymer({
   <template>
     <json-data text-id="sentence-with-plurals">[
       {
-        "0": "You ($3$) gave no gifts.",
+        "0": "You ({3}) gave no gifts.",
         "1": {
-          "male": "You ($3$) gave him ($4$) $5$.",
-          "female": "You ($3$) gave her ($4$) $5$.",
-          "other": "You ($3$) gave them ($4$) $5$."
+          "male": "You ({3}) gave him ({4}) {5}.",
+          "female": "You ({3}) gave her ({4}) {5}.",
+          "other": "You ({3}) gave them ({4}) {5}."
         },
         "one": {
-          "male": "You ($3$) gave him ($4$) and one other person $5$.",
-          "female": "You ($3$) gave her ($4$) and one other person $5$.",
-          "other": "You ($3$) gave them ($4$) and one other person $5$."
+          "male": "You ({3}) gave him ({4}) and one other person {5}.",
+          "female": "You ({3}) gave her ({4}) and one other person {5}.",
+          "other": "You ({3}) gave them ({4}) and one other person {5}."
         },
-        "other": "You ($3$) gave them ($4$) and $1$ other people gifts."
+        "other": "You ({3}) gave them ({4}) and {1} other people gifts."
       },
       "{{text.recipients.length - 1}}",
       "{{text.recipients.0.gender}}",

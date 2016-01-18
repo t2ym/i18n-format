@@ -146,14 +146,14 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
         <demo-snippet class="centered-demo">
           <template>
             <i18n-format>
-              <span>$1$ element is effective for UI localization with $2$.</span>
+              <span>{1} element is effective for UI localization with {2}.</span>
               <code>&lt;i18n-format&gt;</code>
               <b>parameters</b>
             </i18n-format>
           </template>
           <script type="text/markdown">
             <i18n-format>
-              <span>$1$ element is effective for UI localization with $2$.</span>
+              <span>{1} element is effective for UI localization with {2}.</span>
               <code>&lt;i18n-format&gt;</code>
               <b>parameters</b>
             </i18n-format>
@@ -181,7 +181,7 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
             // In real cases, text values are dynamically loaded from JSON
             text = {
               "example": [
-                "A $1$ element can represent a sentence with $2$.",
+                "A {1} element can represent a sentence with {2}.",
                 "i18n-format",
                 "localizable parameters"
               ]
@@ -191,7 +191,7 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
             window.addEventListener('dom-change', function () {
               window.demo.text = {
                 example: [
-                  "A $1$ element can represent a sentence with $2$.",
+                  "A {1} element can represent a sentence with {2}.",
                   "i18n-format",
                   "localizable parameters"
                 ]
