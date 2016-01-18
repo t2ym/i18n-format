@@ -23,13 +23,31 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
 
     <test-fixture id="static">
       <template>
-        <i18n-format lang="en" options="{}" offset="1">123456.789</i18n-format>
+        <i18n-format lang="en">
+          <span>Parameter {1} and {2} are rendered.</span>
+          <b>A</b>
+          <i>B</i>
+        </i18n-format>
+      </template>
+    </test-fixture>
+
+    <test-fixture id="non-default-attributes">
+      <template>
+        <i18n-format lang="fr" param-attribute="parameter" param-format="%n%" observe-params="false">
+          <span>Parameter %1% and %2% are rendered.</span>
+          <b>A</b>
+          <i>B</i>
+        </i18n-format>
       </template>
     </test-fixture>
 
     <test-fixture id="bound">
       <template is="dom-template" id="bound-template">
-        <i18n-format lang="en" options="{}" offset="1">{{number}}</i18n-format>
+        <i18n-format lang="{{lang}}">
+          <span>{{text.0}}</span>
+          <b>{{text.1}}</b>
+          <i>{{text.2}}</i>
+        </i18n-format>
       </template>
     </test-fixture>
 
@@ -65,30 +83,27 @@ suite('<i18n-format>', function () {
       assert.equal(el.lang, 'en', 'default lang is en');
     });
 
-    test('default options property', function () {
-      assert.isUndefined(el.options, 'default options is undefined');
+    test('DEFAULT_LANG property', function () {
+      assert.equal(el.DEFAULT_LANG, 'en', 'DEFAULT_LANG is en');
     });
 
-    test('default raw property', function () {
-      assert.equal(el.raw, '', 'default raw is a null string');
+    test('default paramAttribute property', function () {
+      assert.equal(el.paramAttribute, 'param', 'default paramAttribute is param');
     });
 
-    test('default offset property', function () {
-      assert.isNumber(el.offset, 'offset is a number');
-      assert.equal(el.offset, 0, 'default offset is 0');
+    test('default paramFormat property', function () {
+      assert.equal(el.paramFormat, '{n}', 'default paramFormat is {n}');
     });
 
-    test('default rawNumber property', function () {
-      assert.isUndefined(el.rawNumber, 'rawNumber is undefined when raw is null');
+    test('default observeParams property', function () {
+      assert.isBoolean(el.observeParams, 'observeParams is a Boolean');
+      assert.equal(el.observeParams, true, 'default observeParams is true');
     });
 
-    test('default number property', function () {
-      assert.isUndefined(el.number, 'number is undefined when raw is null');
+    test('default textContent is empty', function () {
+      assert.equal(Polymer.dom(el.root).textContent, '', 'textContent is empty');
     });
 
-    test('default formatted property', function () {
-      assert.isUndefined(el.formatted, 'formatted is undefined when raw is null');
-    });
   });
 
   if (!Number.isNaN) {
@@ -97,6 +112,12 @@ suite('<i18n-format>', function () {
       return typeof value === 'number' && isNaN(value);
     };
   }
+  var lang1 = 'en';
+  var lang2 = 'fr';
+  var paramAttribute1 = 'param';
+  var paramAttribute2 = 'parameter';
+  var paramFormat1 = '{n}';
+  var paramFormat2 = '%n%';
   var rawValue1 = '123456.789';
   var rawNumber1 = Number(rawValue1);
   var rawValueInvalid = 'ABC';
@@ -113,26 +134,102 @@ suite('<i18n-format>', function () {
   var formatted1_offset = '123,454.789';
   var suites = [
     { 
-      suite: 'static value', 
+      suite: 'static values', 
       fixture: 'static', 
       model: undefined, 
-      rawValue: rawValue1,
-      offset: offset1,
-      rawNumber: rawNumber1,
-      number: number1,
-      options: {},
-      formatted: formatted1_en
+      lang: lang1,
+      paramAttribute: paramAttribute1,
+      paramFormat: paramFormat1,
+      childNodes: [
+        { nodeName: '#text', data: 'Parameter ' },
+        { nodeName: 'CONTENT', select: '[param=\'1\']' },
+        { nodeName: '#text', data: ' and ' },
+        { nodeName: 'CONTENT', select: '[param=\'2\']' },
+        { nodeName: '#text', data: ' are rendered.' }
+      ],
+      parameters: [
+        { select: 'b[param=\'1\']', textContent: 'A' },
+        { select: 'i[param=\'2\']', textContent: 'B' }
+      ]
     },
     { 
-      suite: 'bound value', 
+      suite: 'non-default static parameters', 
+      fixture: 'non-default-attributes', 
+      model: undefined, 
+      lang: lang2,
+      paramAttribute: paramAttribute2,
+      paramFormat: paramFormat2,
+      childNodes: [
+        { nodeName: '#text', data: 'Parameter ' },
+        { nodeName: 'CONTENT', select: '[parameter=\'1\']' },
+        { nodeName: '#text', data: ' and ' },
+        { nodeName: 'CONTENT', select: '[parameter=\'2\']' },
+        { nodeName: '#text', data: ' are rendered.' }
+      ],
+      parameters: [
+        { select: 'b[parameter=\'1\']', textContent: 'A' },
+        { select: 'i[parameter=\'2\']', textContent: 'B' }
+      ]
+    },
+    { 
+      suite: 'bound values', 
       fixture: 'bound', 
-      model: { number: rawValue1 }, 
-      rawValue: rawValue1,
-      offset: offset1,
-      rawNumber: rawNumber1,
-      number: number1,
-      options: {},
-      formatted: formatted1_en
+      model: {
+        lang: 'en',
+        text: [
+          'Parameter {1} and {2} are rendered.',
+          'A',
+          'B'
+        ]
+      }, 
+      lang: lang1,
+      paramAttribute: paramAttribute1,
+      paramFormat: paramFormat1,
+      childNodes: [
+        { nodeName: '#text', data: 'Parameter ' },
+        { nodeName: 'CONTENT', select: '[param=\'1\']' },
+        { nodeName: '#text', data: ' and ' },
+        { nodeName: 'CONTENT', select: '[param=\'2\']' },
+        { nodeName: '#text', data: ' are rendered.' }
+      ],
+      parameters: [
+        { select: 'b[param=\'1\']', textContent: 'A' },
+        { select: 'i[param=\'2\']', textContent: 'B' }
+      ]
+    },
+/*
+    { 
+      suite: 'change text values', 
+      fixture: 'bound', 
+      model: {
+        lang: 'en',
+        text: [
+          'Parameter {1} and {2} are rendered.',
+          'A',
+          'B'
+        ]
+      }, 
+      lang: lang1,
+      paramAttribute: paramAttribute1,
+      paramFormat: paramFormat1,
+      assign: { 
+        text: [
+          'Param {2} and {1} are rendered.',
+          'AAA',
+          'BBB'
+        ]
+      },
+      childNodes: [
+        { nodeName: '#text', data: 'Param ' },
+        { nodeName: 'CONTENT', select: '[param=\'2\']' },
+        { nodeName: '#text', data: ' and ' },
+        { nodeName: 'CONTENT', select: '[param=\'1\']' },
+        { nodeName: '#text', data: ' are rendered.' }
+      ],
+      parameters: [
+        { select: 'b[param=\'1\']', textContent: 'AAA' },
+        { select: 'i[param=\'2\']', textContent: 'BBB' }
+      ]
     },
     { 
       suite: 'change raw value', 
@@ -276,6 +373,7 @@ suite('<i18n-format>', function () {
       assign: { offset: offsetInvalid },
       formatted: 'NaN'
     }
+*/
   ];
 
   suites.forEach(function (params) {
@@ -285,19 +383,19 @@ suite('<i18n-format>', function () {
       var rawValue = params.rawValue;
       var fixtureElement;
       var lang = params.assign && params.assign.lang ? params.assign.lang : 'en';
-      var updateModel = function (element, model) {
-        for (var name in model) {
+      var updateProperty = function (element, properties) {
+        for (var name in properties) {
           var path = name.split(/[.]/);
           if (path.length === 1) {
-            element[name] = model[name];
+            element[name] = properties[name];
           }
           else {
             var cursor = element;
             var p = path.shift();
             while (p) {
               if (path.length < 1) {
-                cursor[p] = model[name];
-                element.notifyPath(name, model[name], true);
+                cursor[p] = properties[name];
+                element.notifyPath(name, properties[name], true);
                 break;
               }
               else {
@@ -314,29 +412,59 @@ suite('<i18n-format>', function () {
       });
 
       test('lang property from attribute', function () {
-        updateModel(el, params.assign);
-        assert.equal(el.lang, lang, 'lang is set');
+        updateProperty(el, params.assign);
+        assert.equal(el.lang, params.lang, 'lang is set');
       });
 
-      test('options property from attribute is set as ' 
-          + JSON.stringify(params.options), function () {
-        updateModel(el, params.assign);
-        assert.deepEqual(el.options, params.options, 'options is set');
+      test('paramAttribute property is set as ' + params.paramAttribute, function () {
+        updateProperty(el, params.assign);
+        assert.isString(el.paramAttribute, 'paramAttribute property is a string');
+        assert.equal(el.paramAttribute, params.paramAttribute, 'paramAttribute property is set');
       });
 
-      test('textContent is set as ' + rawValue, function () {
-        updateModel(el, params.assign);
-        assert.equal(Polymer.dom(el).textContent, rawValue, 'textContent is ' + rawValue);
+      test('paramFormat property is set as ' + params.paramFormat, function () {
+        updateProperty(el, params.assign);
+        assert.isString(el.paramFormat, 'paramFormat property is a string');
+        assert.equal(el.paramFormat, params.paramFormat, 'paramForamt property is set');
       });
 
+      test('childNodes are set as ' + JSON.stringify(params.childNodes), function () {
+        updateProperty(el, params.assign);
+        var childNodes = Polymer.dom(el.root).childNodes;
+        var i;
+        for (i = 0; i < params.childNodes.length; i++) {
+          for (var p in params.childNodes[i]) {
+            assert.equal(childNodes[i][p], params.childNodes[i][p], p + ' is set as ' + params.childNodes[i][p]);
+          }
+        }
+      });
+
+      test('parameters are set as ' + JSON.stringify(params.parameters), function () {
+        updateProperty(el, params.assign);
+        var i;
+        for (i = 0; i < params.parameters.length; i++) {
+          var node = Polymer.dom(el).querySelector(params.parameters[i].select);
+          assert.isDefined(node, params.parameters[i].select + ' is defined');
+          for (var p in params.parameters[i]) {
+            if (p === 'select') {
+              continue;
+            }
+            assert.equal(node[p], params.parameters[i][p], p + ' is set as ' + params.parameters[i][p]);
+          }
+        }
+      });
+
+
+
+/*
       test('raw property is set as ' + rawValue, function () {
-        updateModel(el, params.assign);
+        updateProperty(el, params.assign);
         assert.isString(el.raw, 'raw property is a string');
         assert.equal(el.raw, rawValue, 'raw property is set as the raw value');
       });
 
       test('offset property from attribute is set as ' + params.offset, function () {
-        updateModel(el, params.assign);
+        updateProperty(el, params.assign);
         if (typeof params.offset === 'number') {
           assert.isNumber(el.offset, 'offset is a number');
         }
@@ -349,7 +477,7 @@ suite('<i18n-format>', function () {
       });
 
       test('rawNumber property is set as ' + params.rawNumber, function () {
-        updateModel(el, params.assign);
+        updateProperty(el, params.assign);
         assert.isNumber(el.rawNumber, 'rawNumber is a number');
         if (Number.isNaN(params.rawNumber)) {
           assert.ok(Number.isNaN(el.rawNumber), 'rawNumber is NaN');
@@ -360,7 +488,7 @@ suite('<i18n-format>', function () {
       });
 
       test('number property is set as ' + params.number, function () {
-        updateModel(el, params.assign);
+        updateProperty(el, params.assign);
         assert.isNumber(el.number, 'number is a number');
         if (Number.isNaN(params.number)) {
           assert.ok(Number.isNaN(el.number), 'number is NaN');
@@ -371,16 +499,16 @@ suite('<i18n-format>', function () {
       });
 
       test('formatted property is set as ' + params.formatted, function () {
-        updateModel(el, params.assign);
+        updateProperty(el, params.assign);
         assert.isString(el.formatted, 'formatted is a string');
         assert.equal(el.formatted, params.formatted);
       });
 
       test('renders the formatted number ' + params.formatted, function () {
-        updateModel(el, params.assign);
+        updateProperty(el, params.assign);
         assert.equal(el.$.number.textContent, params.formatted);
       });
-
+*/
     });
   });
 
@@ -438,7 +566,7 @@ suite('<i18n-format>', function () {
         test('default lang property is en', function () {
           assert.equal(el.lang, 'en', 'default lang is en');
         });
-
+/*
         test('default options property is undefined', function () {
           assert.isUndefined(el.options, 'default options is undefined');
         });
@@ -468,8 +596,10 @@ suite('<i18n-format>', function () {
         test('renders a null string', function () {
           assert.equal(el.$.number.textContent, '', 'textContent is empty');
         });
+*/
       });
 
+/*
       suite('bound value changed' 
             + (isReattach ? ' with reattaching' : ''), function () {
         setup(function () {
@@ -574,6 +704,7 @@ suite('<i18n-format>', function () {
         });
 
       });
+*/
     });    
   });
 
