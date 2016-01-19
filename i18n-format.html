@@ -196,6 +196,12 @@ Styles can be specified for the containing element and the contained parameters 
 Polymer({
   is: 'i18n-format',
 
+  /**
+   * Fired whenever the formatted text is rendered.
+   *
+   * @event rendered
+   */
+
   properties: {
     /**
      * The locale for the template text.
@@ -472,6 +478,8 @@ Polymer({
     //if (templateText) {
     //  console.log('i18n-format: render: templateText = ' + templateText);
     //}
+
+    this.fire('rendered');
   }
 });
 </script>
