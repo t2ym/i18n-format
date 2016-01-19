@@ -700,71 +700,65 @@ suite('<i18n-format>', function () {
 
       [ false, true ].forEach(function (isReattach) {
 
-        suite(params.suite, function () {
+        suite(params.suite + (isReattach ? ' with reattaching' : ''), function () {
 
           setup(function () {
             wrapper = fixture(params.fixture, params.model);
             if (isReattach) {
               reattach(wrapper.$.placeholder);
             }
+            el = wrapper.$[params.target];
           });
 
-          suite(params.suite + (isReattach ? ' with reattaching' : ''), function () {
-            setup(function () {
-              el = wrapper.$[params.target];
-            });
+          test('lang property is ' + params.lang, function () {
+            updateModel(wrapper, params.assign);
+            assert.equal(el.lang, params.lang, 'lang is ' + params.lang);
+          });
 
-            test('lang property is ' + params.lang, function () {
-              updateModel(wrapper, params.assign);
-              assert.equal(el.lang, params.lang, 'lang is ' + params.lang);
-            });
+          test('paramAttribute property is ' + params.paramAttribute, function () {
+            updateModel(wrapper, params.assign);
+            assert.equal(el.paramAttribute, params.paramAttribute, 'paramAttribute is ' + params.paramAttribute);
+          });
 
-            test('paramAttribute property is ' + params.paramAttribute, function () {
-              updateModel(wrapper, params.assign);
-              assert.equal(el.paramAttribute, params.paramAttribute, 'paramAttribute is ' + params.paramAttribute);
-            });
+          test('paramFormat property is ' + params.paramFormat, function () {
+            updateModel(wrapper, params.assign);
+            assert.equal(el.paramFormat, params.paramFormat, 'paramFormat is ' + params.paramFormat);
+          });
 
-            test('paramFormat property is ' + params.paramFormat, function () {
-              updateModel(wrapper, params.assign);
-              assert.equal(el.paramFormat, params.paramFormat, 'paramFormat is ' + params.paramFormat);
-            });
-
-            test('updated childNodes are ' + JSON.stringify(params.childNodes), function (done) {
-              el.addEventListener('rendered', function (e) {
-                if (e.target === el) {
-                  var childNodes = Polymer.dom(el.root).childNodes;
-                  var i;
-                  for (i = 0; i < params.childNodes.length; i++) {
-                    for (var p in params.childNodes[i]) {
-                      assert.equal(childNodes[i][p] || childNodes[i].getAttribute(p), params.childNodes[i][p], p + ' is set as ' + params.childNodes[i][p]);
-                    }
+          test('updated childNodes are ' + JSON.stringify(params.childNodes), function (done) {
+            el.addEventListener('rendered', function (e) {
+              if (e.target === el) {
+                var childNodes = Polymer.dom(el.root).childNodes;
+                var i;
+                for (i = 0; i < params.childNodes.length; i++) {
+                  for (var p in params.childNodes[i]) {
+                    assert.equal(childNodes[i][p] || childNodes[i].getAttribute(p), params.childNodes[i][p], p + ' is set as ' + params.childNodes[i][p]);
                   }
-                  done();
                 }
-              });
-              updateModel(wrapper, params.assign);
+                done();
+              }
             });
+            updateModel(wrapper, params.assign);
+          });
 
-            test('updated parameters are ' + JSON.stringify(params.parameters), function (done) {
-              el.addEventListener('rendered', function (e) {
-                if (e.target === el) {
-                  var i;
-                  for (i = 0; i < params.parameters.length; i++) {
-                    var node = Polymer.dom(el).querySelector(params.parameters[i].select);
-                    assert.isDefined(node, params.parameters[i].select + ' is defined');
-                    for (var p in params.parameters[i]) {
-                      if (p === 'select') {
-                        continue;
-                      }
-                      assert.equal(node[p], params.parameters[i][p], p + ' is set as ' + params.parameters[i][p]);
+          test('updated parameters are ' + JSON.stringify(params.parameters), function (done) {
+            el.addEventListener('rendered', function (e) {
+              if (e.target === el) {
+                var i;
+                for (i = 0; i < params.parameters.length; i++) {
+                  var node = Polymer.dom(el).querySelector(params.parameters[i].select);
+                  assert.isDefined(node, params.parameters[i].select + ' is defined');
+                  for (var p in params.parameters[i]) {
+                    if (p === 'select') {
+                      continue;
                     }
+                    assert.equal(node[p], params.parameters[i][p], p + ' is set as ' + params.parameters[i][p]);
                   }
-                  done();
                 }
-              });
-              updateModel(wrapper, params.assign);
+                done();
+              }
             });
-
+            updateModel(wrapper, params.assign);
           });
 
     /*
