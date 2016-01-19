@@ -3,7 +3,6 @@
 Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
 -->
 <link rel="import" href="../../polymer/polymer.html">
-<link rel="import" href="../../iron-selector/iron-selector.html">
 
 <dom-module id="bound-i18n-format">
   <template>
@@ -13,14 +12,14 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
         <b>{{text.1}}</b>
         <i>{{text.2}}</i>
       </i18n-format>
-      <i18n-format id="num">{{number}}</i18n-format>
-      <i18n-format id="num2">{{number2}}</i18n-format>
-      <i18n-format id="empty"></i18n-format>
-      <i18n-format id="currency" options="{{options}}">123456.789</i18n-format>
-      <iron-selector id="currencySelector" attr-for-selected="value" selected="{{options.currency}}">
-        <div name="USD" iron-selected>USD</div>
-        <div name="JPY">JPY</div>
-      </iron-selector>
+      <i18n-format id="compound" lang="{{lang}}">
+        <json-data>{{serialize(compoundText.0)}}</json-data>
+        <i18n-number lang="{{lang}}" offset="{{offset}}">{{recipients.length}}</i18n-number>
+        <span>{{recipients.0.gender}}</span>
+        <span>{{sender.name}}</span>
+        <span>{{recipients.0.name}}</span>
+        <span>{{compoundText.5}}</span>
+      </i18n-format>
     </span>
   </template>
   <script>
@@ -43,15 +42,51 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
         },
         notify: true
       },
-      number: {
-        type: String,
-        value: '',
-        notify: true
+      compoundText: {
+        type: Array,
+        value: function () {
+          return [
+            {
+              '0': 'You ({3}) gave no gifts.',
+              '1': {
+                'male': 'You ({3}) gave him ({4}) {5}.',
+                'female': 'You ({3}) gave her ({4}) {5}.',
+                'other': 'You ({3}) gave them ({4}) {5}.'
+              },
+              'one': {
+                'male': 'You ({3}) gave him ({4}) and one other person {5}.',
+                'female': 'You ({3}) gave her ({4}) and one other person {5}.',
+                'other': 'You ({3}) gave them ({4}) and one other person {5}.'
+              },
+              'other': 'You ({3}) gave them ({4}) and {1} other people gifts.'
+            },
+            '{{recipients.length}}', // dummy
+            '{{recipients.0.gender}}', // dummy
+            '{{sender.name}}', // dummy
+            '{{recipients.0.name}}', // dummy
+            'a gift'
+          ];
+        }
       },
-      number2: {
-        type: String,
-        value: '12.34',
-        notify: true
+      offset: {
+        type: Number,
+        value: 1
+      },
+      recipients: {
+        type: Array,
+        value: function () {
+          return [
+            { name: 'Alice', gender: 'female' },
+            { name: 'Bob', gender: 'male' },
+            { name: 'Yoda', gender: 'other' }
+          ];
+        }
+      },
+      sender: {
+        type: Object,
+        value: function () {
+          return { name: 'Joe', gender: 'male' };
+        }
       },
       options: {
         type: Object,
@@ -60,6 +95,10 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
         },
         notify: true
       }
+    },
+
+    serialize: function (obj) {
+      return JSON.stringify(obj);
     }
   });
   </script>
