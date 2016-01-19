@@ -211,7 +211,8 @@ Polymer({
     lang: {
       type: String,
       value: 'en',
-      reflectToAttribute: true
+      reflectToAttribute: true,
+      observer: '_langChanged'
     },
 
     /**
@@ -252,7 +253,7 @@ Polymer({
   DEFAULT_LANG: 'en',
 
   observers: [
-    '_langChanged(lang)'
+    //'_langChanged(lang)'
   ],
 
   ready () {
@@ -309,7 +310,7 @@ Polymer({
     mutations.forEach(function(mutation) {
       switch (mutation.type) {
       case 'characterData':
-        //console.log('i18n-format: _templateMutated: characterData: tag = ' + 
+        //console.log('i18n-format: ' + this.id + '._templateMutated(): characterData: tag = ' + 
         //            Polymer.dom(mutation.target).parentNode.tagName.toLowerCase() + 
         //            ' data = ' + mutation.target.data);
         if (Polymer.dom(mutation.target).parentNode.tagName.toLowerCase() !== 'i18n-number') {
@@ -327,8 +328,8 @@ Polymer({
    *
    * @param {string} lang New locale.
    */
-  _langChanged (lang) {
-    //console.log('i18n-format: _langChanged lang = ' + lang);
+  _langChanged (lang, oldLang) {
+    //console.log('i18n-format: ' + this.id + '._langChanged() lang = ' + lang + ' oldLang = ' + oldLang);
     if (this.elements &&
         lang !== undefined &&
         lang !== null &&
@@ -385,7 +386,7 @@ Polymer({
           if (typeof param.number === 'undefined') {
             // i18n-number is not ready
             //console.log('i18n-format: i18n-number is not ready');
-            templateObject = '';
+            templateObject = undefined;
           }
           else if (templateObject[param.rawNumber]) {
             templateObject = templateObject[param.rawNumber];
@@ -424,6 +425,9 @@ Polymer({
       if (typeof templateObject === 'string') {
         templateText = templateObject;
       }
+      else if (typeof templateObject === 'undefined') {
+        templateText = undefined;
+      }
       else {
         templateText = '';
         console.warn('i18n-format: cannot find a template');
@@ -449,8 +453,12 @@ Polymer({
       //console.log('i18n-format: skipping rendering as the templateText has not changed');
       return;
     }
+    else if (typeof templateText === 'undefined') {
+      return;
+    }
     else {
       this.lastTemplateText = templateText;
+      //console.log('i18n-format: ' + this.id + '.render() templateText = ' + templateText);
     }
 
     i = 1;
@@ -474,10 +482,6 @@ Polymer({
       // each node has to be appended via Polymer.dom()
       Polymer.dom(this.root).appendChild(childNodes[i]);
     }
-
-    //if (templateText) {
-    //  console.log('i18n-format: render: templateText = ' + templateText);
-    //}
 
     this.fire('rendered');
   }
