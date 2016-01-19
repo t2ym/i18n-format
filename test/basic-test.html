@@ -33,7 +33,7 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
 
     <test-fixture id="non-default-attributes">
       <template>
-        <i18n-format lang="fr" param-attribute="parameter" param-format="%n%" observe-params="false">
+        <i18n-format lang="fr" param-attribute="parameter" param-format="%n%">
           <span>Parameter %1% and %2% are rendered.</span>
           <b>A</b>
           <i>B</i>
@@ -118,6 +118,7 @@ suite('<i18n-format>', function () {
   var paramAttribute2 = 'parameter';
   var paramFormat1 = '{n}';
   var paramFormat2 = '%n%';
+
   var rawValue1 = '123456.789';
   var rawNumber1 = Number(rawValue1);
   var rawValueInvalid = 'ABC';
@@ -132,6 +133,7 @@ suite('<i18n-format>', function () {
   var formatted1_USD = '$123,455.79';
   var formatted1_JPY = '¥123,456';
   var formatted1_offset = '123,454.789';
+
   var suites = [
     { 
       suite: 'static values', 
@@ -172,7 +174,7 @@ suite('<i18n-format>', function () {
       ]
     },
     { 
-      suite: 'bound values', 
+      suite: 'static bound values', 
       fixture: 'bound', 
       model: {
         lang: 'en',
@@ -376,6 +378,54 @@ suite('<i18n-format>', function () {
 */
   ];
 
+  var updateProperty = function (element, properties) {
+    for (var name in properties) {
+      var path = name.split(/[.]/);
+      if (path.length === 1) {
+        element[name] = properties[name];
+      }
+      else {
+        var cursor = element;
+        var p = path.shift();
+        while (p) {
+          if (path.length < 1) {
+            cursor[p] = properties[name];
+            element.notifyPath(name, properties[name], true);
+            break;
+          }
+          else {
+            cursor = cursor[p];
+          }
+          p = path.shift();
+        }
+      }
+    }
+  };
+
+  var updateModel = function (element, model) {
+    for (var name in model) {
+      var path = name.split(/[.]/);
+      if (path.length === 1) {
+        element[name] = model[name];
+      }
+      else {
+        var cursor = element;
+        var p = path.shift();
+        while (p) {
+          if (path.length < 1) {
+            cursor[p] = model[name];
+            element.notifyPath(name, model[name], true);
+            break;
+          }
+          else {
+            cursor = cursor[p];
+          }
+          p = path.shift();
+        }
+      }
+    }
+  };
+
   suites.forEach(function (params) {
 
     suite(params.suite, function () {
@@ -383,29 +433,6 @@ suite('<i18n-format>', function () {
       var rawValue = params.rawValue;
       var fixtureElement;
       var lang = params.assign && params.assign.lang ? params.assign.lang : 'en';
-      var updateProperty = function (element, properties) {
-        for (var name in properties) {
-          var path = name.split(/[.]/);
-          if (path.length === 1) {
-            element[name] = properties[name];
-          }
-          else {
-            var cursor = element;
-            var p = path.shift();
-            while (p) {
-              if (path.length < 1) {
-                cursor[p] = properties[name];
-                element.notifyPath(name, properties[name], true);
-                break;
-              }
-              else {
-                cursor = cursor[p];
-              }
-              p = path.shift();
-            }
-          }
-        }
-      };
 
       setup(function () {
         el = fixture(params.fixture, params.model);
@@ -512,200 +539,261 @@ suite('<i18n-format>', function () {
     });
   });
 
+  var boundSuites = [
+    { 
+      suite: 'change bound text values', 
+      fixture: 'bound-and-wrapped',
+      target: 'simple',
+      model: {
+        lang: lang1,
+        text: [
+          'Parameter {1} and {2} are rendered.',
+          'A',
+          'B'
+        ]
+      }, 
+      assign: { 
+        text: [
+          'Param {2} and {1} are re-rendered.',
+          'AAA',
+          'BBB'
+        ]
+      },
+      lang: lang1,
+      paramAttribute: paramAttribute1,
+      paramFormat: paramFormat1,
+      childNodes: [
+        { nodeName: '#text', data: 'Param ' },
+        { nodeName: 'CONTENT', select: '[param=\'2\']' },
+        { nodeName: '#text', data: ' and ' },
+        { nodeName: 'CONTENT', select: '[param=\'1\']' },
+        { nodeName: '#text', data: ' are re-rendered.' }
+      ],
+      parameters: [
+        { select: 'b[param=\'1\']', textContent: 'AAA' },
+        { select: 'i[param=\'2\']', textContent: 'BBB' }
+      ]
+    }
+  ];
+
   suite('bound in a local DOM', function () {
     var wrapper;
     var el;
 
     var reattach = function (placeholder) {
-      var num = Polymer.dom(placeholder).querySelector('#num');
-      var empty = Polymer.dom(placeholder).querySelector('#empty');
-      Polymer.dom(placeholder).removeChild(num);
-      Polymer.dom(placeholder).removeChild(empty);
-      Polymer.dom(placeholder).appendChild(num);
-      Polymer.dom(placeholder).appendChild(empty);
+      var simple = Polymer.dom(placeholder).querySelector('#simple');
+      Polymer.dom(placeholder).removeChild(simple);
+      Polymer.dom(placeholder).appendChild(simple);
     };
 
-    var updateModel = function (element, model) {
-      for (var name in model) {
-        var path = name.split(/[.]/);
-        if (path.length === 1) {
-          element[name] = model[name];
-        }
-        else {
-          var cursor = element;
-          var p = path.shift();
-          while (p) {
-            if (path.length < 1) {
-              cursor[p] = model[name];
-              element.notifyPath(name, model[name], true);
-              break;
-            }
-            else {
-              cursor = cursor[p];
-            }
-            p = path.shift();
+    boundSuites.forEach(function (params) {
+
+      [ false, true ].forEach(function (isReattach) {
+
+        setup(function () {
+          wrapper = fixture(params.fixture, params.model);
+          if (isReattach) {
+            reattach(wrapper.$.placeholder);
           }
-        }
-      }
-    };
-
-    [ false, true ].forEach(function (isReattach) {
-
-      setup(function () {
-        wrapper = fixture('bound-and-wrapped');
-        if (isReattach) {
-          reattach(wrapper.$.placeholder);
-        }
-      });
-
-      suite('bound and wrapped' + (isReattach ? ' with reattaching' : ''), function () {
-        setup(function () {
-          el = wrapper.$.num;
         });
 
-        test('default lang property is en', function () {
-          assert.equal(el.lang, 'en', 'default lang is en');
-        });
-/*
-        test('default options property is undefined', function () {
-          assert.isUndefined(el.options, 'default options is undefined');
-        });
-
-        test('empty raw property', function () {
-          assert.isString(el.raw, 'empty raw is a string');
-          assert.equal(el.raw, '', 'empty raw is a null string');
-        });
-
-        test('default offset property is 0', function () {
-          assert.isNumber(el.offset, 'offset is a number');
-          assert.equal(el.offset, 0, 'default offset is 0');
-        });
-
-        test('default rawNumber property is undefined', function () {
-          assert.isUndefined(el.rawNumber, 'rawNumber is undefined when raw is null');
-        });
-
-        test('default number property is undefined', function () {
-          assert.isUndefined(el.number, 'number is undefined when raw is null');
-        });
-
-        test('default formatted property is undefined', function () {
-          assert.isUndefined(el.formatted, 'formatted is undefined when raw is null');
-        });
-
-        test('renders a null string', function () {
-          assert.equal(el.$.number.textContent, '', 'textContent is empty');
-        });
-*/
-      });
-
-/*
-      suite('bound value changed' 
-            + (isReattach ? ' with reattaching' : ''), function () {
-        setup(function () {
-          el = wrapper.$.num;
-        });
-
-        test('change bound value to ' + rawNumber1, function (done) {
-          el.addEventListener('rendered', function (e) {
-            assert.equal(el.$.number.textContent, '123,456.789', 
-                        'renders the formatted number');    
-            done();
+        suite(params.suite + (isReattach ? ' with reattaching' : ''), function () {
+          setup(function () {
+            el = wrapper.$[params.target];
           });
-          wrapper.number = rawNumber1;
-        });
 
-      });
-
-      suite('bound value emptied' 
-            + (isReattach ? ' with reattaching' : ''), function () {
-        setup(function () {
-          el = wrapper.$.num2;
-        });
-
-        test('change bound value to empty', function (done) {
-          el.addEventListener('rendered', function (e) {
-            assert.equal(el.$.number.textContent, '', 
-                        'renders the formatted number');    
-            done();
+          test('lang property is ' + params.lang, function () {
+            updateModel(wrapper, params.assign);
+            assert.equal(el.lang, params.lang, 'lang is ' + params.lang);
           });
-          wrapper.number2 = '';
-        });
 
-      });
-
-      suite('non-bound empty textContent changed' 
-            + (isReattach ? ' with reattaching' : ''), function () {
-        setup(function () {
-          el = wrapper.$.empty;
-        });
-
-        test('change empty textContent value to ' + rawNumber1, function (done) {
-          el.addEventListener('rendered', function (e) {
-            assert.equal(el.$.number.textContent, '123,456.789', 
-                        'renders the formatted number');    
-            done();
+          test('paramAttribute property is ' + params.paramAttribute, function () {
+            updateModel(wrapper, params.assign);
+            assert.equal(el.paramAttribute, params.paramAttribute, 'paramAttribute is ' + params.paramAttribute);
           });
-          Polymer.dom(el).textContent = rawNumber1;
-        });
 
-      });
-
-      suite('currency options value changed' 
-            + (isReattach ? ' with reattaching' : ''), function () {
-        setup(function () {
-          el = wrapper.$.currency;
-        });
-
-        test('change currency options value to JPY', function (done) {
-          el.addEventListener('rendered', function (e) {
-            assert.equal(el.$.number.textContent, '¥123,457', 
-                        'renders the formatted currency');
-            done();
+          test('paramFormat property is ' + params.paramFormat, function () {
+            updateModel(wrapper, params.assign);
+            assert.equal(el.paramFormat, params.paramFormat, 'paramFormat is ' + params.paramFormat);
           });
-          wrapper.options.currency = 'JPY';
-          wrapper.notifyPath('options.currency', wrapper.options.currency, true);
-        });
 
-      });
-
-      suite('currency options value changed' 
-            + (isReattach ? ' with reattaching' : ''), function () {
-        setup(function () {
-          el = wrapper.$.currency;
-        });
-
-        test('change currency options value to JPY and render()', function (done) {
-          el.addEventListener('rendered', function (e) {
-            assert.equal(el.$.number.textContent, '¥123,457', 
-                        'renders the formatted currency');
-            done();
+          test('updated childNodes are ' + JSON.stringify(params.childNodes), function (done) {
+            el.addEventListener('rendered', function (e) {
+              if (e.target === el) {
+                var childNodes = Polymer.dom(el.root).childNodes;
+                var i;
+                for (i = 0; i < params.childNodes.length; i++) {
+                  for (var p in params.childNodes[i]) {
+                    assert.equal(childNodes[i][p], params.childNodes[i][p], p + ' is set as ' + params.childNodes[i][p]);
+                  }
+                }
+                done();
+              }
+            });
+            updateModel(wrapper, params.assign);
           });
-          wrapper.options.currency = 'JPY';
-          el.render();
-        });
 
-      });
-
-      suite('bound currency options value changed' 
-            + (isReattach ? ' with reattaching' : ''), function () {
-        setup(function () {
-          el = wrapper.$.currency;
-        });
-
-        test('change bound currency options value to JPY', function (done) {
-          el.addEventListener('rendered', function (e) {
-            assert.equal(el.$.number.textContent, '¥123,457', 
-                        'renders the formatted currency');
-            done();
+          test('updated parameters are ' + JSON.stringify(params.parameters), function (done) {
+            el.addEventListener('rendered', function (e) {
+              if (e.target === el) {
+                var i;
+                for (i = 0; i < params.parameters.length; i++) {
+                  var node = Polymer.dom(el).querySelector(params.parameters[i].select);
+                  assert.isDefined(node, params.parameters[i].select + ' is defined');
+                  for (var p in params.parameters[i]) {
+                    if (p === 'select') {
+                      continue;
+                    }
+                    assert.equal(node[p], params.parameters[i][p], p + ' is set as ' + params.parameters[i][p]);
+                  }
+                }
+                done();
+              }
+            });
+            updateModel(wrapper, params.assign);
           });
-          wrapper.$.currencySelector.select('JPY');
-          //wrapper.notifyPath('options.currency', wrapper.options.currency, true);
+
+  /*
+          test('default options property is undefined', function () {
+            assert.isUndefined(el.options, 'default options is undefined');
+          });
+
+          test('empty raw property', function () {
+            assert.isString(el.raw, 'empty raw is a string');
+            assert.equal(el.raw, '', 'empty raw is a null string');
+          });
+
+          test('default offset property is 0', function () {
+            assert.isNumber(el.offset, 'offset is a number');
+            assert.equal(el.offset, 0, 'default offset is 0');
+          });
+
+          test('default rawNumber property is undefined', function () {
+            assert.isUndefined(el.rawNumber, 'rawNumber is undefined when raw is null');
+          });
+
+          test('default number property is undefined', function () {
+            assert.isUndefined(el.number, 'number is undefined when raw is null');
+          });
+
+          test('default formatted property is undefined', function () {
+            assert.isUndefined(el.formatted, 'formatted is undefined when raw is null');
+          });
+
+          test('renders a null string', function () {
+            assert.equal(el.$.number.textContent, '', 'textContent is empty');
+          });
+  */
         });
 
+  /*
+        suite('bound value changed' 
+              + (isReattach ? ' with reattaching' : ''), function () {
+          setup(function () {
+            el = wrapper.$.num;
+          });
+
+          test('change bound value to ' + rawNumber1, function (done) {
+            el.addEventListener('rendered', function (e) {
+              assert.equal(el.$.number.textContent, '123,456.789', 
+                          'renders the formatted number');    
+              done();
+            });
+            wrapper.number = rawNumber1;
+          });
+
+        });
+
+        suite('bound value emptied' 
+              + (isReattach ? ' with reattaching' : ''), function () {
+          setup(function () {
+            el = wrapper.$.num2;
+          });
+
+          test('change bound value to empty', function (done) {
+            el.addEventListener('rendered', function (e) {
+              assert.equal(el.$.number.textContent, '', 
+                          'renders the formatted number');    
+              done();
+            });
+            wrapper.number2 = '';
+          });
+
+        });
+
+        suite('non-bound empty textContent changed' 
+              + (isReattach ? ' with reattaching' : ''), function () {
+          setup(function () {
+            el = wrapper.$.empty;
+          });
+
+          test('change empty textContent value to ' + rawNumber1, function (done) {
+            el.addEventListener('rendered', function (e) {
+              assert.equal(el.$.number.textContent, '123,456.789', 
+                          'renders the formatted number');    
+              done();
+            });
+            Polymer.dom(el).textContent = rawNumber1;
+          });
+
+        });
+
+        suite('currency options value changed' 
+              + (isReattach ? ' with reattaching' : ''), function () {
+          setup(function () {
+            el = wrapper.$.currency;
+          });
+
+          test('change currency options value to JPY', function (done) {
+            el.addEventListener('rendered', function (e) {
+              assert.equal(el.$.number.textContent, '¥123,457', 
+                          'renders the formatted currency');
+              done();
+            });
+            wrapper.options.currency = 'JPY';
+            wrapper.notifyPath('options.currency', wrapper.options.currency, true);
+          });
+
+        });
+
+        suite('currency options value changed' 
+              + (isReattach ? ' with reattaching' : ''), function () {
+          setup(function () {
+            el = wrapper.$.currency;
+          });
+
+          test('change currency options value to JPY and render()', function (done) {
+            el.addEventListener('rendered', function (e) {
+              assert.equal(el.$.number.textContent, '¥123,457', 
+                          'renders the formatted currency');
+              done();
+            });
+            wrapper.options.currency = 'JPY';
+            el.render();
+          });
+
+        });
+
+        suite('bound currency options value changed' 
+              + (isReattach ? ' with reattaching' : ''), function () {
+          setup(function () {
+            el = wrapper.$.currency;
+          });
+
+          test('change bound currency options value to JPY', function (done) {
+            el.addEventListener('rendered', function (e) {
+              assert.equal(el.$.number.textContent, '¥123,457', 
+                          'renders the formatted currency');
+              done();
+            });
+            wrapper.$.currencySelector.select('JPY');
+            //wrapper.notifyPath('options.currency', wrapper.options.currency, true);
+          });
+
+        });
+  */
       });
-*/
-    });    
+    });
   });
 
 });

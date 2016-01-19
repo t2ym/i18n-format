@@ -8,6 +8,11 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
 <dom-module id="bound-i18n-format">
   <template>
     <span id="placeholder">
+      <i18n-format id="simple" lang="{{lang}}">
+        <span>{{text.0}}</span>
+        <b>{{text.1}}</b>
+        <i>{{text.2}}</i>
+      </i18n-format>
       <i18n-format id="num">{{number}}</i18n-format>
       <i18n-format id="num2">{{number2}}</i18n-format>
       <i18n-format id="empty"></i18n-format>
@@ -22,6 +27,22 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
   Polymer({
     is: 'bound-i18n-format',
     properties: {
+      lang: {
+        type: String,
+        value: 'en',
+        notify: true
+      },
+      text: {
+        type: Array,
+        value: function () {
+          return [
+            'Parameter {1} and {2} are rendered.',
+            'A',
+            'B'
+          ];
+        },
+        notify: true
+      },
       number: {
         type: String,
         value: '',
