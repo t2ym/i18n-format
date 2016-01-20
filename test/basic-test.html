@@ -221,7 +221,7 @@ suite('<i18n-format>', function () {
         { nodeName: '#text', data: '.' }
       ],
       parameters: [
-        { select: 'i18n-number[param=\'1\']', number: 1, formatted: '1' },
+        { select: 'i18n-number[param=\'1\']', number: 1, formatted: '1', 'root.PolymerDom.children.0.textContent': '1' },
         { select: 'span[param=\'2\']', textContent: 'female' },
         { select: 'span[param=\'3\']', textContent: 'Joe' },
         { select: 'span[param=\'4\']', textContent: 'Alice' },
@@ -422,6 +422,9 @@ suite('<i18n-format>', function () {
             element.notifyPath(name, properties[name], true);
             break;
           }
+          else if (p === 'PolymerDom') {
+            cursor = Polymer.dom(cursor);
+          }
           else {
             cursor = cursor[p];
           }
@@ -445,15 +448,40 @@ suite('<i18n-format>', function () {
         while (p) {
           if (path.length < 1) {
             cursor[p] = model[name];
-            console.log('updateModel: notifyPath: name = ' + name);
             element.notifyPath(name, model[name], true);
             break;
+          }
+          else if (p === 'PolymerDom') {
+            cursor = Polymer.dom(cursor);
           }
           else {
             cursor = cursor[p];
           }
           p = path.shift();
         }
+      }
+    }
+  };
+
+  var getProperty = function (target, name) {
+    var path = name.split(/[.]/);
+    if (path.length === 1) {
+      return target[name];
+    }
+    else {
+      var cursor = target;
+      var p = path.shift();
+      while (p) {
+        if (path.length < 1) {
+          return cursor[p];
+        }
+        else if (p === 'PolymerDom') {
+          cursor = Polymer.dom(cursor);
+        }
+        else {
+          cursor = cursor[p];
+        }
+        p = path.shift();
       }
     }
   };
@@ -508,7 +536,7 @@ suite('<i18n-format>', function () {
             if (p === 'select') {
               continue;
             }
-            assert.equal(node[p], params.parameters[i][p], p + ' is set as ' + params.parameters[i][p]);
+            assert.equal(getProperty(node, p), params.parameters[i][p], p + ' is set as ' + params.parameters[i][p]);
           }
         }
       });
@@ -578,7 +606,7 @@ suite('<i18n-format>', function () {
         { nodeName: '#text', data: ' other people gifts.' }
       ],
       parameters: [
-        { select: 'i18n-number[param=\'1\']', number: 2, formatted: '2' },
+        { select: 'i18n-number[param=\'1\']', number: 2, formatted: '2', 'root.PolymerDom.children.0.textContent': '2' },
         { select: 'span[param=\'2\']', textContent: 'female' },
         { select: 'span[param=\'3\']', textContent: 'Joe' },
         { select: 'span[param=\'4\']', textContent: 'Alice' },
@@ -611,7 +639,7 @@ suite('<i18n-format>', function () {
         { nodeName: '#text', data: '.' }
       ],
       parameters: [
-        { select: 'i18n-number[param=\'1\']', number: 1, formatted: '1' },
+        { select: 'i18n-number[param=\'1\']', number: 1, formatted: '1', 'root.PolymerDom.children.0.textContent': '1' },
         { select: 'span[param=\'2\']', textContent: 'female' },
         { select: 'span[param=\'3\']', textContent: 'Joe' },
         { select: 'span[param=\'4\']', textContent: 'Alice' },
@@ -640,7 +668,7 @@ suite('<i18n-format>', function () {
         { nodeName: '#text', data: ') gave no gifts.' }
       ],
       parameters: [
-        { select: 'i18n-number[param=\'1\']', number: -1, formatted: '-1', rawNumber: 0 },
+        { select: 'i18n-number[param=\'1\']', number: -1, formatted: '-1', rawNumber: 0, 'root.PolymerDom.children.0.textContent': '-1' },
         { select: 'span[param=\'2\']', textContent: '' },
         { select: 'span[param=\'3\']', textContent: 'Joe' },
         { select: 'span[param=\'4\']', textContent: '' },
@@ -675,7 +703,7 @@ suite('<i18n-format>', function () {
         { nodeName: '#text', data: '.' }
       ],
       parameters: [
-        { select: 'i18n-number[param=\'1\']', number: 0, formatted: '0', rawNumber: 1 },
+        { select: 'i18n-number[param=\'1\']', number: 0, formatted: '0', rawNumber: 1, 'root.PolymerDom.children.0.textContent': '0' },
         { select: 'span[param=\'2\']', textContent: 'female' },
         { select: 'span[param=\'3\']', textContent: 'Joe' },
         { select: 'span[param=\'4\']', textContent: 'Alice' },
@@ -709,7 +737,7 @@ suite('<i18n-format>', function () {
         { nodeName: '#text', data: ' other people gifts.' }
       ],
       parameters: [
-        { select: 'i18n-number[param=\'1\']', number: 1, formatted: '1' },
+        { select: 'i18n-number[param=\'1\']', number: 1, formatted: '1', 'root.PolymerDom.children.0.textContent': '1' },
         { select: 'span[param=\'2\']', textContent: 'female' },
         { select: 'span[param=\'3\']', textContent: 'Joe' },
         { select: 'span[param=\'4\']', textContent: 'Alice' },
@@ -730,7 +758,7 @@ suite('<i18n-format>', function () {
       paramFormat: paramFormat1,
       childNodes: [],
       parameters: [
-        { select: 'i18n-number[param=\'1\']', number: 2, formatted: '2' },
+        { select: 'i18n-number[param=\'1\']', number: 2, formatted: '2', 'root.PolymerDom.children.0.textContent': '2' },
         { select: 'span[param=\'2\']', textContent: 'female' },
         { select: 'span[param=\'3\']', textContent: 'Joe' },
         { select: 'span[param=\'4\']', textContent: 'Alice' },
@@ -753,7 +781,7 @@ suite('<i18n-format>', function () {
       paramFormat: paramFormat1,
       childNodes: [],
       parameters: [
-        { select: 'i18n-number[param=\'1\']', number: 2, formatted: '2' },
+        { select: 'i18n-number[param=\'1\']', number: 2, formatted: '2', 'root.PolymerDom.children.0.textContent': '2' },
         { select: 'span[param=\'2\']', textContent: 'female' },
         { select: 'span[param=\'3\']', textContent: 'Joe' },
         { select: 'span[param=\'4\']', textContent: 'Alice' },
@@ -831,7 +859,7 @@ suite('<i18n-format>', function () {
                     if (p === 'select') {
                       continue;
                     }
-                    assert.equal(node[p], params.parameters[i][p], p + ' is set as ' + params.parameters[i][p]);
+                    assert.equal(getProperty(node, p), params.parameters[i][p], p + ' is set as ' + params.parameters[i][p]);
                   }
                 }
                 done();
