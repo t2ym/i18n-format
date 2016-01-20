@@ -231,7 +231,8 @@ Polymer({
      */
     paramFormat: {
       type: String,
-      value: '{n}'
+      value: '{n}',
+      observer: '_paramFormatChanged'
     },
 
     /**
@@ -336,6 +337,26 @@ Polymer({
     //else {
     //  console.log('i18n-format: skipping render()');
     //}
+  },
+
+  /**
+   * Observer of `paramFormat` property to re-render the template text.
+   *
+   * @param {string} paramFormat New paramFormat.
+   * @param {string} oldParamFormat Old paramFormat.
+   */
+  _paramFormatChanged: function (paramFormat, oldParamFormat) {
+    //console.log('i18n-format: ' + this.id + '._paramFormatChanged() new = ' + paramFormat + ' old = ' + oldParamFormat);
+    if (this.elements &&
+        oldParamFormat !== undefined &&
+        paramFormat &&
+        this.lang !== undefined &&
+        this.lang !== null &&
+        !this.lang.match(/^{{.*}}$/) &&
+        !this.lang.match(/^\[\[.*\]\]$/)) {
+      this.lastTemplateText = undefined;
+      this.render();
+    }
   },
 
   /**
