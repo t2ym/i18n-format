@@ -3,11 +3,7 @@
 Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
 -->
 <link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../../iron-collapse/iron-collapse.html">
 <link rel="import" href="../../paper-input/paper-input.html">
-<link rel="import" href="../../paper-dropdown-menu/paper-dropdown-menu.html">
-<link rel="import" href="../../paper-menu/paper-menu.html">
-<link rel="import" href="../../paper-item/paper-item.html">
 <link rel="import" href="../../paper-button/paper-button.html">
 <link rel="import" href="../../paper-styles/demo-pages.html">
 <link rel="import" href="../i18n-format.html">
@@ -54,29 +50,6 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
     </i18n-format>
 
     <div id="parameters" class="parameters-panel">
-<!--
-
-      <paper-input id="raw"
-                  class="input"
-                  label="Raw number input"
-                  auto-validate
-                  pattern="[0-9]*([.][0-9]*)?"
-                  error-message="Number only!"
-                  value="{{raw}}"></paper-input>
-      <h4 class="subhead">attributes</h4>
-
-      <paper-dropdown-menu id="lang"
-                          label="lang"
-                          class="dropdown-menu">
-        <paper-menu class="dropdown-content"
-                    selected="{{lang}}"
-                    attr-for-selected="name">
-          <template is="dom-repeat" items="{{langList}}">
-            <paper-item name="{{item.value}}">{{item.label}}</paper-item>
-          </template>
-        </paper-menu>
-      </paper-dropdown-menu>
--->
 
       <paper-input id="offset"
             class="input"
