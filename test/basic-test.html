@@ -842,6 +842,39 @@ suite('<i18n-format>', function () {
         { select: 'span[param=\'4\']', textContent: 'Alice' },
         { select: 'span[param=\'5\']', textContent: 'a gift' }
       ]
+    },
+    { 
+      suite: 'change paramAttribute', 
+      fixture: 'bound-and-wrapped',
+      target: 'compound',
+      model: {
+        recipients: [
+          { name: 'Alice', gender: 'female' },
+          { name: 'Bob', gender: 'male' }
+        ]
+      },
+      assign: {
+        paramAttribute: paramAttribute2
+      },
+      lang: lang1,
+      paramAttribute: paramAttribute2,
+      paramFormat: paramFormat1,
+      childNodes: [
+        { nodeName: '#text', data: 'You (' },
+        { nodeName: 'CONTENT', select: '[parameter=\'3\']' },
+        { nodeName: '#text', data: ') gave her (' },
+        { nodeName: 'CONTENT', select: '[parameter=\'4\']' },
+        { nodeName: '#text', data: ') and one other person ' },
+        { nodeName: 'CONTENT', select: '[parameter=\'5\']' },
+        { nodeName: '#text', data: '.' }
+      ],
+      parameters: [
+        { select: 'i18n-number[parameter=\'1\']', number: 1, formatted: '1', 'root.PolymerDom.children.0.textContent': '1' },
+        { select: 'span[parameter=\'2\']', textContent: 'female' },
+        { select: 'span[parameter=\'3\']', textContent: 'Joe' },
+        { select: 'span[parameter=\'4\']', textContent: 'Alice' },
+        { select: 'span[parameter=\'5\']', textContent: 'a gift' }
+      ]
     }
   ];
 

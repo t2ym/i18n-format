@@ -12,7 +12,10 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
         <b>{{text.1}}</b>
         <i>{{text.2}}</i>
       </i18n-format>
-      <i18n-format id="compound" lang="{{lang}}" param-format="{{paramFormat}}">
+      <i18n-format id="compound" 
+                  lang="{{lang}}" 
+                  param-format="{{paramFormat}}" 
+                  param-attribute="{{paramAttribute}}">
         <json-data>{{serialize(compoundText.0)}}</json-data>
         <i18n-number lang="{{lang}}" offset="{{offset}}">{{recipients.length}}</i18n-number>
         <span>{{recipients.0.gender}}</span>
@@ -91,6 +94,10 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
       paramFormat: {
         type: String,
         value: '{n}'
+      },
+      paramAttribute: {
+        type: String,
+        value: 'param'
       }
     },
 
