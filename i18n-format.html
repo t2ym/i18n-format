@@ -382,6 +382,8 @@ Polymer({
           this.elements[n].setAttribute(paramAttribute, '' + n);
         }
       }
+      this.lastTemplateText = undefined;
+      this.render();
     }
   },
 
