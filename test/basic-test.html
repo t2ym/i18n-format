@@ -680,6 +680,36 @@ suite('<i18n-format>', function () {
         { select: 'span[param=\'4\']', textContent: 'Alice' },
         { select: 'span[param=\'5\']', textContent: 'a gift' }
       ]
+    },
+    { 
+      suite: 'update lang and re-render', 
+      fixture: 'bound-and-wrapped',
+      target: 'compound',
+      model: {
+        lang: lang1
+      },
+      assign: { 
+        lang: lang2
+      },
+      lang: lang2,
+      paramAttribute: paramAttribute1,
+      paramFormat: paramFormat1,
+      childNodes: [
+        { nodeName: '#text', data: 'You (' },
+        { nodeName: 'CONTENT', select: '[param=\'3\']' },
+        { nodeName: '#text', data: ') gave them (' },
+        { nodeName: 'CONTENT', select: '[param=\'4\']' },
+        { nodeName: '#text', data: ') and ' },
+        { nodeName: 'CONTENT', select: '[param=\'1\']' },
+        { nodeName: '#text', data: ' other people gifts.' }
+      ],
+      parameters: [
+        { select: 'i18n-number[param=\'1\']', number: 2, formatted: '2' },
+        { select: 'span[param=\'2\']', textContent: 'female' },
+        { select: 'span[param=\'3\']', textContent: 'Joe' },
+        { select: 'span[param=\'4\']', textContent: 'Alice' },
+        { select: 'span[param=\'5\']', textContent: 'a gift' }
+      ]
     }
   ];
 
