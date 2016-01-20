@@ -221,7 +221,8 @@ Polymer({
      */
     paramAttribute: {
       type: String,
-      value: 'param'
+      value: 'param',
+      observer: '_paramAttributeChanged'
     },
 
     /**
@@ -356,6 +357,31 @@ Polymer({
         !this.lang.match(/^\[\[.*\]\]$/)) {
       this.lastTemplateText = undefined;
       this.render();
+    }
+  },
+
+  /**
+   * Observer of `paramAttribute` property to reset parameter attributes.
+   *
+   * @param {string} paramAttribute New paramAttribute.
+   * @param {string} oldParamAttribute Old paramAttribute.
+   */
+  _paramAttributeChanged: function (paramAttribute, oldParamAttribute) {
+    console.log('i18n-format: ' + this.id + '._paramAttributeChanged() new = ' + paramAttribute + ' old = ' + oldParamAttribute);
+    var n;
+    if (this.elements &&
+        oldParamAttribute !== undefined &&
+        paramAttribute &&
+        this.lang !== undefined &&
+        this.lang !== null &&
+        !this.lang.match(/^{{.*}}$/) &&
+        !this.lang.match(/^\[\[.*\]\]$/)) {
+      for (n = 1; n < this.elements.length; n++) {
+        this.elements[n].removeAttribute(oldParamAttribute);
+        if (!this.elements[n].hasAttribute(paramAttribute)) {
+          this.elements[n].setAttribute(paramAttribute, '' + n);
+        }
+      }
     }
   },
 
