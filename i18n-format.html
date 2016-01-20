@@ -370,7 +370,16 @@ Polymer({
       return templateText;
     }
     else if (this.templateElement.tagName.toLowerCase() === 'json-data') {
-      var templateObject = JSON.parse(this.templateTextNode.data);
+      var templateObject;
+      try {
+        templateObject = JSON.parse(this.templateTextNode.data);
+      }
+      catch (ex) {
+        if (this.templateTextNode.data) {
+          console.warn('i18n-format: parse error in json-data');
+        }
+        return templateText;
+      }
       var n;
       for (n = 1;
            typeof templateObject === 'object' && n < this.elements.length;
