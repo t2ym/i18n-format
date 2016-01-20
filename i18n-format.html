@@ -252,10 +252,6 @@ Polymer({
    */
   DEFAULT_LANG: 'en',
 
-  observers: [
-    //'_langChanged(lang)'
-  ],
-
   ready () {
     this._setupParams();
   },
@@ -328,7 +324,7 @@ Polymer({
    *
    * @param {string} lang New locale.
    */
-  _langChanged (lang, oldLang) {
+  _langChanged (lang /*, oldLang */) {
     //console.log('i18n-format: ' + this.id + '._langChanged() lang = ' + lang + ' oldLang = ' + oldLang);
     if (this.elements &&
         lang !== undefined &&
