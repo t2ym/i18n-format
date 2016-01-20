@@ -82,6 +82,7 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
         <bound-i18n-format 
           lang="{{lang}}"
           text="{{text}}"
+          param-format="{{paramFormat}}"
           compound-text="{{compoundText}}"
           recipients="{{recipients}}"
           sender="{{sender}}"></bound-i18n-format>
@@ -786,6 +787,60 @@ suite('<i18n-format>', function () {
         { select: 'span[param=\'3\']', textContent: 'Joe' },
         { select: 'span[param=\'4\']', textContent: 'Alice' },
         { select: 'span[param=\'5\']', textContent: '' }
+      ]
+    },
+    { 
+      suite: 'change paramFormat', 
+      fixture: 'bound-and-wrapped',
+      target: 'compound',
+      model: {
+        compoundText: [
+          {
+            '0': 'You (%3%) gave no gifts.',
+            '1': {
+              'male': 'You (%3%) gave him (%4%) %5%.',
+              'female': 'You (%3%) gave her (%4%) %5%.',
+              'other': 'You (%3%) gave them (%4%) %5%.'
+            },
+            'one': {
+              'male': 'You (%3%) gave him (%4%) and one other person %5%.',
+              'female': 'You (%3%) gave her (%4%) and one other person %5%.',
+              'other': 'You (%3%) gave them (%4%) and one other person %5%.'
+            },
+            'other': 'You (%3%) gave them (%4%) and %1% other people gifts.'
+          },
+          '{{recipients.length}}', // dummy
+          '{{recipients.0.gender}}', // dummy
+          '{{sender.name}}', // dummy
+          '{{recipients.0.name}}', // dummy
+          'a gift'
+        ],
+        recipients: [
+          { name: 'Alice', gender: 'female' },
+          { name: 'Bob', gender: 'male' }
+        ]
+      },
+      assign: {
+        paramFormat: paramFormat2
+      },
+      lang: lang1,
+      paramAttribute: paramAttribute1,
+      paramFormat: paramFormat2,
+      childNodes: [
+        { nodeName: '#text', data: 'You (' },
+        { nodeName: 'CONTENT', select: '[param=\'3\']' },
+        { nodeName: '#text', data: ') gave her (' },
+        { nodeName: 'CONTENT', select: '[param=\'4\']' },
+        { nodeName: '#text', data: ') and one other person ' },
+        { nodeName: 'CONTENT', select: '[param=\'5\']' },
+        { nodeName: '#text', data: '.' }
+      ],
+      parameters: [
+        { select: 'i18n-number[param=\'1\']', number: 1, formatted: '1', 'root.PolymerDom.children.0.textContent': '1' },
+        { select: 'span[param=\'2\']', textContent: 'female' },
+        { select: 'span[param=\'3\']', textContent: 'Joe' },
+        { select: 'span[param=\'4\']', textContent: 'Alice' },
+        { select: 'span[param=\'5\']', textContent: 'a gift' }
       ]
     }
   ];
