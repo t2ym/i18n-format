@@ -252,18 +252,18 @@ Polymer({
    */
   DEFAULT_LANG: 'en',
 
-  ready () {
+  ready: function () {
     this._setupParams();
   },
 
-  attached () {
+  attached: function () {
     this.render();
   },
 
   /**
    * Traverse the local DOM and set up parameters and observers.
    */
-  _setupParams () {
+  _setupParams: function () {
     var n;
     this.elements = Array.prototype.filter.call(
       Polymer.dom(this).childNodes,
@@ -302,7 +302,7 @@ Polymer({
    *
    * @param {Array} mutations Array of MutationRecord (https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver).
    */
-  _templateMutated (mutations) {
+  _templateMutated: function (mutations) {
     mutations.forEach(function(mutation) {
       switch (mutation.type) {
       case 'characterData':
@@ -324,7 +324,7 @@ Polymer({
    *
    * @param {string} lang New locale.
    */
-  _langChanged (lang /*, oldLang */) {
+  _langChanged: function (lang /*, oldLang */) {
     //console.log('i18n-format: ' + this.id + '._langChanged() lang = ' + lang + ' oldLang = ' + oldLang);
     if (this.elements &&
         lang !== undefined &&
@@ -345,7 +345,7 @@ Polymer({
    * @param {number} n The number to get the plural category for.
    * @return {string} Plural category of the number. 
    */
-  _getPluralCategory (n) {
+  _getPluralCategory: function (n) {
     var category = 'other';
     var lang = this.lang || this.DEFAULT_LANG;
     lang = lang.split(/[-_]/)[0];
@@ -364,7 +364,7 @@ Polymer({
    *
    * @return {string} Selected template text. 
    */
-  _selectTemplateText () {
+  _selectTemplateText: function () {
     var templateText = '';
     if (!this.templateElement) {
       return templateText;
@@ -447,7 +447,7 @@ Polymer({
   /**
    * Render the template text.
    */
-  render () {
+  render: function () {
     var templateText = this._selectTemplateText();
     var tmpNode = document.createElement('span');
     var paramPlaceholder;
