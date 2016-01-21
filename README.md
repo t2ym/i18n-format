@@ -1,7 +1,6 @@
 ## `<i18n-format>`
 
-Parameterized text formatter for easier grammatical localization 
-with [Unicode CLDR plural rules](http://cldr.unicode.org/index/cldr-spec/plural-rules) and gender support
+Text formatter with [Unicode CLDR plural rules](http://cldr.unicode.org/index/cldr-spec/plural-rules) and choices (like gender) support.
 
 [Demo](https://t2ym.github.io/i18n-format/components/i18n-format/demo) and [API Docs](https://t2ym.github.io/i18n-format/components/i18n-format/)
 
