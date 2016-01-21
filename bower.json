@@ -4,7 +4,7 @@
   "authors": [
     "Tetsuya Mori <t2y3141592@gmail.com>"
   ],
-  "description": "Parameterized text template for localization",
+  "description": "Text formatter with Unicode CLDR Plural Rules and choices support",
   "main": "i18n-format.html",
   "keywords": [
     "polymer",
