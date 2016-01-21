@@ -38,24 +38,24 @@ This renders as follows:
 
 #### Compound Template Format
 
-An appropriate template can be dynamically picked up according to parameter values with plural categories, gender, etc.
+An appropriate template in `json-data` is selected by plural categories, gender, etc.
 
 ```html
     <p>
       <i18n-format lang="{{lang}}">
         <json-data>{
-          "0": "You ($3$) gave no gifts.",
+          "0": "You ({3}) gave no gifts.",
           "1": {
-            "male": "You ($3$) gave him ($4$) $5$.",
-            "female": "You ($3$) gave her ($4$) $5$.",
-            "other": "You ($3$) gave them ($4$) $5$."
+            "male": "You ({3}) gave him ({4}) {5}.",
+            "female": "You ({3}) gave her ({4}) {5}.",
+            "other": "You ({3}) gave them ({4}) {5}."
           },
           "one": {
-            "male": "You ($3$) gave him ($4$) and one other person $5$.",
-            "female": "You ($3$) gave her ($4$) and one other person $5$.",
-            "other": "You ($3$) gave them ($4$) and one other person $5$."
+            "male": "You ({3}) gave him ({4}) and one other person {5}.",
+            "female": "You ({3}) gave her ({4}) and one other person {5}.",
+            "other": "You ({3}) gave them ({4}) and one other person {5}."
           },
-          "other": "You ($3$) gave them ($4$) and $1$ other people gifts."
+          "other": "You ({3}) gave them ({4}) and {1} other people gifts."
         }</json-data>
         <i18n-number lang="{{effectiveLang}}" offset="1">{{recipients.length}}</i18n-number>
         <span>{{recipients.0.gender}}</span>
