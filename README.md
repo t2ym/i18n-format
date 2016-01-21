@@ -4,7 +4,7 @@ Text formatter with [Unicode CLDR plural rules](http://cldr.unicode.org/index/cl
 
 [Demo](https://t2ym.github.io/i18n-format/components/i18n-format/demo) and [API Docs](https://t2ym.github.io/i18n-format/components/i18n-format/)
 
-<img src="https://raw.githubusercontent.com/wiki/t2ym/i18n-foramt/i18n-format.gif" width="600px">
+<img src="https://raw.githubusercontent.com/wiki/t2ym/i18n-format/i18n-format.gif" width="600px">
 
 ### Install
 
