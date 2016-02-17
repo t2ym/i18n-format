@@ -28,7 +28,7 @@
   "dependencies": {
     "polymer": "^1.2.0",
     "make-plural": "^3.0.3",
-    "i18n-number": "^0.1.2"
+    "i18n-number": "~0.1.4"
   },
   "devDependencies": {
     "web-component-tester": "^3.4.0",
