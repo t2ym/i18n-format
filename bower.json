@@ -1,6 +1,6 @@
 {
   "name": "i18n-format",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "authors": [
     "Tetsuya Mori <t2y3141592@gmail.com>"
   ],
@@ -28,7 +28,7 @@
   "dependencies": {
     "polymer": "^1.2.0",
     "make-plural": "^3.0.3",
-    "i18n-number": "^0.2.0"
+    "i18n-number": "^0.2.1"
   },
   "devDependencies": {
     "web-component-tester": "^3.4.0",
