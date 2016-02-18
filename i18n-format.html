@@ -314,6 +314,9 @@ Polymer({
         if (Polymer.dom(mutation.target).parentNode.tagName.toLowerCase() !== 'i18n-number') {
           this.render();
         }
+        else if (typeof Polymer.dom(mutation.target).parentNode.formatted !== 'undefined') {
+          this.render();
+        }
         break;
       default:
         break;
@@ -437,7 +440,8 @@ Polymer({
         if (param.tagName.toLowerCase() === 'i18n-number') {
           // plural selector
           var category = this._getPluralCategory(param.number);
-          if (typeof param.number === 'undefined') {
+          if (typeof param.number === 'undefined' ||
+              typeof param.formatted === 'undefined') {
             // i18n-number is not ready
             //console.log('i18n-format: i18n-number is not ready');
             templateObject = undefined;
