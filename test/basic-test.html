@@ -121,6 +121,16 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
       </template>
     </test-fixture>
 
+    <test-fixture id="invalid-template-static">
+      <template>
+        <i18n-format lang="en">
+          <json-data>{
+            "other": 1
+          }</json-data>
+          <i18n-number lang="en" offset="0">1</i18n-number>
+        </i18n-format>
+      </template>
+    </test-fixture>
 
     <script>
 suite('<i18n-format>', function () {
@@ -282,6 +292,14 @@ suite('<i18n-format>', function () {
     { 
       suite: 'default number category', 
       fixture: 'default-number-category-static', 
+      model: undefined,
+      lang: lang1,
+      paramAttribute: paramAttribute1,
+      paramFormat: paramFormat1
+    },
+    { 
+      suite: 'invalid template', 
+      fixture: 'invalid-template-static', 
       model: undefined,
       lang: lang1,
       paramAttribute: paramAttribute1,
