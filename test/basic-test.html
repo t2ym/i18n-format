@@ -89,6 +89,14 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
       </template>
     </test-fixture>
 
+    <test-fixture id="json-error-static">
+      <template>
+        <i18n-format>
+          <json-data>ERROR</json-data>
+        </i18n-format>
+      </template>
+    </test-fixture>
+
     <script>
 suite('<i18n-format>', function () {
 
@@ -229,6 +237,14 @@ suite('<i18n-format>', function () {
         { select: 'span[param=\'4\']', textContent: 'Alice' },
         { select: 'span[param=\'5\']', textContent: 'a gift' }
       ]
+    },
+    { 
+      suite: 'json error', 
+      fixture: 'json-error-static', 
+      model: undefined,
+      lang: lang1,
+      paramAttribute: paramAttribute1,
+      paramFormat: paramFormat1
     }
 /*
     { 
@@ -517,73 +533,77 @@ suite('<i18n-format>', function () {
         assert.equal(el.paramFormat, params.paramFormat, 'paramForamt property is set');
       });
 
-      test('childNodes are set as ' + JSON.stringify(params.childNodes), function (done) {
-        if (el.lastTemplateText) {
-          updateProperty(el, params.assign);
-          var childNodes = Polymer.dom(el.root).childNodes;
-          var i;
-          for (i = 0; i < params.childNodes.length; i++) {
-            for (var p in params.childNodes[i]) {
-              assert.equal(childNodes[i][p] || childNodes[i].getAttribute(p), params.childNodes[i][p], p + ' is set as ' + params.childNodes[i][p]);
-            }
-          }
-          done();
-        }
-        else {
-          el.addEventListener('rendered', function (e) {
-            console.log('handling rendered');
-            if (e.target === el) {
-              var childNodes = Polymer.dom(el.root).childNodes;
-              var i;
-              for (i = 0; i < params.childNodes.length; i++) {
-                for (var p in params.childNodes[i]) {
-                  assert.equal(childNodes[i][p] || childNodes[i].getAttribute(p), params.childNodes[i][p], p + ' is set as ' + params.childNodes[i][p]);
-                }
+      if (params.childNodes) {
+        test('childNodes are set as ' + JSON.stringify(params.childNodes), function (done) {
+          if (el.lastTemplateText) {
+            updateProperty(el, params.assign);
+            var childNodes = Polymer.dom(el.root).childNodes;
+            var i;
+            for (i = 0; i < params.childNodes.length; i++) {
+              for (var p in params.childNodes[i]) {
+                assert.equal(childNodes[i][p] || childNodes[i].getAttribute(p), params.childNodes[i][p], p + ' is set as ' + params.childNodes[i][p]);
               }
-              done();
             }
-          });
-          updateProperty(el, params.assign);
-        }
-      });
-
-      test('parameters are set as ' + JSON.stringify(params.parameters), function (done) {
-        if (el.lastTemplateText) {
-          updateProperty(el, params.assign);
-          var i;
-          for (i = 0; i < params.parameters.length; i++) {
-            var node = Polymer.dom(el).querySelector(params.parameters[i].select);
-            assert.isDefined(node, params.parameters[i].select + ' is defined');
-            for (var p in params.parameters[i]) {
-              if (p === 'select') {
-                continue;
-              }
-              assert.equal(getProperty(node, p), params.parameters[i][p], p + ' is set as ' + params.parameters[i][p]);
-            }
+            done();
           }
-          done();
-        }
-        else {
-          el.addEventListener('rendered', function (e) {
-            console.log('handling rendered');
-            if (e.target === el) {
-              var i;
-              for (i = 0; i < params.parameters.length; i++) {
-                var node = Polymer.dom(el).querySelector(params.parameters[i].select);
-                assert.isDefined(node, params.parameters[i].select + ' is defined');
-                for (var p in params.parameters[i]) {
-                  if (p === 'select') {
-                    continue;
+          else {
+            el.addEventListener('rendered', function (e) {
+              console.log('handling rendered');
+              if (e.target === el) {
+                var childNodes = Polymer.dom(el.root).childNodes;
+                var i;
+                for (i = 0; i < params.childNodes.length; i++) {
+                  for (var p in params.childNodes[i]) {
+                    assert.equal(childNodes[i][p] || childNodes[i].getAttribute(p), params.childNodes[i][p], p + ' is set as ' + params.childNodes[i][p]);
                   }
-                  assert.equal(getProperty(node, p), params.parameters[i][p], p + ' is set as ' + params.parameters[i][p]);
                 }
+                done();
               }
-              done();
+            });
+            updateProperty(el, params.assign);
+          }
+        });
+      }
+
+      if (params.parameters) {
+        test('parameters are set as ' + JSON.stringify(params.parameters), function (done) {
+          if (el.lastTemplateText) {
+            updateProperty(el, params.assign);
+            var i;
+            for (i = 0; i < params.parameters.length; i++) {
+              var node = Polymer.dom(el).querySelector(params.parameters[i].select);
+              assert.isDefined(node, params.parameters[i].select + ' is defined');
+              for (var p in params.parameters[i]) {
+                if (p === 'select') {
+                  continue;
+                }
+                assert.equal(getProperty(node, p), params.parameters[i][p], p + ' is set as ' + params.parameters[i][p]);
+              }
             }
-          });
-          updateProperty(el, params.assign);
-        }
-      });
+            done();
+          }
+          else {
+            el.addEventListener('rendered', function (e) {
+              console.log('handling rendered');
+              if (e.target === el) {
+                var i;
+                for (i = 0; i < params.parameters.length; i++) {
+                  var node = Polymer.dom(el).querySelector(params.parameters[i].select);
+                  assert.isDefined(node, params.parameters[i].select + ' is defined');
+                  for (var p in params.parameters[i]) {
+                    if (p === 'select') {
+                      continue;
+                    }
+                    assert.equal(getProperty(node, p), params.parameters[i][p], p + ' is set as ' + params.parameters[i][p]);
+                  }
+                }
+                done();
+              }
+            });
+            updateProperty(el, params.assign);
+          }
+        });
+      }
 
     });
   });
