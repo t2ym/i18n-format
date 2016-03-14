@@ -25,5 +25,5 @@ addons:
       - g++-4.8
   sauce_connect: true
 script:
-  - xvfb-run wct
-  - "if [ \"${TRAVIS_PULL_REQUEST}\" = \"false\" ]; then xvfb-run wct --plugin sauce --sauce 'default'; fi"
+  - xvfb-run wct --plugin sauce --sauce 'default'
+  - ./node_modules/coveralls/bin/coveralls.js <./test/coverage-report/lcov.info
