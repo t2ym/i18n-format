@@ -1,6 +1,6 @@
 {
   "name": "i18n-format",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Text formatter with Unicode CLDR Plural Rules and choices support",
   "main": "i18n-format.html",
   "directories": {
