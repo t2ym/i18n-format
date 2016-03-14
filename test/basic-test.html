@@ -97,6 +97,19 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
       </template>
     </test-fixture>
 
+    <test-fixture id="no-template-found-static">
+      <template>
+        <i18n-format lang="en">
+          <json-data>{
+            "male": "He ({2}) is {1}.",
+            "female": "She ({2}) is {1}."
+          }</json-data>
+          <span>unknown</span>
+          <span>Yoda</span>
+        </i18n-format>
+      </template>
+    </test-fixture>
+
     <script>
 suite('<i18n-format>', function () {
 
@@ -241,6 +254,14 @@ suite('<i18n-format>', function () {
     { 
       suite: 'json error', 
       fixture: 'json-error-static', 
+      model: undefined,
+      lang: lang1,
+      paramAttribute: paramAttribute1,
+      paramFormat: paramFormat1
+    },
+    { 
+      suite: 'no template found', 
+      fixture: 'no-template-found-static', 
       model: undefined,
       lang: lang1,
       paramAttribute: paramAttribute1,
