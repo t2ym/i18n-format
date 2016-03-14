@@ -26,4 +26,4 @@ addons:
   sauce_connect: true
 script:
   - xvfb-run wct
-  - "if [ \"${TRAVIS_PULL_REQUEST}\" = \"false\" ]; then wct --plugin sauce --sauce 'default'; fi"
+  - "if [ \"${TRAVIS_PULL_REQUEST}\" = \"false\" ]; then xvfb-run wct --plugin sauce --sauce 'default'; fi"
