@@ -25,5 +25,6 @@ addons:
       - g++-4.8
   sauce_connect: true
 script:
+  - cp -vf non-sf7.wct.conf.json wct.conf.json
   - xvfb-run wct
   - ./node_modules/coveralls/bin/coveralls.js <./test/coverage-report/lcov.info
