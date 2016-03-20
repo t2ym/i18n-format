@@ -7,17 +7,17 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
 <dom-module id="bound-i18n-format">
   <template>
     <span id="placeholder">
-      <i18n-format id="simple" lang="{{lang}}">
+      <i18n-format id="simple" lang="{{locale}}">
         <span>{{text.0}}</span>
         <b>{{text.1}}</b>
         <i>{{text.2}}</i>
       </i18n-format>
       <i18n-format id="compound" 
-                  lang="{{lang}}" 
+                  lang="{{locale}}" 
                   param-format="{{paramFormat}}" 
                   param-attribute="{{paramAttribute}}">
         <json-data>{{serialize(compoundText.0)}}</json-data>
-        <i18n-number lang="{{lang}}" offset="{{offset}}">{{recipients.length}}</i18n-number>
+        <i18n-number lang="{{locale}}" offset="{{offset}}">{{recipients.length}}</i18n-number>
         <span>{{recipients.0.gender}}</span>
         <span>{{sender.name}}</span>
         <span>{{recipients.0.name}}</span>
@@ -29,10 +29,11 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
   Polymer({
     is: 'bound-i18n-format',
     properties: {
-      lang: {
+      locale: {
         type: String,
         value: 'en',
-        notify: true
+        notify: true,
+        reflectToAttribute: true
       },
       text: {
         type: Array,
