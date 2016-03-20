@@ -16,13 +16,13 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
   <body>
 
     <test-fixture id="default">
-      <template>
+      <template is="dom-template">
         <i18n-format></i18n-format>
       </template>
     </test-fixture>
 
     <test-fixture id="static">
-      <template>
+      <template is="dom-template">
         <i18n-format lang="en">
           <span>Parameter {1} and {2} are rendered.</span>
           <b>A</b>
@@ -32,7 +32,7 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
     </test-fixture>
 
     <test-fixture id="non-default-attributes">
-      <template>
+      <template is="dom-template">
         <i18n-format lang="fr" param-attribute="parameter" param-format="%n%">
           <span>Parameter %1% and %2% are rendered.</span>
           <b>A</b>
@@ -52,7 +52,7 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
     </test-fixture>
 
     <test-fixture id="compound-static">
-      <template>
+      <template is="dom-template">
         <i18n-format lang="en">
           <json-data>{
             "0": "You ({3}) gave no gifts.",
@@ -80,7 +80,7 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
     <test-fixture id="bound-and-wrapped">
       <template is="dom-template" id="bound-and-wrapped-template">
         <bound-i18n-format 
-          lang="{{lang}}"
+          locale="{{lang}}"
           text="{{text}}"
           param-format="{{paramFormat}}"
           compound-text="{{compoundText}}"
@@ -90,7 +90,7 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
     </test-fixture>
 
     <test-fixture id="json-error-static">
-      <template>
+      <template is="dom-template">
         <i18n-format>
           <json-data>ERROR</json-data>
         </i18n-format>
@@ -98,7 +98,7 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
     </test-fixture>
 
     <test-fixture id="no-template-found-static">
-      <template>
+      <template is="dom-template">
         <i18n-format lang="en">
           <json-data>{
             "male": "He ({2}) is {1}.",
@@ -111,7 +111,7 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
     </test-fixture>
 
     <test-fixture id="default-number-category-static">
-      <template>
+      <template is="dom-template">
         <i18n-format lang="en">
           <json-data>{
             "other": "Default number for {1}."
@@ -122,7 +122,7 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
     </test-fixture>
 
     <test-fixture id="invalid-template-static">
-      <template>
+      <template is="dom-template">
         <i18n-format lang="en">
           <json-data>{
             "other": 1
@@ -515,7 +515,12 @@ suite('<i18n-format>', function () {
     for (var name in model) {
       var path = name.split(/[.]/);
       if (path.length === 1) {
-        element[name] = model[name];
+        if (name === 'lang' && element.is === 'bound-i18n-format') {
+          element.locale = model.lang;
+        }
+        else {
+          element[name] = model[name];
+        }
         //console.log('updateModel: notifyPath: name = ' + name);
         //element.notifyPath(name, model[name], true);
       }
@@ -572,7 +577,9 @@ suite('<i18n-format>', function () {
       var lang = params.assign && params.assign.lang ? params.assign.lang : 'en';
 
       setup(function () {
-        el = fixture(params.fixture, params.model);
+        el = params.model
+              ? fixture(params.fixture, params.model)
+              : fixture(params.fixture, {});
       });
 
       test('lang property from attribute', function () {
@@ -1075,9 +1082,30 @@ suite('<i18n-format>', function () {
             el = wrapper.$[params.target];
           });
 
-          test('lang property is ' + params.lang, function () {
-            updateModel(wrapper, params.assign);
-            assert.equal(el.lang, params.lang, 'lang is ' + params.lang);
+          test('lang property is ' + params.lang, function (done) {
+            var doneCalled = false;
+            var langPropertyIsSet;
+            if (params.assign &&
+                typeof params.assign.lang !== 'undefined' &&
+                typeof el.lastTemplateText === 'undefined') {
+              console.log('addEventListener rendered');
+              el.addEventListener('rendered', langPropertyIsSet = function (e) {
+                if (Polymer.dom(e).rootTarget === el &&
+                    !doneCalled) {
+                  el.removeEventListener('rendered', langPropertyIsSet);
+                  assert.equal(el.lang, params.lang, 'lang is ' + params.lang);
+                  doneCalled = true;
+                  done();
+                }
+                return false;
+              });
+              updateModel(el, params.assign);
+            }
+            else {
+              updateModel(el, params.assign);
+              assert.equal(el.lang, params.lang, 'lang is ' + params.lang);
+              done();
+            }
           });
 
           test('paramAttribute property is ' + params.paramAttribute, function () {
@@ -1093,7 +1121,8 @@ suite('<i18n-format>', function () {
           if (params.childNodes) {
             test('updated childNodes are ' + JSON.stringify(params.childNodes), function (done) {
               el.addEventListener('rendered', function (e) {
-                if (e.target === el) {
+                if (e.target === el &&
+                    params.assign && el.lang === (params.assign.lang ? params.assign.lang : el.DEFAULT_LANG)) {
                   var childNodes = Polymer.dom(el.root).childNodes;
                   var i;
                   for (i = 0; i < params.childNodes.length; i++) {
@@ -1105,6 +1134,11 @@ suite('<i18n-format>', function () {
                 }
               });
               updateModel(wrapper, params.assign);
+              if (params.childNodes.length === 0 &&
+                  Object.getOwnPropertyDescriptor(el, 'lang') &&
+                  typeof Object.getOwnPropertyDescriptor(el, 'lang').set !== 'function') {
+                el.fire('rendered');
+              }
             });
           }
 
@@ -1127,6 +1161,11 @@ suite('<i18n-format>', function () {
                 }
               });
               updateModel(wrapper, params.assign);
+              if (params.childNodes.length === 0 &&
+                  Object.getOwnPropertyDescriptor(el, 'lang') &&
+                  typeof Object.getOwnPropertyDescriptor(el, 'lang').set !== 'function') {
+                window.setTimeout(function () { el.fire('rendered'); }, 10);
+              }
             });
           }
 
