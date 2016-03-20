@@ -256,6 +256,10 @@ Polymer({
 
   ready: function () {
     this._setupParams();
+    if (!this.lang) {
+      // Polyfill non-functional default value for lang property in Safari 7
+      this.lang = this.DEFAULT_LANG;
+    }
   },
 
   attached: function () {
@@ -276,11 +280,16 @@ Polymer({
     var needParamObservation = this.observeParams &&
                                this.elements.length > 0 && 
                                this.elements[0].tagName.toLowerCase() === 'json-data';
+    this.observer = new MutationObserver(this._templateMutated.bind(this));
+    var desc = Object.getOwnPropertyDescriptor(this, 'lang');
+    if (desc && typeof desc.set !== 'function') {
+      // Fix #1. Emulate lang's observer since Safari 7 overrides lang property
+      this.observer.observe(this, { attributes: true, attributeFilter: [ 'lang' ] });
+    }
     for (n = 0; n < this.elements.length; n++) {
       if (n === 0) {
         this.templateElement = this.elements[n];
         this.templateTextNode = Polymer.dom(this.templateElement).childNodes[0];
-        this.observer = new MutationObserver(this._templateMutated.bind(this));
         this.observer.observe(this.templateTextNode, { characterData: true });
       }
       else {
@@ -318,8 +327,13 @@ Polymer({
           this.render();
         }
         break;
+      case 'attributes':
+        if (mutation.attributeName === 'lang') {
+          this._langChanged(this.lang);
+        }
+        break;
       default:
-        /* istanbul ignore next: mutation.type is always characterData */
+        /* istanbul ignore next: mutation.type is always characterData or attributes */
         break;
       }
     }, this);
