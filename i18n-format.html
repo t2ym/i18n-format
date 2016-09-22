@@ -221,7 +221,7 @@ Polymer({
      */
     paramAttribute: {
       type: String,
-      value: 'param',
+      value: (function () { return Polymer.Element ? 'slot' : 'param'; })(),
       observer: '_paramAttributeChanged'
     },
 
@@ -521,6 +521,8 @@ Polymer({
     var paramPlaceholder;
     var childNodes = [];
     var i;
+    var shadowDomV1 = !!(Polymer.Element && Polymer.Element.name === 'PolymerElement');
+    var shadyDomV1 = !!window.ShadyDOM;
 
     if (templateText === this.lastTemplateText) {
       //console.log('i18n-format: skipping rendering as the templateText has not changed');
@@ -538,6 +540,7 @@ Polymer({
     while (i < this.elements.length) {
       paramPlaceholder = this.paramFormat.replace('n', i);
       templateText = templateText.replace(paramPlaceholder, 
+                      shadowDomV1 ? '<slot name="' + i + '"></slot>' :
                       '<content select="[' + this.paramAttribute + '=\'' + i + '\']"></content>');
       i++;
     }
@@ -556,6 +559,9 @@ Polymer({
       Polymer.dom(this.root).appendChild(childNodes[i]);
     }
 
+    if (shadyDomV1) {
+      ShadyDOM.flush();
+    }
     this.fire('rendered');
   }
 });
