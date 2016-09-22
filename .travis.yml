@@ -2,6 +2,7 @@ language: node_js
 branches:
   except:
   - gh-pages
+  - 2.0-develop
 sudo: false
 before_script:
   - npm install web-component-tester
