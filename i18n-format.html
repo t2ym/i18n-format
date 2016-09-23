@@ -208,10 +208,10 @@ Polymer({
      * The typical value is bound to `{{effectiveLang}}` when the containing element has
      * `BehaviorsStore.I18nBehavior`.
      */
-    lang: {
+    _lang: {
       type: String,
       value: 'en',
-      reflectToAttribute: true,
+      reflectToAttribute: false,
       observer: '_langChanged'
     },
 
@@ -329,7 +329,7 @@ Polymer({
         break;
       case 'attributes':
         if (mutation.attributeName === 'lang') {
-          this._langChanged(this.lang);
+          this._lang = this.lang;
         }
         break;
       default:
