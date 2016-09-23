@@ -282,7 +282,7 @@ Polymer({
                                this.elements[0].tagName.toLowerCase() === 'json-data';
     this.observer = new MutationObserver(this._templateMutated.bind(this));
     var desc = Object.getOwnPropertyDescriptor(this, 'lang');
-    if (desc && typeof desc.set !== 'function') {
+    if (Polymer.Element || (desc && typeof desc.set !== 'function')) {
       // Fix #1. Emulate lang's observer since Safari 7 overrides lang property
       this.observer.observe(this, { attributes: true, attributeFilter: [ 'lang' ] });
     }
