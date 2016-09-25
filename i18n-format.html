@@ -543,7 +543,12 @@ Polymer({
     
     tmpNode.innerHTML = templateText;
 
-    Polymer.dom(this.root).innerHTML = '';
+    if (Polymer.Element) {
+      this.root.innerHTML = ''; // Polymer 2.x
+    }
+    else {
+      Polymer.dom(this.root).innerHTML = '';
+    }
 
     // References of childNodes have to be copied for Shady DOM compatibility
     for (i = 0; i < tmpNode.childNodes.length; i++) {
