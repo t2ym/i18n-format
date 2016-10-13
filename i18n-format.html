@@ -542,6 +542,10 @@ Polymer({
     tmpNode.innerHTML = templateText;
 
     if (Polymer.Element) {
+      if (this.root === this) {
+        this.attachShadow({ mode: 'open' });
+        this.root = this.shadowRoot;
+      }
       this.root.innerHTML = ''; // Polymer 2.x
     }
     else {
