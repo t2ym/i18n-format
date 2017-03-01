@@ -536,7 +536,7 @@ Polymer({
     }
 
     i = 1;
-    while (i < this.elements.length) {
+    while (this.elements && i < this.elements.length) {
       paramPlaceholder = this.paramFormat.replace('n', i);
       templateText = templateText.replace(paramPlaceholder, 
                       shadowDomV1 ? '<slot name="' + i + '"></slot>' :
