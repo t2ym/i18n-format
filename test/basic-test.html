@@ -276,6 +276,7 @@ addEventListener('WebComponentsReady', function () {
     var lang2 = 'fr';
     var lang3 = 'ja';
     var lang4 = 'xx';
+    var lang5 = '';
     var paramAttribute1 = defaultParamAttribute;
     var paramAttribute2 = 'parameter';
     var paramFormat1 = '{n}';
@@ -893,6 +894,22 @@ addEventListener('WebComponentsReady', function () {
           lang: lang4 // 'xx' -> fallback to 'en'
         },
         lang: lang4,
+        paramAttribute: paramAttribute1,
+        paramFormat: paramFormat1
+      },
+      { 
+        suite: 'null lang and re-render', 
+        fixture: 'bound-and-wrapped',
+        target: 'compound',
+        model: {
+          locale: lang1,
+          lang: lang1,
+          recipients: []
+        },
+        assign: { 
+          lang: lang5 // 'xx' -> fallback to 'en'
+        },
+        lang: lang5,
         paramAttribute: paramAttribute1,
         paramFormat: paramFormat1
       },
