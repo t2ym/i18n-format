@@ -2,7 +2,8 @@ language: node_js
 branches:
   except:
   - gh-pages
-sudo: false
+sudo: true
+dist: trusty
 before_script:
   - npm install -g bower t2ym/polymer-cli#wct6-plugin t2ym/web-component-tester-istanbul#0.10.1-wct6.7
   - export PATH=$PWD/node_modules/.bin:$PATH
