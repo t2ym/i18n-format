@@ -26,6 +26,7 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
     </span>
   </template>
   <script>
+  var defaultParamAttribute = Polymer.ElementMixin ? 'slot' : 'param';
   Polymer({
     is: 'bound-i18n-format',
     properties: {
@@ -98,7 +99,7 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
       },
       paramAttribute: {
         type: String,
-        value: 'param'
+        value: defaultParamAttribute
       }
     }
   });
