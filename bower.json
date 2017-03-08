@@ -44,7 +44,7 @@
     "promise-polyfill": "polymerlabs/promise-polyfill#^1.0.0"
   },
   "resolutions": {
-    "polymer": "2.0.0-rc.1",
+    "polymer": "2.0.0-rc.2",
     "webcomponentsjs": "v1.0.0-rc.5",
     "iron-flex-layout": "2.0-preview",
     "paper-styles": "2.0-preview",
