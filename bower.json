@@ -26,7 +26,7 @@
     "bower_components"
   ],
   "dependencies": {
-    "polymer": "2.0.0-rc.2",
+    "polymer": "^2.0.0-rc.4",
     "make-plural": "^3.0.3",
     "i18n-number": "#2.0-develop"
   },
@@ -44,8 +44,8 @@
     "promise-polyfill": "polymerlabs/promise-polyfill#^1.0.0"
   },
   "resolutions": {
-    "polymer": "2.0.0-rc.2",
-    "webcomponentsjs": "v1.0.0-rc.5",
+    "polymer": "^2.0.0-rc.4",
+    "webcomponentsjs": "^v1.0.0-rc.5",
     "iron-flex-layout": "2.0-preview",
     "paper-styles": "2.0-preview",
     "iron-behaviors": "2.0-preview",
