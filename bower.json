@@ -26,7 +26,7 @@
     "bower_components"
   ],
   "dependencies": {
-    "polymer": "^2.0.0-rc.4",
+    "polymer": "^2.0.0-rc.5",
     "make-plural": "^3.0.3",
     "i18n-number": "#2.0-develop"
   },
@@ -44,7 +44,7 @@
     "promise-polyfill": "polymerlabs/promise-polyfill#^1.0.0"
   },
   "resolutions": {
-    "polymer": "^2.0.0-rc.4",
+    "polymer": "^2.0.0-rc.5",
     "webcomponentsjs": "v1.0.0-rc.8",
     "iron-flex-layout": "2.0-preview",
     "paper-styles": "2.0-preview",
@@ -58,7 +58,7 @@
       "dependencies": {
         "polymer": "^1.8.1",
         "make-plural": "^3.0.3",
-        "i18n-number": "^1.0.1"
+        "i18n-number": "#2.0-develop"
       },
       "devDependencies": {
         "web-component-tester": "t2ym/web-component-tester#wct6-plugin",
