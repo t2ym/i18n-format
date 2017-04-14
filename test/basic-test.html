@@ -148,6 +148,11 @@ addEventListener('WebComponentsReady', function () {
       if (template) {
         if (Polymer.LegacyElementMixin) {
           // Polymer 2.x
+          if (!window.FixtureWrapper) {
+            window.FixtureWrapper = class FixtureWrapper extends Polymer.Element { };
+            customElements.define('fixture-wrapper', FixtureWrapper);
+          }
+
           if (model) {
             // emulate <template is="dom-template">
             // Note: Limitation: the first call must contain all the instance properties in model
@@ -160,7 +165,7 @@ addEventListener('WebComponentsReady', function () {
               for (p in model) {
                 instanceProps[p] = true;
               }
-              var self = t;
+              var self = new FixtureWrapper();
               t.__templatizeOwner = undefined;
               t._ctor = Polymer.Templatize.templatize(t, self, {
                 instanceProps: instanceProps,
