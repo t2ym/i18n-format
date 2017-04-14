@@ -56,11 +56,31 @@
   "variants": {
     "1.x": {
       "dependencies": {
-        "polymer": "^1.8.1",
+        "polymer": "^1.9.0",
         "make-plural": "^3.0.3",
         "i18n-number": "#2.0-develop"
       },
       "devDependencies": {
+        "web-component-tester": "t2ym/web-component-tester#wct6-plugin",
+        "iron-component-page": "PolymerElements/iron-component-page#^1.1.2",
+        "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.3",
+        "paper-input": "PolymerElements/paper-input#^1.1.5",
+        "paper-button": "PolymerElements/paper-button#^1.0.11",
+        "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.3.2",
+        "paper-styles": "PolymerElements/paper-styles#^1.1.2",
+        "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#^1.1.2",
+        "paper-menu": "PolymerElements/paper-menu#^1.2.2",
+        "paper-item": "PolymerElements/paper-item#^1.1.3",
+        "promise-polyfill": "polymerlabs/promise-polyfill#^1.0.0"
+      },
+      "resolutions": {
+        "polymer": "^1.9.0",
+        "webcomponentsjs": "^0.7.24",
+        "i18n-number": "#2.0-develop",
+        "iron-behaviors": "PolymerElements/iron-behaviors^1.0.17",
+        "iron-selector": "PolymerElements/iron-selector^1.5.2",
+        "iron-a11y-keys-behavior": "PolymerElements/iron-a11y-keys-behavior^1.1.9",
+        "iron-resizable-behavior": "PolymerElements/iron-resizable-behavior^1.0.5",
         "web-component-tester": "t2ym/web-component-tester#wct6-plugin",
         "iron-component-page": "PolymerElements/iron-component-page#^1.1.2",
         "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.3",
