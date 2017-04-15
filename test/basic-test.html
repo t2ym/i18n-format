@@ -1089,7 +1089,7 @@ addEventListener('WebComponentsReady', function () {
                   var resolved = false;
                   var onRendered;
                   if (params.assign) {
-                    wrapper.addEventListener('rendered', onRendered = function (e) {
+                    onRendered = function (e) {
                       var target = isV2 ? e.composedPath()[0] : Polymer.dom(e).rootTarget;
                       //console.log('received rendered event in suiteSetup');
                       if (target === wrapper || target === el) {
@@ -1102,7 +1102,15 @@ addEventListener('WebComponentsReady', function () {
                       else {
                         //console.log('skipping rendered event from ', target);
                       }
-                    });
+                    };
+                    if (params.delay) {
+                      setTimeout(function () {
+                        wrapper.addEventListener('rendered', onRendered);
+                      }, params.delay);
+                    }
+                    else {
+                      wrapper.addEventListener('rendered', onRendered);
+                    }
                     setTimeout(function () {
                       if (!resolved) {
                         wrapper.removeEventListener('rendered', onRendered);
@@ -1159,7 +1167,13 @@ addEventListener('WebComponentsReady', function () {
                     if (p === 'select') {
                       continue;
                     }
-                    assert.equal(getProperty(node, p), params.parameters[i][p], p + ' is set as ' + params.parameters[i][p]);
+                    try {
+                      assert.equal(getProperty(node, p), params.parameters[i][p], p + ' is set as ' + params.parameters[i][p]);
+                    }
+                    catch (e) {
+                      debugger;
+                      throw e;
+                    }
                   }
                 }
                 done();
