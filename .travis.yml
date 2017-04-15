@@ -26,6 +26,6 @@ script:
   - mv -f bower_components bower_components2
   - mv -f bower_components-1.x bower_components
   - cp -vf test/v1-wct.conf.json wct.conf.json
-  - bower install intl#1.1.0
+  - bower install intl#1.1.0 || echo success
   - xvfb-run wct
   - if [ "${TRAVIS_BRANCH}" != "" ]; then lcov-result-merger 'test/coverage-report*/lcov.info' | ./node_modules/coveralls/bin/coveralls.js || echo success; fi
