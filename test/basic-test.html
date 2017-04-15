@@ -289,6 +289,35 @@ addEventListener('WebComponentsReady', function () {
 
     var suites = [
       { 
+        suite: 'static compound template', 
+        fixture: 'compound-static', 
+        model: { dummy: 'dummy' },
+        delay: 100,
+        assign: { dummy: 'dummy' },
+        lang: lang1,
+        paramAttribute: paramAttribute1,
+        paramFormat: paramFormat1,
+        childNodes: [
+          { nodeName: '#text', data: 'You (' },
+          isV2 ? { nodeName: defaultSlotElement, name: '3' }
+               : { nodeName: defaultSlotElement, select: '[' + defaultSlotAttribute + '=\'3\']' },
+          { nodeName: '#text', data: ') gave her (' },
+          isV2 ? { nodeName: defaultSlotElement, name: '4' }
+               : { nodeName: defaultSlotElement, select: '[' + defaultSlotAttribute + '=\'4\']' },
+          { nodeName: '#text', data: ') and one other person ' },
+          isV2 ? { nodeName: defaultSlotElement, name: '5' }
+               : { nodeName: defaultSlotElement, select: '[' + defaultSlotAttribute + '=\'5\']' },
+          { nodeName: '#text', data: '.' }
+        ],
+        parameters: [
+          { select: 'i18n-number[' + defaultParamAttribute + '=\'1\']', number: 1, formatted: '1', 'root.PolymerDom.children.0.textContent': '1' },
+          { select: 'span[' + defaultParamAttribute + '=\'2\']', textContent: 'female' },
+          { select: 'span[' + defaultParamAttribute + '=\'3\']', textContent: 'Joe' },
+          { select: 'span[' + defaultParamAttribute + '=\'4\']', textContent: 'Alice' },
+          { select: 'span[' + defaultParamAttribute + '=\'5\']', textContent: 'a gift' }
+        ]
+      },
+      { 
         suite: 'static values', 
         fixture: 'static', 
         model: undefined, 
@@ -355,34 +384,6 @@ addEventListener('WebComponentsReady', function () {
         parameters: [
           { select: 'b[' + defaultParamAttribute + '=\'1\']', textContent: 'A' },
           { select: 'i[' + defaultParamAttribute + '=\'2\']', textContent: 'B' }
-        ]
-      },
-      { 
-        suite: 'static compound template', 
-        fixture: 'compound-static', 
-        model: { dummy: 'dummy' },
-        assign: { dummy: 'dummy' },
-        lang: lang1,
-        paramAttribute: paramAttribute1,
-        paramFormat: paramFormat1,
-        childNodes: [
-          { nodeName: '#text', data: 'You (' },
-          isV2 ? { nodeName: defaultSlotElement, name: '3' }
-               : { nodeName: defaultSlotElement, select: '[' + defaultSlotAttribute + '=\'3\']' },
-          { nodeName: '#text', data: ') gave her (' },
-          isV2 ? { nodeName: defaultSlotElement, name: '4' }
-               : { nodeName: defaultSlotElement, select: '[' + defaultSlotAttribute + '=\'4\']' },
-          { nodeName: '#text', data: ') and one other person ' },
-          isV2 ? { nodeName: defaultSlotElement, name: '5' }
-               : { nodeName: defaultSlotElement, select: '[' + defaultSlotAttribute + '=\'5\']' },
-          { nodeName: '#text', data: '.' }
-        ],
-        parameters: [
-          { select: 'i18n-number[' + defaultParamAttribute + '=\'1\']', number: 1, formatted: '1', 'root.PolymerDom.children.0.textContent': '1' },
-          { select: 'span[' + defaultParamAttribute + '=\'2\']', textContent: 'female' },
-          { select: 'span[' + defaultParamAttribute + '=\'3\']', textContent: 'Joe' },
-          { select: 'span[' + defaultParamAttribute + '=\'4\']', textContent: 'Alice' },
-          { select: 'span[' + defaultParamAttribute + '=\'5\']', textContent: 'a gift' }
         ]
       },
       { 
@@ -521,8 +522,9 @@ addEventListener('WebComponentsReady', function () {
             fixtureElement = result.fixture;
             return new Promise(function (resolve) {
               var resolved = false;
+              var onRendered;
               if (params.assign) {
-                el.addEventListener('rendered', function onRendered(e) {
+                onRendered = function onRendered(e) {
                   var target = isV2 ? e.composedPath()[0] : Polymer.dom(e).rootTarget;
                   console.log('received rendered event in suiteSetup');
                   if (target === el) {
@@ -531,9 +533,18 @@ addEventListener('WebComponentsReady', function () {
                     resolved = true;
                     resolve();
                   }
-                });
+                };
+                if (params.delay) {
+                  setTimeout(function () {
+                    el.addEventListener('rendered', onRendered);
+                  }, params.delay);
+                }
+                else {
+                  el.addEventListener('rendered', onRendered);
+                }
                 setTimeout(function () {
                   if (!resolved) {
+                    el.removeEventListener('rendered', onRendered);
                     resolve();
                   }
                 }, 1000);
