@@ -26,7 +26,7 @@
     "bower_components"
   ],
   "dependencies": {
-    "polymer": "^2.0.0-rc.5",
+    "polymer": "^2.0.0-rc.6",
     "make-plural": "^3.0.3",
     "i18n-number": "#2.0-develop"
   },
@@ -44,8 +44,8 @@
     "promise-polyfill": "polymerlabs/promise-polyfill#^1.0.0"
   },
   "resolutions": {
-    "polymer": "^2.0.0-rc.5",
-    "webcomponentsjs": "v1.0.0-rc.8",
+    "polymer": "^2.0.0-rc.6",
+    "webcomponentsjs": "^v1.0.0-rc.8",
     "iron-flex-layout": "2.0-preview",
     "paper-styles": "2.0-preview",
     "iron-behaviors": "2.0-preview",
@@ -56,9 +56,9 @@
   "variants": {
     "1.x": {
       "dependencies": {
-        "polymer": "^1.9.0",
+        "polymer": "^1.9.1",
         "make-plural": "^3.0.3",
-        "i18n-number": "#2.0-develop"
+        "i18n-number": "^1.0.2"
       },
       "devDependencies": {
         "web-component-tester": "t2ym/web-component-tester#wct6-plugin",
@@ -74,9 +74,9 @@
         "promise-polyfill": "polymerlabs/promise-polyfill#^1.0.0"
       },
       "resolutions": {
-        "polymer": "^1.9.0",
+        "polymer": "^1.9.1",
         "webcomponentsjs": "^0.7.24",
-        "i18n-number": "#2.0-develop",
+        "i18n-number": "^1.0.2",
         "iron-behaviors": "PolymerElements/iron-behaviors^1.0.17",
         "iron-selector": "PolymerElements/iron-selector^1.5.2",
         "iron-a11y-keys-behavior": "PolymerElements/iron-a11y-keys-behavior^1.1.9",
