@@ -7,7 +7,7 @@
 
 Text formatter with [Unicode CLDR plural rules](http://cldr.unicode.org/index/cldr-spec/plural-rules) and choices (like gender) support.
 
-[Demo](https://www.webcomponents.org/element/t2ym/i18n-format/demo/demo/index.html) and [API Docs](https://www.webcomponents.org/element/t2ym/i18n-number/elements/i18n-format)
+[Demo](https://www.webcomponents.org/element/t2ym/i18n-format/demo/demo/index.html) and [API Docs](https://www.webcomponents.org/element/t2ym/i18n-format/elements/i18n-format)
 
 <img src="https://raw.githubusercontent.com/wiki/t2ym/i18n-format/i18n-format.gif" width="600px">
 
