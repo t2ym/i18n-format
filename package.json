@@ -1,6 +1,6 @@
 {
   "name": "i18n-format",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Text formatter with Unicode CLDR Plural Rules and choices support",
   "main": "i18n-format.html",
   "directories": {
@@ -18,7 +18,6 @@
     "polymer",
     "web-component",
     "web-components",
-    "polymer",
     "i18n",
     "internationalization",
     "l10n",
@@ -35,7 +34,8 @@
   "homepage": "https://github.com/t2ym/i18n-format#readme",
   "devDependencies": {
     "coveralls": "^2.11.8",
+    "lcov-result-merger": "^1.2.0",
     "web-component-tester": "t2ym/web-component-tester#wct6-plugin",
-    "web-component-tester-istanbul": "t2ym/web-component-tester-istanbul#0.10.1-wct6.8"
+    "web-component-tester-istanbul": "t2ym/web-component-tester-istanbul#0.10.1-wct6.11"
   }
 }

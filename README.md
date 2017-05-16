@@ -1,12 +1,13 @@
 [![Build Status](https://travis-ci.org/t2ym/i18n-format.svg?branch=master)](https://travis-ci.org/t2ym/i18n-format)
 [![Coverage Status](https://coveralls.io/repos/github/t2ym/i18n-format/badge.svg?branch=master&build=39)](https://coveralls.io/github/t2ym/i18n-format?branch=master)
-[![Bower](https://img.shields.io/bower/v/i18n-format.svg)](https://customelements.io/t2ym/i18n-format/)
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/t2ym/i18n-format)
+[![Bower](https://img.shields.io/bower/v/i18n-format.svg)](https://www.webcomponents.org/element/t2ym/i18n-format)
 
 ## `<i18n-format>`
 
 Text formatter with [Unicode CLDR plural rules](http://cldr.unicode.org/index/cldr-spec/plural-rules) and choices (like gender) support.
 
-[Demo](https://t2ym.github.io/i18n-format/components/i18n-format/demo) and [API Docs](https://t2ym.github.io/i18n-format/components/i18n-format/)
+[Demo](https://www.webcomponents.org/element/t2ym/i18n-format/demo/demo/index.html) and [API Docs](https://www.webcomponents.org/element/t2ym/i18n-format/elements/i18n-format)
 
 <img src="https://raw.githubusercontent.com/wiki/t2ym/i18n-format/i18n-format.gif" width="600px">
 
@@ -88,7 +89,7 @@ So this example renders as follows:
   <p>You (<span>James</span>) gave her (<span>Alice</span>) and one other person <span>a gift</span>.</p>
 ```
 
-[`<i18n-number>`](https://github.com/t2ym/i18n-number/) specifies plural categories for
+[`<i18n-number>`](https://www.webcomponents.org/element/t2ym/i18n-number) specifies plural categories for
 [CLDR plural rules](http://cldr.unicode.org/index/cldr-spec/plural-rules).
 
 ### License

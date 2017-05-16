@@ -5,7 +5,7 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
 
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../i18n-number/i18n-number.html">
-<script src="../make-plural/plurals.min.js"></script>
+<link rel="import" href="import-plurals.html"></script>
 
 <!--
 `<i18n-format>` renders a text string with parameters to make grammatical localization of parameterized sentences easier.
@@ -208,10 +208,10 @@ Polymer({
      * The typical value is bound to `{{effectiveLang}}` when the containing element has
      * `BehaviorsStore.I18nBehavior`.
      */
-    lang: {
+    _lang: {
       type: String,
       value: 'en',
-      reflectToAttribute: true,
+      reflectToAttribute: false,
       observer: '_langChanged'
     },
 
@@ -221,7 +221,7 @@ Polymer({
      */
     paramAttribute: {
       type: String,
-      value: 'param',
+      value: (function () { return Polymer.Element ? 'slot' : 'param'; })(),
       observer: '_paramAttributeChanged'
     },
 
@@ -256,6 +256,11 @@ Polymer({
 
   ready: function () {
     this._setupParams();
+    if (this.root === this) {
+      this.attachShadow({ mode: 'open' });
+      this.root = this.shadowRoot;
+      this.render();
+    }
     if (!this.lang) {
       // Polyfill non-functional default value for lang property in Safari 7
       this.lang = this.DEFAULT_LANG;
@@ -281,11 +286,7 @@ Polymer({
                                this.elements.length > 0 && 
                                this.elements[0].tagName.toLowerCase() === 'json-data';
     this.observer = new MutationObserver(this._templateMutated.bind(this));
-    var desc = Object.getOwnPropertyDescriptor(this, 'lang');
-    if (desc && typeof desc.set !== 'function') {
-      // Fix #1. Emulate lang's observer since Safari 7 overrides lang property
-      this.observer.observe(this, { attributes: true, attributeFilter: [ 'lang' ] });
-    }
+    this.observer.observe(this, { attributes: true, attributeFilter: [ 'lang' ] });
     for (n = 0; n < this.elements.length; n++) {
       if (n === 0) {
         this.templateElement = this.elements[n];
@@ -320,16 +321,14 @@ Polymer({
         //console.log('i18n-format: ' + this.id + '._templateMutated(): characterData: tag = ' + 
         //            Polymer.dom(mutation.target).parentNode.tagName.toLowerCase() + 
         //            ' data = ' + mutation.target.data);
-        if (Polymer.dom(mutation.target).parentNode.tagName.toLowerCase() !== 'i18n-number') {
-          this.render();
-        }
-        else if (typeof Polymer.dom(mutation.target).parentNode.formatted !== 'undefined') {
+        if ((Polymer.Element ? mutation.target : Polymer.dom(mutation.target)).parentNode.tagName.toLowerCase() !== 'i18n-number' ||
+            typeof (Polymer.Element ? mutation.target : Polymer.dom(mutation.target)).parentNode.formatted !== 'undefined') {
           this.render();
         }
         break;
       case 'attributes':
         if (mutation.attributeName === 'lang') {
-          this._langChanged(this.lang);
+          this._lang = this.lang;
         }
         break;
       default:
@@ -521,6 +520,8 @@ Polymer({
     var paramPlaceholder;
     var childNodes = [];
     var i;
+    var shadowDomV1 = !!Polymer.Element;
+    var shadyDomV1 = !!window.ShadyDOM;
 
     if (templateText === this.lastTemplateText) {
       //console.log('i18n-format: skipping rendering as the templateText has not changed');
@@ -535,16 +536,26 @@ Polymer({
     }
 
     i = 1;
-    while (i < this.elements.length) {
+    while (this.elements && i < this.elements.length) {
       paramPlaceholder = this.paramFormat.replace('n', i);
       templateText = templateText.replace(paramPlaceholder, 
+                      shadowDomV1 ? '<slot name="' + i + '"></slot>' :
                       '<content select="[' + this.paramAttribute + '=\'' + i + '\']"></content>');
       i++;
     }
     
     tmpNode.innerHTML = templateText;
 
-    Polymer.dom(this.root).innerHTML = '';
+    if (Polymer.Element) {
+      if (this.root === this) {
+        this.attachShadow({ mode: 'open' });
+        this.root = this.shadowRoot;
+      }
+      this.root.innerHTML = ''; // Polymer 2.x
+    }
+    else {
+      Polymer.dom(this.root).innerHTML = '';
+    }
 
     // References of childNodes have to be copied for Shady DOM compatibility
     for (i = 0; i < tmpNode.childNodes.length; i++) {
@@ -556,6 +567,9 @@ Polymer({
       Polymer.dom(this.root).appendChild(childNodes[i]);
     }
 
+    if (shadyDomV1) {
+      ShadyDOM.flush();
+    }
     this.fire('rendered');
   }
 });
