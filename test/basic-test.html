@@ -269,6 +269,14 @@ addEventListener('WebComponentsReady', function () {
         assert.equal(Polymer.dom(el.root).textContent, '', 'textContent is empty');
       });
 
+      suiteTeardown(function () {
+        el = undefined;
+        var f = document.querySelector('test-fixture#default');
+        if (f && typeof f.restore === 'function') {
+          f.restore();
+        }
+      });
+
     });
 
     if (!Number.isNaN) {
