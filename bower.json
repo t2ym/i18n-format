@@ -40,7 +40,7 @@
     "paper-styles": "PolymerElements/paper-styles#1 - 2",
     "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#1 - 2",
     "paper-item": "PolymerElements/paper-item#1 - 2",
-    "promise-polyfill": "polymerlabs/promise-polyfill#2.0-preview"
+    "promise-polyfill": "t2ym/promise-polyfill#2.0-preview"
   },
   "variants": {
     "1.x": {
