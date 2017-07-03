@@ -35,7 +35,7 @@
   "devDependencies": {
     "coveralls": "^2.11.8",
     "lcov-result-merger": "^1.2.0",
-    "web-component-tester": "t2ym/web-component-tester#wct6-plugin",
-    "web-component-tester-istanbul": "t2ym/web-component-tester-istanbul#0.10.1-wct6.11"
+    "@t2ym/web-component-tester": "^6.0.0",
+    "wct-istanbul": "^0.11.1"
   }
 }
