@@ -33,9 +33,10 @@
   },
   "homepage": "https://github.com/t2ym/i18n-format#readme",
   "devDependencies": {
+    "@t2ym/web-component-tester": "^6.0.1",
     "coveralls": "^2.11.8",
     "lcov-result-merger": "^1.2.0",
-    "@t2ym/web-component-tester": "^6.0.0",
-    "wct-istanbul": "^0.11.1"
+    "wct-headless": "^2.2.0",
+    "wct-istanbul": "^0.12.3"
   }
 }
