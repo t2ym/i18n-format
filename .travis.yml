@@ -22,11 +22,11 @@ addons:
       - google-chrome-stable
   sauce_connect: true
 script:
-  - wct --skip-plugin=istanbul
+  - wct
   - mv -f bower_components bower_components2
   - mv -f bower_components-1.x bower_components
   - cp -vf test/v1-wct.conf.json wct.conf.json
   - cp -vf bower-1.x.json bower.json
   - bower install intl#1.1.0 || echo success
-  - wct --skip-plugin=istanbul
-  - #if [ "${TRAVIS_BRANCH}" != "" ]; then lcov-result-merger 'test/coverage-report*/lcov.info' | ./node_modules/coveralls/bin/coveralls.js || echo success; fi
+  - wct
+  - if [ "${TRAVIS_BRANCH}" != "" ]; then lcov-result-merger 'test/coverage-report*/lcov.info' | ./node_modules/coveralls/bin/coveralls.js || echo success; fi
