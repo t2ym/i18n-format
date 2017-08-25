@@ -2,7 +2,7 @@ language: node_js
 branches:
   except:
   - gh-pages
-sudo: true
+sudo: false
 dist: trusty
 before_script:
   - npm install -g bower @t2ym/polymer-cli wct-istanbul wct-headless
@@ -22,7 +22,7 @@ addons:
       - google-chrome-stable
   sauce_connect: true
 script:
-  - xvfb-run polymer test
+  - polymer test
   - mv -f bower_components bower_components2
   - mv -f bower_components-1.x bower_components
   - cp -vf test/v1-wct.conf.json wct.conf.json
