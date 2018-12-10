@@ -14,13 +14,13 @@ Text formatter with [Unicode CLDR plural rules](http://cldr.unicode.org/index/cl
 ### Install
 
 ```
-    bower install --save i18n-format
+    npm install i18n-format
 ```
 
 ### Import
 
-```html
-    <link rel="import" href="/path/to/bower_components/i18n-format/i18n-format.html">
+```javascript
+    import "i18n-format/i18n-format.html";
 ```
 
 ### Usage

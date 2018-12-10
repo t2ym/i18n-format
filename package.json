@@ -1,19 +1,5 @@
 {
-  "name": "i18n-format",
-  "version": "2.0.0",
   "description": "Text formatter with Unicode CLDR Plural Rules and choices support",
-  "main": "i18n-format.html",
-  "directories": {
-    "test": "test"
-  },
-  "scripts": {
-    "test": "wct && if [ \"${TRAVIS_BRANCH}\" != \"\" ]; then coveralls <./test/coverage-report/lcov.info; fi",
-    "clean": "rm -rvf ./test/coverage-report"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/t2ym/i18n-format.git"
-  },
   "keywords": [
     "polymer",
     "web-component",
@@ -26,17 +12,52 @@
     "pluralization",
     "cldr"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/t2ym/i18n-format.git"
+  },
+  "homepage": "https://github.com/t2ym/i18n-format#readme",
+  "name": "i18n-format",
+  "version": "3.0.0-pre.1",
+  "main": "i18n-format.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "wct && if [ \"${TRAVIS_BRANCH}\" != \"\" ]; then coveralls <./test/coverage-report/lcov.info; fi",
+    "clean": "rm -rvf ./test/coverage-report"
+  },
   "author": "Tetsuya Mori <t2y3141592@gmail.com>",
   "license": "BSD-2-Clause",
   "bugs": {
     "url": "https://github.com/t2ym/i18n-format/issues"
   },
-  "homepage": "https://github.com/t2ym/i18n-format#readme",
   "devDependencies": {
-    "@t2ym/web-component-tester": "^6.0.1",
+    "@polymer/iron-component-page": "^4.0.0",
+    "@polymer/iron-demo-helpers": "^3.0.0",
+    "@polymer/iron-flex-layout": "^3.0.0",
+    "@polymer/paper-button": "^3.0.0",
+    "@polymer/paper-dropdown-menu": "^3.0.0",
+    "@polymer/paper-input": "^3.0.0",
+    "@polymer/paper-item": "^3.0.0",
+    "@polymer/paper-listbox": "^3.0.0",
+    "@polymer/paper-styles": "^3.0.0",
     "coveralls": "^2.11.8",
     "lcov-result-merger": "^1.2.0",
-    "wct-headless": "^2.2.0",
-    "wct-istanbul": "^0.12.3"
+    "wct-browser-legacy": "^1.0.1",
+    "wct-istanbul": "^0.14.3",
+    "web-animations-js": "^2.3.1",
+    "web-component-tester": "^6.9.0"
+  },
+  "resolutions": {
+    "inherits": "2.0.3",
+    "samsam": "1.1.3",
+    "supports-color": "3.1.2",
+    "type-detect": "1.0.0"
+  },
+  "dependencies": {
+    "@polymer/polymer": "^3.0.0",
+    "i18n-number": "^3.0.0-pre.3",
+    "make-plural": "^4.3.0"
   }
 }

@@ -1,19 +1,14 @@
 {
   "plugins": {
     "local": {
-      "disabled": true
-    },
-    "headless": {
       "browsers": [
         "chrome",
         "firefox"
       ],
-      "browsersOptions": {
+      "browserOptions": {
         "chrome": [
-          "window-size=1920,1080",
           "headless",
-          "disable-gpu",
-          "no-sandbox"
+          "disable-gpu"
         ],
         "firefox": [
           "--headless"
@@ -26,12 +21,7 @@
         {
           "browserName":  "microsoftedge",
           "platform":     "Windows 10",
-          "version":      "15"
-        },
-        {
-          "browserName":  "microsoftedge",
-          "platform":     "Windows 10",
-          "version":      "14"
+          "version":      "17"
         },
         {
           "browserName":  "internet explorer",
@@ -40,8 +30,13 @@
         },
         {
           "browserName":  "safari",
-          "platform":     "OS X 10.12",
-          "version":      "10"
+          "platform":     "OS X 10.13",
+          "version":      "12"
+        },
+        {
+          "browserName":  "safari",
+          "platform":     "OS X 10.11",
+          "version":      "9"
         }
       ]
     },
@@ -49,10 +44,10 @@
       "dir": "test/coverage-report",
       "reporters": ["text-summary", "lcov"],
       "include": [
-        "**/i18n-format.html"
+        "**/i18n-format.js"
       ],
       "exclude": [
-        "/bower_components/**/*",
+        "/node_modules/**/*",
         "/test/**/*"
       ]
     }

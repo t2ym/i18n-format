@@ -1,13 +1,8 @@
-<!--
+/**
 @license https://github.com/t2ym/i18n-format/blob/master/LICENSE.md
 Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
--->
-
-<link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../i18n-number/i18n-number.html">
-<link rel="import" href="import-plurals.html"></script>
-
-<!--
+*/
+/**
 `<i18n-format>` renders a text string with parameters to make grammatical localization of parameterized sentences easier.
 The first child element (`<span>` or `<json-data>`), followed by parameter elements, provides the template for the target text with parameters.
 Its parameters can be any elements like `<span>`, `<a>`, etc. See `BehaviorsStore.I18nBehavior` (work in progress) for more details in its application.
@@ -186,14 +181,24 @@ Styles can be specified for the containing element and the contained parameters 
 @element i18n-format
 @hero hero.svg
 @demo demo/index.html
--->
+*/
+/*
+  FIXME(polymer-modulizer): the above comments were extracted
+  from HTML and may be out of place here. Review them and
+  then delete this comment!
+*/
+import '@polymer/polymer/polymer-legacy.js';
 
-<dom-module id="i18n-format">
-  <template>
-  </template>
-</dom-module>
-<script>
+import 'i18n-number/i18n-number.js';
+import plurals from 'make-plural/es6/plurals.js';
+import { Polymer, html } from '@polymer/polymer/polymer-legacy.js';
+import { PolymerElement } from '@polymer/polymer/polymer-element.js';
+import { dom } from '@polymer/polymer/lib/legacy/polymer.dom.js';
 Polymer({
+  importMeta: import.meta,
+
+  _template: html` `,
+
   is: 'i18n-format',
 
   /**
@@ -221,7 +226,7 @@ Polymer({
      */
     paramAttribute: {
       type: String,
-      value: (function () { return Polymer.Element ? 'slot' : 'param'; })(),
+      value: (function () { return PolymerElement ? 'slot' : 'param'; })(),
       observer: '_paramAttributeChanged'
     },
 
@@ -277,7 +282,7 @@ Polymer({
   _setupParams: function () {
     var n;
     this.elements = Array.prototype.filter.call(
-      Polymer.dom(this).childNodes,
+      dom(this).childNodes,
       function (node) {
         return node.nodeType === node.ELEMENT_NODE;
       }
@@ -290,7 +295,7 @@ Polymer({
     for (n = 0; n < this.elements.length; n++) {
       if (n === 0) {
         this.templateElement = this.elements[n];
-        this.templateTextNode = Polymer.dom(this.templateElement).childNodes[0];
+        this.templateTextNode = dom(this.templateElement).childNodes[0];
         this.observer.observe(this.templateTextNode, { characterData: true });
       }
       else {
@@ -299,7 +304,7 @@ Polymer({
         }
         if (needParamObservation) {
           // TODO: childNodes[0] may not be a text node
-          this.observer.observe(Polymer.dom(this.elements[n]).childNodes[0], { characterData: true });
+          this.observer.observe(dom(this.elements[n]).childNodes[0], { characterData: true });
           if (this.elements[n].tagName.toLowerCase() === 'i18n-number') {
             this.listen(this.elements[n], 'rendered', 'render');
           }
@@ -321,8 +326,8 @@ Polymer({
         //console.log('i18n-format: ' + this.id + '._templateMutated(): characterData: tag = ' + 
         //            Polymer.dom(mutation.target).parentNode.tagName.toLowerCase() + 
         //            ' data = ' + mutation.target.data);
-        if ((Polymer.Element ? mutation.target : Polymer.dom(mutation.target)).parentNode.tagName.toLowerCase() !== 'i18n-number' ||
-            typeof (Polymer.Element ? mutation.target : Polymer.dom(mutation.target)).parentNode.formatted !== 'undefined') {
+        if ((PolymerElement ? mutation.target : dom(mutation.target)).parentNode.tagName.toLowerCase() !== 'i18n-number' ||
+            typeof (PolymerElement ? mutation.target : dom(mutation.target)).parentNode.formatted !== 'undefined') {
           this.render();
         }
         break;
@@ -415,11 +420,11 @@ Polymer({
     var category = 'other';
     var lang = this.lang || this.DEFAULT_LANG;
     lang = lang.split(/[-_]/)[0];
-    if (window.plurals[lang]) {
-      category = window.plurals[lang](n);
+    if (plurals[lang]) {
+      category = plurals[lang](n);
     }
     else {
-      category = window.plurals.en(n);
+      category = plurals.en(n);
     }
     //console.log('i18n-format: _getPluralCategory(' + n + ') = ' + category);
     return category;
@@ -520,7 +525,7 @@ Polymer({
     var paramPlaceholder;
     var childNodes = [];
     var i;
-    var shadowDomV1 = !!Polymer.Element;
+    var shadowDomV1 = !!PolymerElement;
     var shadyDomV1 = !!window.ShadyDOM;
 
     if (templateText === this.lastTemplateText) {
@@ -546,7 +551,7 @@ Polymer({
     
     tmpNode.innerHTML = templateText;
 
-    if (Polymer.Element) {
+    if (PolymerElement) {
       if (this.root === this) {
         this.attachShadow({ mode: 'open' });
         this.root = this.shadowRoot;
@@ -554,7 +559,7 @@ Polymer({
       this.root.innerHTML = ''; // Polymer 2.x
     }
     else {
-      Polymer.dom(this.root).innerHTML = '';
+      dom(this.root).innerHTML = '';
     }
 
     // References of childNodes have to be copied for Shady DOM compatibility
@@ -564,7 +569,7 @@ Polymer({
 
     for (i = 0; i < childNodes.length; i++) {
       // each node has to be appended via Polymer.dom()
-      Polymer.dom(this.root).appendChild(childNodes[i]);
+      dom(this.root).appendChild(childNodes[i]);
     }
 
     if (shadyDomV1) {
@@ -573,8 +578,8 @@ Polymer({
     this.fire('rendered');
   }
 });
-</script>
-<!--
+
+/*
 
 Simple Template Format:
 
@@ -695,4 +700,10 @@ Compound Template Format:
       ]</json-data>
     </template>
 
--->
+*/
+/*
+  FIXME(polymer-modulizer): the above comments were extracted
+  from HTML and may be out of place here. Review them and
+  then delete this comment!
+*/
+;
