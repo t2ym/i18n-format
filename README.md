@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/t2ym/i18n-format.svg?branch=master)](https://travis-ci.org/t2ym/i18n-format)
 [![Coverage Status](https://coveralls.io/repos/github/t2ym/i18n-format/badge.svg?branch=master&build=39)](https://coveralls.io/github/t2ym/i18n-format?branch=master)
+[![npm version](https://badge.fury.io/js/i18n-format.svg)](https://badge.fury.io/js/i18n-format)
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/t2ym/i18n-format)
 
 ## `<i18n-format>`
