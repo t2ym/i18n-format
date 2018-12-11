@@ -19,7 +19,7 @@ Text formatter with [Unicode CLDR plural rules](http://cldr.unicode.org/index/cl
 ### Import
 
 ```javascript
-    import "i18n-format/i18n-format.html";
+    import "i18n-format/i18n-format.js";
 ```
 
 ### Usage
