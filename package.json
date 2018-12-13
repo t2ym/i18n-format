@@ -18,12 +18,13 @@
   },
   "homepage": "https://github.com/t2ym/i18n-format#readme",
   "name": "i18n-format",
-  "version": "3.0.0-pre.9",
+  "version": "3.0.0-pre.10",
   "main": "i18n-format.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
+    "demo:build": "polymer build",
     "test": "wct && if [ \"${TRAVIS_BRANCH}\" != \"\" ]; then coveralls <./test/coverage-report/lcov.info; fi",
     "clean": "rm -rvf ./test/coverage-report"
   },
@@ -57,7 +58,7 @@
   },
   "dependencies": {
     "@polymer/polymer": "^3.0.0",
-    "i18n-number": "^3.0.0-pre.3",
+    "i18n-number": "^3.0.0-pre.8",
     "make-plural": "^4.3.0"
   }
 }
