@@ -295,7 +295,15 @@ Polymer({
     for (n = 0; n < this.elements.length; n++) {
       if (n === 0) {
         this.templateElement = this.elements[n];
-        this.templateTextNode = dom(this.templateElement).childNodes[0];
+        let i = 0;
+        do {
+          this.templateTextNode = dom(this.templateElement).childNodes[i++];
+          if (!this.templateTextNode) {
+            this.templateTextNode = dom(this.templateElement).childNodes[0];
+            break;
+          }
+        }
+        while (this.templateTextNode.nodeType !== this.templateTextNode.TEXT_NODE);
         this.observer.observe(this.templateTextNode, { characterData: true });
       }
       else {
