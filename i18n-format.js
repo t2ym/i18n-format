@@ -219,8 +219,7 @@ Polymer({
      */
     paramAttribute: {
       type: String,
-      value: 'slot',
-      observer: '_paramAttributeChanged'
+      value: 'slot'
     },
 
     /**
@@ -391,6 +390,7 @@ Polymer({
    * @param {string} paramAttribute New paramAttribute.
    * @param {string} oldParamAttribute Old paramAttribute.
    */
+  /* only for Polymer 1.x with ShadowDOM v0
   _paramAttributeChanged: function (paramAttribute, oldParamAttribute) {
     //console.log('i18n-format: ' + this.id + '._paramAttributeChanged() new = ' + paramAttribute + ' old = ' + oldParamAttribute);
     var n;
@@ -411,6 +411,7 @@ Polymer({
       this.render();
     }
   },
+  */
 
   /**
    * Detect the CLDR plural category of a number 
