@@ -25,6 +25,9 @@ Polymer({
         <span>{{recipients.0.name}}</span>
         <span parameter="5">{{compoundText.5}}</span>
       </i18n-format>
+      <i18n-format id="dummy">
+        <span><!-- --></span>
+      </i18n-format>
     </span>
 `,
 
