@@ -182,17 +182,10 @@ Styles can be specified for the containing element and the contained parameters 
 @hero hero.svg
 @demo demo/index.html
 */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
-import '@polymer/polymer/polymer-legacy.js';
-
 import 'i18n-number/i18n-number.js';
 import plurals from 'make-plural/es6/plurals.js';
-import { Polymer, html } from '@polymer/polymer/polymer-legacy.js';
-import { PolymerElement } from '@polymer/polymer/polymer-element.js';
+import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
+import { html } from '@polymer/polymer/lib/utils/html-tag.js';
 import { dom } from '@polymer/polymer/lib/legacy/polymer.dom.js';
 Polymer({
   importMeta: import.meta,
@@ -226,7 +219,7 @@ Polymer({
      */
     paramAttribute: {
       type: String,
-      value: (function () { return PolymerElement ? 'slot' : 'param'; })(),
+      value: 'slot',
       observer: '_paramAttributeChanged'
     },
 
@@ -334,8 +327,8 @@ Polymer({
         //console.log('i18n-format: ' + this.id + '._templateMutated(): characterData: tag = ' + 
         //            Polymer.dom(mutation.target).parentNode.tagName.toLowerCase() + 
         //            ' data = ' + mutation.target.data);
-        if ((PolymerElement ? mutation.target : dom(mutation.target)).parentNode.tagName.toLowerCase() !== 'i18n-number' ||
-            typeof (PolymerElement ? mutation.target : dom(mutation.target)).parentNode.formatted !== 'undefined') {
+        if (mutation.target.parentNode.tagName.toLowerCase() !== 'i18n-number' ||
+            typeof mutation.target.parentNode.formatted !== 'undefined') {
           this.render();
         }
         break;
@@ -533,7 +526,6 @@ Polymer({
     var paramPlaceholder;
     var childNodes = [];
     var i;
-    var shadowDomV1 = !!PolymerElement;
     var shadyDomV1 = !!window.ShadyDOM;
 
     if (templateText === this.lastTemplateText) {
@@ -551,24 +543,17 @@ Polymer({
     i = 1;
     while (this.elements && i < this.elements.length) {
       paramPlaceholder = this.paramFormat.replace('n', i);
-      templateText = templateText.replace(paramPlaceholder, 
-                      shadowDomV1 ? '<slot name="' + i + '"></slot>' :
-                      '<content select="[' + this.paramAttribute + '=\'' + i + '\']"></content>');
+      templateText = templateText.replace(paramPlaceholder, '<slot name="' + i + '"></slot>');
       i++;
     }
     
     tmpNode.innerHTML = templateText;
 
-    if (PolymerElement) {
-      if (this.root === this) {
-        this.attachShadow({ mode: 'open' });
-        this.root = this.shadowRoot;
-      }
-      this.root.innerHTML = ''; // Polymer 2.x
+    if (this.root === this) {
+      this.attachShadow({ mode: 'open' });
+      this.root = this.shadowRoot;
     }
-    else {
-      dom(this.root).innerHTML = '';
-    }
+    this.root.innerHTML = '';
 
     // References of childNodes have to be copied for Shady DOM compatibility
     for (i = 0; i < tmpNode.childNodes.length; i++) {
@@ -709,9 +694,3 @@ Compound Template Format:
     </template>
 
 */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
-;
