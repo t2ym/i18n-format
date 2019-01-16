@@ -254,11 +254,13 @@ Polymer({
 
   ready: function () {
     this._setupParams();
+    /*
     if (this.root === this) {
       this.attachShadow({ mode: 'open' });
       this.root = this.shadowRoot;
       this.render();
     }
+    */
     if (!this.lang) {
       // Polyfill non-functional default value for lang property in Safari 7
       this.lang = this.DEFAULT_LANG;
@@ -549,10 +551,12 @@ Polymer({
     
     tmpNode.innerHTML = templateText;
 
+    /*
     if (this.root === this) {
       this.attachShadow({ mode: 'open' });
       this.root = this.shadowRoot;
     }
+    */
     this.root.innerHTML = '';
 
     // References of childNodes have to be copied for Shady DOM compatibility
