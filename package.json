@@ -58,7 +58,7 @@
   },
   "dependencies": {
     "@polymer/polymer": "^3.0.0",
-    "i18n-number": "^3.0.0",
+    "i18n-number": "^3.0.1",
     "make-plural": "^4.3.0"
   }
 }
