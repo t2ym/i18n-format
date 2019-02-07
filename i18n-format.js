@@ -543,6 +543,7 @@ Polymer({
       //console.log('i18n-format: ' + this.id + '.render() templateText = ' + templateText);
     }
 
+    templateText = templateText.replace(/</g, '&lt;');
     i = 1;
     while (this.elements && i < this.elements.length) {
       paramPlaceholder = this.paramFormat.replace('n', i);
