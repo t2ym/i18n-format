@@ -4,7 +4,16 @@
       "browsers": [
         "chrome",
         "firefox"
-      ]
+      ],
+      "browserOptions": {
+        "chrome": [
+          "headless",
+          "disable-gpu"
+        ],
+        "firefox": [
+          "--headless"
+        ]
+      }
     },
     "sauce": {
       "disabled": false,
@@ -12,12 +21,7 @@
         {
           "browserName":  "microsoftedge",
           "platform":     "Windows 10",
-          "version":      "15"
-        },
-        {
-          "browserName":  "microsoftedge",
-          "platform":     "Windows 10",
-          "version":      "14"
+          "version":      "17"
         },
         {
           "browserName":  "internet explorer",
@@ -26,8 +30,8 @@
         },
         {
           "browserName":  "safari",
-          "platform":     "OS X 10.12",
-          "version":      "10"
+          "platform":     "OS X 10.13",
+          "version":      "12"
         },
         {
           "browserName":  "safari",
