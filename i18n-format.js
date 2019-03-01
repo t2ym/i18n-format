@@ -8,6 +8,7 @@ import 'i18n-number/i18n-number.js';
 import plurals from 'make-plural/es6/plurals.js';
 
 const templateCache = new Map();
+const jsonCache = new Map();
 
 /**
 `<i18n-format>` renders a text string with parameters to make grammatical localization of parameterized sentences easier.
@@ -404,7 +405,12 @@ export class I18nFormat extends polyfill(HTMLElement) {
     else if (this.templateElement.tagName.toLowerCase() === 'json-data') {
       let templateObject;
       try {
-        templateObject = JSON.parse(this.templateTextNode.data);
+        let data = this.templateTextNode.data;
+        templateObject = jsonCache.get(data);
+        if (!templateObject) {
+          templateObject = JSON.parse(data);
+          jsonCache.set(data, templateObject);
+        }
       }
       catch (ex) {
         if (this.templateTextNode.data) {
