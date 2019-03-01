@@ -4,7 +4,6 @@
   "sources": [
   ],
   "extraDependencies": [
-    "node_modules/intl/**",
     "node_modules/@webcomponents/webcomponentsjs/**",
     "node_modules/web-animations-js/**"
   ],

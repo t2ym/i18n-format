@@ -1,4 +1,24 @@
-{
+module.exports = {
+  "webserver": {
+    "hostname": "selenium-hub"
+  },
+  "activeBrowsers": [
+    {
+      "url": 'http://selenium-hub:4444/wd/hub',
+      "browserName": "internet explorer",
+      "version": "11",
+    },
+    {
+      "url": 'http://selenium-hub:4444/wd/hub',
+      "browserName": "MicrosoftEdge",
+      "version": "17",
+    },
+    {
+      "url": 'http://selenium-hub:4444/wd/hub',
+      "browserName": "safari",
+      "version": "12",
+    },
+  ],
   "plugins": {
     "local": {
       "browsers": [
@@ -16,7 +36,7 @@
       }
     },
     "sauce": {
-      "disabled": false,
+      "disabled": true,
       "browsers": [
         {
           "browserName":  "microsoftedge",
@@ -41,15 +61,14 @@
       ]
     },
     "istanbul": {
-      "dir": "test/coverage-report",
+      "dir": process.env.COVERAGE_DIR || "test/coverage-report",
       "reporters": ["text-summary", "lcov"],
       "include": [
         "**/i18n-format.js"
       ],
       "exclude": [
-        "/node_modules/**/*",
         "/test/**/*"
       ]
     }
   }
-}
+};

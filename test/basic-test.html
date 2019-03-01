@@ -70,11 +70,11 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
             "other": "You ({3}) gave them ({4}) and {1} other people gifts."
           }</json-data>
           <i18n-number lang="en" offset="1">2</i18n-number>
-          <span>female</span>
-          <span>Joe</span>
-          <span>Alice</span>
-          <span>a gift</span>
-          <span>{{dummy}}</span>
+          <span slot="2"><!-- comment -->female</span>
+          <span><!-- comment --><i>Joe</i></span>
+          <span><!-- comment -->Alice</span>
+          <span><!-- comment -->a gift</span>
+          <span><!-- comment -->{{dummy}}</span>
         </i18n-format>
       </template>
     </test-fixture>
@@ -92,8 +92,8 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
     </test-fixture>
 
     <test-fixture id="json-error-static">
-      <template is="dom-template">
-        <i18n-format>
+      <template>
+        <i18n-format lang="{{x}}">
           <json-data>ERROR</json-data>
         </i18n-format>
       </template>
@@ -108,6 +108,7 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
           }</json-data>
           <span>unknown</span>
           <span>Yoda</span>
+          <i18n-number> </i18n-number>
         </i18n-format>
       </template>
     </test-fixture>
@@ -366,7 +367,11 @@ suite('<i18n-format>', function () {
     });
 
     test('default textContent is empty', function () {
-      assert.equal(dom(el.root).textContent, '', 'textContent is empty');
+      assert.equal(el.shadowRoot.textContent, '', 'textContent is empty');
+    });
+
+    test('importMeta property', function () {
+      assert.equal(typeof el.constructor.importMeta, 'object', 'importMeta is an object');
     });
 
     suiteTeardown(function () {
@@ -418,7 +423,7 @@ suite('<i18n-format>', function () {
         { nodeName: '#text', data: '.' }
       ],
       parameters: [
-        { select: 'i18n-number[' + defaultParamAttribute + '=\'1\']', number: 1, formatted: '1', 'root.PolymerDom.children.0.textContent': '1' },
+        { select: 'i18n-number[' + defaultParamAttribute + '=\'1\']', number: 1, formatted: '1', 'shadowRoot.children.0.textContent': '1' },
         { select: 'span[' + defaultParamAttribute + '=\'2\']', textContent: 'female' },
         { select: 'span[' + defaultParamAttribute + '=\'3\']', textContent: 'Joe' },
         { select: 'span[' + defaultParamAttribute + '=\'4\']', textContent: 'Alice' },
@@ -681,7 +686,7 @@ suite('<i18n-format>', function () {
 
       if (params.childNodes) {
         test('childNodes are set as ' + JSON.stringify(params.childNodes), function (done) {
-          var childNodes = dom(el.root).childNodes;
+          var childNodes = Array.prototype.filter.call(el.shadowRoot.childNodes, (node) => node.nodeType !== node.COMMENT_NODE);
           var i;
           for (i = 0; i < params.childNodes.length; i++) {
             for (var p in params.childNodes[i]) {
@@ -697,7 +702,7 @@ suite('<i18n-format>', function () {
           updateProperty(el, params.assign);
           var i;
           for (i = 0; i < params.parameters.length; i++) {
-            var node = dom(el).querySelector(params.parameters[i].select);
+            var node = el.querySelector(params.parameters[i].select);
             assert.isDefined(node, params.parameters[i].select + ' is defined');
             for (var p in params.parameters[i]) {
               if (p === 'select') {
@@ -819,7 +824,7 @@ suite('<i18n-format>', function () {
         { nodeName: '#text', data: ' other people gifts.' }
       ],
       parameters: [
-        { select: 'i18n-number[' + defaultParamAttribute + '=\'1\']', number: 2, formatted: '2', 'root.PolymerDom.children.0.textContent': '2' },
+        { select: 'i18n-number[' + defaultParamAttribute + '=\'1\']', number: 2, formatted: '2', 'shadowRoot.children.0.textContent': '2' },
         { select: 'span[' + defaultParamAttribute + '=\'2\']', textContent: 'female' },
         { select: 'span[' + defaultParamAttribute + '=\'3\']', textContent: 'Joe' },
         { select: 'span[' + defaultParamAttribute + '=\'4\']', textContent: 'Alice' },
@@ -855,7 +860,7 @@ suite('<i18n-format>', function () {
         { nodeName: '#text', data: '.' }
       ],
       parameters: [
-        { select: 'i18n-number[' + defaultParamAttribute + '=\'1\']', number: 1, formatted: '1', 'root.PolymerDom.children.0.textContent': '1' },
+        { select: 'i18n-number[' + defaultParamAttribute + '=\'1\']', number: 1, formatted: '1', 'shadowRoot.children.0.textContent': '1' },
         { select: 'span[' + defaultParamAttribute + '=\'2\']', textContent: 'female' },
         { select: 'span[' + defaultParamAttribute + '=\'3\']', textContent: 'Joe' },
         { select: 'span[' + defaultParamAttribute + '=\'4\']', textContent: 'Alice' },
@@ -886,7 +891,7 @@ suite('<i18n-format>', function () {
         { nodeName: '#text', data: ') gave no gifts.' }
       ],
       parameters: [
-        { select: 'i18n-number[' + defaultParamAttribute + '=\'1\']', number: -1, formatted: '-1', rawNumber: 0, 'root.PolymerDom.children.0.textContent': '-1' },
+        { select: 'i18n-number[' + defaultParamAttribute + '=\'1\']', number: -1, formatted: '-1', rawNumber: 0, 'shadowRoot.children.0.textContent': '-1' },
         { select: 'span[' + defaultParamAttribute + '=\'2\']', textContent: '' },
         { select: 'span[' + defaultParamAttribute + '=\'3\']', textContent: 'Joe' },
         { select: 'span[' + defaultParamAttribute + '=\'4\']', textContent: '' },
@@ -924,7 +929,7 @@ suite('<i18n-format>', function () {
         { nodeName: '#text', data: '.' }
       ],
       parameters: [
-        { select: 'i18n-number[' + defaultParamAttribute + '=\'1\']', number: 0, formatted: '0', rawNumber: 1, 'root.PolymerDom.children.0.textContent': '0' },
+        { select: 'i18n-number[' + defaultParamAttribute + '=\'1\']', number: 0, formatted: '0', rawNumber: 1, 'shadowRoot.children.0.textContent': '0' },
         { select: 'span[' + defaultParamAttribute + '=\'2\']', textContent: 'female' },
         { select: 'span[' + defaultParamAttribute + '=\'3\']', textContent: 'Joe' },
         { select: 'span[' + defaultParamAttribute + '=\'4\']', textContent: 'Alice' },
@@ -960,7 +965,7 @@ suite('<i18n-format>', function () {
         { nodeName: '#text', data: '.' }
       ],
       parameters: [
-        { select: 'i18n-number[' + defaultParamAttribute + '=\'1\']', number: 1, formatted: '1', 'root.PolymerDom.children.0.textContent': '1' },
+        { select: 'i18n-number[' + defaultParamAttribute + '=\'1\']', number: 1, formatted: '1', 'shadowRoot.children.0.textContent': '1' },
         { select: 'span[' + defaultParamAttribute + '=\'2\']', textContent: 'unknown' },
         { select: 'span[' + defaultParamAttribute + '=\'3\']', textContent: 'Joe' },
         { select: 'span[' + defaultParamAttribute + '=\'4\']', textContent: 'Yoda' },
@@ -998,7 +1003,7 @@ suite('<i18n-format>', function () {
         { nodeName: '#text', data: ' other people gifts.' }
       ],
       parameters: [
-        { select: 'i18n-number[' + defaultParamAttribute + '=\'1\']', number: 1, formatted: '1', 'root.PolymerDom.children.0.textContent': '1' },
+        { select: 'i18n-number[' + defaultParamAttribute + '=\'1\']', number: 1, formatted: '1', 'shadowRoot.children.0.textContent': '1' },
         { select: 'span[' + defaultParamAttribute + '=\'2\']', textContent: 'female' },
         { select: 'span[' + defaultParamAttribute + '=\'3\']', textContent: 'Joe' },
         { select: 'span[' + defaultParamAttribute + '=\'4\']', textContent: 'Alice' },
@@ -1051,7 +1056,7 @@ suite('<i18n-format>', function () {
       paramFormat: paramFormat1,
       childNodes: [],
       parameters: [
-        { select: 'i18n-number[' + defaultParamAttribute + '=\'1\']', number: 2, formatted: '2', 'root.PolymerDom.children.0.textContent': '2' },
+        { select: 'i18n-number[' + defaultParamAttribute + '=\'1\']', number: 2, formatted: '2', 'shadowRoot.children.0.textContent': '2' },
         { select: 'span[' + defaultParamAttribute + '=\'2\']', textContent: 'female' },
         { select: 'span[' + defaultParamAttribute + '=\'3\']', textContent: 'Joe' },
         { select: 'span[' + defaultParamAttribute + '=\'4\']', textContent: 'Alice' },
@@ -1074,7 +1079,7 @@ suite('<i18n-format>', function () {
       paramFormat: paramFormat1,
       childNodes: [],
       parameters: [
-        { select: 'i18n-number[' + defaultParamAttribute + '=\'1\']', number: 2, formatted: '2', 'root.PolymerDom.children.0.textContent': '2' },
+        { select: 'i18n-number[' + defaultParamAttribute + '=\'1\']', number: 2, formatted: '2', 'shadowRoot.children.0.textContent': '2' },
         { select: 'span[' + defaultParamAttribute + '=\'2\']', textContent: 'female' },
         { select: 'span[' + defaultParamAttribute + '=\'3\']', textContent: 'Joe' },
         { select: 'span[' + defaultParamAttribute + '=\'4\']', textContent: 'Alice' },
@@ -1082,6 +1087,7 @@ suite('<i18n-format>', function () {
       ]
     },
     { 
+      skip: isV2,
       suite: 'change paramFormat', 
       fixture: 'bound-and-wrapped',
       target: 'compound',
@@ -1131,7 +1137,7 @@ suite('<i18n-format>', function () {
         { nodeName: '#text', data: '.' }
       ],
       parameters: [
-        { select: 'i18n-number[' + defaultParamAttribute + '=\'1\']', number: 1, formatted: '1', 'root.PolymerDom.children.0.textContent': '1' },
+        { select: 'i18n-number[' + defaultParamAttribute + '=\'1\']', number: 1, formatted: '1', 'shadowRoot.children.0.textContent': '1' },
         { select: 'span[' + defaultParamAttribute + '=\'2\']', textContent: 'female' },
         { select: 'span[' + defaultParamAttribute + '=\'3\']', textContent: 'Joe' },
         { select: 'span[' + defaultParamAttribute + '=\'4\']', textContent: 'Alice' },
@@ -1165,7 +1171,7 @@ suite('<i18n-format>', function () {
         { nodeName: '#text', data: '.' }
       ],
       parameters: [
-        { select: 'i18n-number[parameter=\'1\']', number: 1, formatted: '1', 'root.PolymerDom.children.0.textContent': '1' },
+        { select: 'i18n-number[parameter=\'1\']', number: 1, formatted: '1', 'shadowRoot.children.0.textContent': '1' },
         { select: 'span[parameter=\'2\']', textContent: 'female' },
         { select: 'span[parameter=\'3\']', textContent: 'Joe' },
         { select: 'span[parameter=\'4\']', textContent: 'Alice' },
@@ -1223,7 +1229,7 @@ suite('<i18n-format>', function () {
                       //console.log('skipping rendered event from ', target);
                     }
                   };
-                  if (params.delay) {
+                  if (false && params.delay) {
                     setTimeout(function () {
                       wrapper.addEventListener('rendered', onRendered);
                     }, params.delay);
@@ -1237,7 +1243,7 @@ suite('<i18n-format>', function () {
                       //console.log('suiteSetup resolved on time out');
                       resolve();
                     }
-                  }, 5000);
+                  }, 50);
                   if (params.assign && params.assign.lang === 'xx') {
                     el.lastTemplateText = undefined;
                   }
@@ -1266,7 +1272,7 @@ suite('<i18n-format>', function () {
 
           if (params.childNodes) {
             test('updated childNodes are ' + JSON.stringify(params.childNodes), function (done) {
-              var childNodes = dom(el.root).childNodes;
+              var childNodes = Array.prototype.filter.call(el.shadowRoot.childNodes, (node) => node.nodeType !== node.COMMENT_NODE);
               var i;
               for (i = 0; i < params.childNodes.length; i++) {
                 for (var p in params.childNodes[i]) {
@@ -1281,7 +1287,7 @@ suite('<i18n-format>', function () {
             test('updated parameters are ' + JSON.stringify(params.parameters), function (done) {
               var i;
               for (i = 0; i < params.parameters.length; i++) {
-                var node = dom(el).querySelector(params.parameters[i].select);
+                var node = el.querySelector(params.parameters[i].select);
                 assert.isDefined(node, params.parameters[i].select + ' is defined');
                 for (var p in params.parameters[i]) {
                   if (p === 'select') {

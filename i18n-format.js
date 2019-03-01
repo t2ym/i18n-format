@@ -2,6 +2,13 @@
 @license https://github.com/t2ym/i18n-format/blob/master/LICENSE.md
 Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
 */
+import { polyfill } from 'wc-putty/polyfill.js';
+import { html, render } from 'lit-html/lit-html.js';
+import 'i18n-number/i18n-number.js';
+import plurals from 'make-plural/es6/plurals.js';
+
+const templateCache = new Map();
+
 /**
 `<i18n-format>` renders a text string with parameters to make grammatical localization of parameterized sentences easier.
 The first child element (`<span>` or `<json-data>`), followed by parameter elements, provides the template for the target text with parameters.
@@ -55,20 +62,20 @@ The "`this`" object here is the containing element of the `<i18n-format>` elemen
 
 ### Shadow DOM representation
 
-At runtime, `param="n"` attributes are automatically attached to identify parameters as distributed `content` elements.
+At runtime, `slot="n"` attributes are automatically attached to identify parameters as distributed `content` elements.
 
     <p>
       <i18n-format>
         #shadow-root
           An
-          <content select="[param='1']"></content>
+          <slot name="1">
            element can represent a template with 
-          <content select="[param='2']"></content>
+          <slot name="2">
           .
 
         <span>An {1} element can represent a template with {2}.</span>
-        <code param="1">i18n-format</code>
-        <a href="https://www.google.com/" param="2">parameters</a>
+        <code slot="1">i18n-format</code>
+        <a href="https://www.google.com/" slot="2">parameters</a>
       </i18n-format>
     </p>
 
@@ -79,9 +86,9 @@ The same effect is achieved in Shady DOM as well. The light DOM is shaded, thoug
     <p>
       <i18n-format>
         An
-        <code param="1">i18n-format</code>
+        <code slot="1">i18n-format</code>
         element can represent a template with 
-        <a href="https://www.google.com/" param="2">parameters</a>
+        <a href="https://www.google.com/" slot="2">parameters</a>
         .
       </i18n-format>
     </p>
@@ -177,22 +184,25 @@ Styles can be specified for the containing element and the contained parameters 
       </i18n-format>
     </p>
 
-@group I18nBehavior
 @element i18n-format
-@hero hero.svg
 @demo demo/index.html
 */
-import 'i18n-number/i18n-number.js';
-import plurals from 'make-plural/es6/plurals.js';
-import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
-import { html } from '@polymer/polymer/lib/utils/html-tag.js';
-import { dom } from '@polymer/polymer/lib/legacy/polymer.dom.js';
-Polymer({
-  importMeta: import.meta,
+export class I18nFormat extends polyfill(HTMLElement) {
+  static get importMeta() {
+    return import.meta;
+  }
 
-  _template: html` `,
+  static get is() {
+    return 'i18n-format';
+  }
 
-  is: 'i18n-format',
+  static get observedAttributes() {
+    return [ 'lang' ];
+  }
+
+  __render() {
+    return html([this._preprocessedTemplateText || '']);
+  }
 
   /**
    * Fired whenever the formatted text is rendered.
@@ -200,100 +210,90 @@ Polymer({
    * @event rendered
    */
 
-  properties: {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+
     /**
      * The locale for the template text.
      * The typical value is bound to `{{effectiveLang}}` when the containing element has
      * `BehaviorsStore.I18nBehavior`.
      */
-    _lang: {
-      type: String,
-      value: 'en',
-      reflectToAttribute: false,
-      observer: '_langChanged'
-    },
-
+    this.lang = this.DEFAULT_LANG;
     /**
-     * The parameter attribute name to identify parameters.
-     * No need to change in a normal usage.
+     * The current preprocessed template text
      */
-    paramAttribute: {
-      type: String,
-      value: 'slot'
-    },
+    this._preprocessedTemplateText = '';
+    this._setupParams();
+  }
 
-    /**
-     * The parameter format in the template text.
-     * The `'n'` in the format means n-th parameter.
-     * No need to change in a normal usage.
-     */
-    paramFormat: {
-      type: String,
-      value: '{n}',
-      observer: '_paramFormatChanged'
-    },
-
-    /**
-     * When the boolean attribute `observe-params` is specified, 
-     * the template is re-rendered on every parameter mutation.
-     * If not specified, the template is re-rendered only on `lang` changes and template text changes.
-     *
-     * Note: If true, re-rendering may be performed muiltiple times redundantly on a locale change.
-     */
-    observeParams: {
-      type: Boolean,
-      value: true // TODO: optimize re-rendering
+  attributeChangedCallback(name, oldValue, newValue) {
+    switch (name) {
+    case 'lang':
+      this._langChanged(newValue);
+      break;
+    /* istanbul ignore next */
+    default:
+      /* istanbul ignore next */
+      break;
     }
-  },
+  }
 
   /**
    * Default locale constant 'en'
    */
-  DEFAULT_LANG: 'en',
-
-  ready: function () {
-    this._setupParams();
-    /*
-    if (this.root === this) {
-      this.attachShadow({ mode: 'open' });
-      this.root = this.shadowRoot;
-      this.render();
-    }
-    */
-    if (!this.lang) {
-      // Polyfill non-functional default value for lang property in Safari 7
-      this.lang = this.DEFAULT_LANG;
-    }
-  },
-
-  attached: function () {
-    this.render();
-  },
+  get DEFAULT_LANG() {
+    return 'en';
+  }
 
   /**
-   * Traverse the local DOM and set up parameters and observers.
+   * The parameter attribute name 'slot' to identify parameters.
    */
-  _setupParams: function () {
-    var n;
+  get paramAttribute() {
+    return 'slot';
+  }
+
+  /**
+   * The parameter format in the template text.
+   * The `'n'` in the format means n-th parameter.
+   */
+  get paramFormat() {
+    return '{n}';
+  }
+
+  /**
+   * The boolean property `observeParams` is always true
+   */
+  get observeParams() {
+    return true;
+  }
+
+  connectedCallback() {
+    this.render();
+  }
+
+  /**
+   * Traverses the local DOM and set up parameters and observers.
+   */
+  _setupParams() {
+    let n;
     this.elements = Array.prototype.filter.call(
-      dom(this).childNodes,
+      this.childNodes,
       function (node) {
         return node.nodeType === node.ELEMENT_NODE;
       }
     );
-    var needParamObservation = this.observeParams &&
-                               this.elements.length > 0 && 
+    let needParamObservation = this.elements.length > 0 &&
                                this.elements[0].tagName.toLowerCase() === 'json-data';
     this.observer = new MutationObserver(this._templateMutated.bind(this));
-    this.observer.observe(this, { attributes: true, attributeFilter: [ 'lang' ] });
     for (n = 0; n < this.elements.length; n++) {
       if (n === 0) {
         this.templateElement = this.elements[n];
         let i = 0;
         do {
-          this.templateTextNode = dom(this.templateElement).childNodes[i++];
+          this.templateTextNode = this.templateElement.childNodes[i++];
           if (!this.templateTextNode) {
-            this.templateTextNode = dom(this.templateElement).childNodes[0];
+            this.templateTextNode = this.templateElement.childNodes[0];
             break;
           }
         }
@@ -305,52 +305,58 @@ Polymer({
           this.elements[n].setAttribute(this.paramAttribute, '' + n);
         }
         if (needParamObservation) {
-          // TODO: childNodes[0] may not be a text node
-          this.observer.observe(dom(this.elements[n]).childNodes[0], { characterData: true });
+          let firstChildNode = null;
+          let childNodes = this.elements[n].childNodes;
+          for (let i = 0; i < childNodes.length; i++) {
+            if (childNodes[i].nodeType === childNodes[i].COMMENT_NODE) {
+              continue;
+            }
+            firstChildNode = childNodes[i];
+            break;
+          }
+          if (firstChildNode && firstChildNode.nodeType === firstChildNode.TEXT_NODE) {
+            this.observer.observe(firstChildNode, { characterData: true });
+          }
           if (this.elements[n].tagName.toLowerCase() === 'i18n-number') {
-            this.listen(this.elements[n], 'rendered', 'render');
+            this.elements[n].addEventListener('rendered', this.render.bind(this));
           }
         }
       }
     }
     //console.log('i18n-format: _setupParams: elements = ' + this.elements);
-  },
+  }
 
   /**
    * MutationObserver callback of child text nodes to re-render on template text or parameter mutations.
    *
    * @param {Array} mutations Array of MutationRecord (https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver).
    */
-  _templateMutated: function (mutations) {
+  _templateMutated(mutations) {
     mutations.forEach(function(mutation) {
       switch (mutation.type) {
       case 'characterData':
-        //console.log('i18n-format: ' + this.id + '._templateMutated(): characterData: tag = ' + 
-        //            Polymer.dom(mutation.target).parentNode.tagName.toLowerCase() + 
+        //console.log('i18n-format: ' + this.id + '._templateMutated(): characterData: tag = ' +
+        //            mutation.target.parentNode.tagName.toLowerCase() +
         //            ' data = ' + mutation.target.data);
         if (mutation.target.parentNode.tagName.toLowerCase() !== 'i18n-number' ||
             typeof mutation.target.parentNode.formatted !== 'undefined') {
           this.render();
         }
         break;
-      case 'attributes':
-        if (mutation.attributeName === 'lang') {
-          this._lang = this.lang;
-        }
-        break;
+      /* istanbul ignore next: mutation.type is always characterData */
       default:
-        /* istanbul ignore next: mutation.type is always characterData or attributes */
+        /* istanbul ignore next: mutation.type is always characterData */
         break;
       }
     }, this);
-  },
+  }
 
   /**
    * Observer of `lang` property to re-render the template text.
    *
    * @param {string} lang New locale.
    */
-  _langChanged: function (lang /*, oldLang */) {
+  _langChanged(lang) {
     //console.log('i18n-format: ' + this.id + '._langChanged() lang = ' + lang + ' oldLang = ' + oldLang);
     if (this.elements &&
         lang !== undefined &&
@@ -362,67 +368,18 @@ Polymer({
     //else {
     //  console.log('i18n-format: skipping render()');
     //}
-  },
+  }
 
   /**
-   * Observer of `paramFormat` property to re-render the template text.
-   *
-   * @param {string} paramFormat New paramFormat.
-   * @param {string} oldParamFormat Old paramFormat.
-   */
-  _paramFormatChanged: function (paramFormat, oldParamFormat) {
-    //console.log('i18n-format: ' + this.id + '._paramFormatChanged() new = ' + paramFormat + ' old = ' + oldParamFormat);
-    if (this.elements &&
-        oldParamFormat !== undefined &&
-        paramFormat &&
-        this.lang !== undefined &&
-        this.lang !== null &&
-        !this.lang.match(/^{{.*}}$/) &&
-        !this.lang.match(/^\[\[.*\]\]$/)) {
-      this.lastTemplateText = undefined;
-      this.render();
-    }
-  },
-
-  /**
-   * Observer of `paramAttribute` property to reset parameter attributes.
-   *
-   * @param {string} paramAttribute New paramAttribute.
-   * @param {string} oldParamAttribute Old paramAttribute.
-   */
-  /* only for Polymer 1.x with ShadowDOM v0
-  _paramAttributeChanged: function (paramAttribute, oldParamAttribute) {
-    //console.log('i18n-format: ' + this.id + '._paramAttributeChanged() new = ' + paramAttribute + ' old = ' + oldParamAttribute);
-    var n;
-    if (this.elements &&
-        oldParamAttribute !== undefined &&
-        paramAttribute &&
-        this.lang !== undefined &&
-        this.lang !== null &&
-        !this.lang.match(/^{{.*}}$/) &&
-        !this.lang.match(/^\[\[.*\]\]$/)) {
-      for (n = 1; n < this.elements.length; n++) {
-        this.elements[n].removeAttribute(oldParamAttribute);
-        if (!this.elements[n].hasAttribute(paramAttribute)) {
-          this.elements[n].setAttribute(paramAttribute, '' + n);
-        }
-      }
-      this.lastTemplateText = undefined;
-      this.render();
-    }
-  },
-  */
-
-  /**
-   * Detect the CLDR plural category of a number 
+   * Detects the CLDR plural category of a number
    * with [`make-plural` library](https://github.com/eemeli/make-plural.js).
    *
    * @param {number} n The number to get the plural category for.
    * @return {string} Plural category of the number. 
    */
-  _getPluralCategory: function (n) {
-    var category = 'other';
-    var lang = this.lang || this.DEFAULT_LANG;
+  _getPluralCategory(n) {
+    let category = 'other';
+    let lang = this.lang || this.DEFAULT_LANG;
     lang = lang.split(/[-_]/)[0];
     if (plurals[lang]) {
       category = plurals[lang](n);
@@ -432,20 +389,20 @@ Polymer({
     }
     //console.log('i18n-format: _getPluralCategory(' + n + ') = ' + category);
     return category;
-  },
+  }
 
   /**
-   * Select a template text by parameters.
+   * Selects a template text by parameters.
    *
    * @return {string} Selected template text. 
    */
-  _selectTemplateText: function () {
-    var templateText = '';
+  _selectTemplateText() {
+    let templateText = '';
     if (!this.templateElement) {
       return templateText;
     }
     else if (this.templateElement.tagName.toLowerCase() === 'json-data') {
-      var templateObject;
+      let templateObject;
       try {
         templateObject = JSON.parse(this.templateTextNode.data);
       }
@@ -455,14 +412,14 @@ Polymer({
         }
         return templateText;
       }
-      var n;
+      let n;
       for (n = 1;
            typeof templateObject === 'object' && n < this.elements.length;
            n++) {
-        var param = this.elements[n];
+        let param = this.elements[n];
         if (param.tagName.toLowerCase() === 'i18n-number') {
           // plural selector
-          var category = this._getPluralCategory(param.number);
+          let category = this._getPluralCategory(param.number);
           if (typeof param.number === 'undefined' ||
               typeof param.formatted === 'undefined') {
             // i18n-number is not ready
@@ -518,18 +475,29 @@ Polymer({
       templateText = this.templateTextNode.data;
     }
     return templateText;
-  },
+  }
 
   /**
-   * Render the template text.
+   * Renders shadowRoot
    */
-  render: function () {
-    var templateText = this._selectTemplateText();
-    var tmpNode = document.createElement('span');
-    var paramPlaceholder;
-    var childNodes = [];
-    var i;
-    var shadyDomV1 = !!window.ShadyDOM;
+  invalidate() {
+    if (!this.needsRender) {
+      this.needsRender = true;
+      Promise.resolve().then(() => {
+        this.needsRender = false;
+        render(this.__render(), this.shadowRoot);
+        this.dispatchEvent(new Event('rendered', { bubbles: true, cancelable: false, composed: true }));
+      });
+    }
+  }
+
+  /**
+   * Renders the template text
+   */
+  render() {
+    let templateText = this._selectTemplateText();
+    let paramPlaceholder;
+    let i;
 
     if (templateText === this.lastTemplateText) {
       //console.log('i18n-format: skipping rendering as the templateText has not changed');
@@ -538,45 +506,27 @@ Polymer({
     else if (typeof templateText === 'undefined') {
       return;
     }
-    else {
-      this.lastTemplateText = templateText;
-      //console.log('i18n-format: ' + this.id + '.render() templateText = ' + templateText);
+
+    this.lastTemplateText = templateText;
+    //console.log('i18n-format: ' + this.id + '.render() templateText = ' + templateText);
+
+    templateText = templateCache.get(this.lastTemplateText);
+    if (typeof templateText === 'undefined') {
+      templateText = this.lastTemplateText.replace(/</g, '&lt;');
+      i = 1;
+      while (this.elements && i < this.elements.length) {
+        paramPlaceholder = this.paramFormat.replace('n', i);
+        templateText = templateText.replace(paramPlaceholder, '<slot name="' + i + '"></slot>');
+        i++;
+      }
+      templateCache.set(this.lastTemplateText, templateText);
     }
 
-    templateText = templateText.replace(/</g, '&lt;');
-    i = 1;
-    while (this.elements && i < this.elements.length) {
-      paramPlaceholder = this.paramFormat.replace('n', i);
-      templateText = templateText.replace(paramPlaceholder, '<slot name="' + i + '"></slot>');
-      i++;
-    }
-    
-    tmpNode.innerHTML = templateText;
-
-    /*
-    if (this.root === this) {
-      this.attachShadow({ mode: 'open' });
-      this.root = this.shadowRoot;
-    }
-    */
-    this.root.innerHTML = '';
-
-    // References of childNodes have to be copied for Shady DOM compatibility
-    for (i = 0; i < tmpNode.childNodes.length; i++) {
-      childNodes[i] = tmpNode.childNodes[i];
-    }
-
-    for (i = 0; i < childNodes.length; i++) {
-      // each node has to be appended via Polymer.dom()
-      dom(this.root).appendChild(childNodes[i]);
-    }
-
-    if (shadyDomV1) {
-      ShadyDOM.flush();
-    }
-    this.fire('rendered');
+    this._preprocessedTemplateText = templateText;
+    this.invalidate();
   }
-});
+}
+customElements.define(I18nFormat.is, I18nFormat);
 
 /*
 
@@ -589,9 +539,9 @@ Simple Template Format:
     <p id="simpleChartDesc">
       <i18n-format>
         <span>A simple {1} with {2} looks like {3}:</span>
-        <code param="1">google-chart</code>
-        <a param="2" href="link">google-advanced-chart</a>
-        <a param="3" href="link2">this</a>
+        <code slot="1">google-chart</code>
+        <a slot="2" href="link">google-advanced-chart</a>
+        <a slot="3" href="link2">this</a>
       </i18n-format>
     </p>
 
@@ -599,9 +549,9 @@ Simple Template Format:
     <p id="simpleChartDesc">
       <i18n-format>
         <span>{{text.simpleChartDesc.0}}</span>
-        <code param="1">{{text.simpleChartDesc.1}}</code>
-        <a param="2" href="link">{{text.simpleChartDesc.2}}</a>
-        <a param="3" href="link2">{{text.simpleChartDesc.3}}</a>
+        <code slot="1">{{text.simpleChartDesc.1}}</code>
+        <a slot="2" href="link">{{text.simpleChartDesc.2}}</a>
+        <a slot="3" href="link2">{{text.simpleChartDesc.3}}</a>
       </i18n-format>
     </p>
 
@@ -611,9 +561,9 @@ Simple Template Format:
         A simple <code>google-chart</code> with <a href="link">google-advanced-chart</a> looks like <a href="link2">this</a>:
       <i18n-format>
         <span>{{text.simpleChartDesc.0}}</span>
-        <code param="1">{{text.simpleChartDesc.1}}</code>
-        <a param="2" href="link">{{text.simpleChartDesc.2}}</a>
-        <a param="3" href="link2">{{text.simpleChartDesc.3}}</a>
+        <code slot="1">{{text.simpleChartDesc.1}}</code>
+        <a slot="2" href="link">{{text.simpleChartDesc.2}}</a>
+        <a slot="3" href="link2">{{text.simpleChartDesc.3}}</a>
       </i18n-format>
     </p>
 
@@ -641,7 +591,7 @@ Simple Template Format:
 Compound Template Format:
 
   Raw HTML Template:
-    <i18n-format lang="{{effectiveLang}}" observe-params text-id="sentence-with-plurals1">
+    <i18n-format lang="{{effectiveLang}}" text-id="sentence-with-plurals1">
       <json-data>{
         "0": "You ({3}) gave no gifts.",
         "1": {
