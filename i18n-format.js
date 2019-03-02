@@ -213,7 +213,6 @@ export class I18nFormat extends polyfill(HTMLElement) {
 
   constructor() {
     super();
-    this.attachShadow({ mode: 'open' });
 
     /**
      * The locale for the template text.
@@ -225,7 +224,6 @@ export class I18nFormat extends polyfill(HTMLElement) {
      * The current preprocessed template text
      */
     this._preprocessedTemplateText = '';
-    this._setupParams();
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -283,6 +281,9 @@ export class I18nFormat extends polyfill(HTMLElement) {
   }
 
   connectedCallback() {
+    if (!this.observer) {
+      this._setupParams();
+    }
     this.render();
   }
 
@@ -504,6 +505,9 @@ export class I18nFormat extends polyfill(HTMLElement) {
       this.needsRender = true;
       Promise.resolve().then(() => {
         this.needsRender = false;
+        if (!this.shadowRoot) {
+          this.attachShadow({ mode: 'open' });
+        }
         render(this.__render(), this.shadowRoot);
         this.dispatchEvent(new Event('rendered', { bubbles: true, cancelable: false, composed: true }));
       });
