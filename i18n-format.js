@@ -241,6 +241,13 @@ export class I18nFormat extends polyfill(HTMLElement) {
   }
 
   /**
+   * root property to imitate a Polymer element
+   */
+  get root() {
+    return this.shadowRoot;
+  }
+
+  /**
    * Default locale constant 'en'
    */
   get DEFAULT_LANG() {
