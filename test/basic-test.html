@@ -366,6 +366,8 @@ suite('<i18n-format>', function () {
       assert.equal(el.observeParams, true, 'default observeParams is true');
       el.observeParams = false;
       assert.equal(el.observeParams, true, 'observeParams is always true');
+      el.observeParams = false;
+      assert.equal(el.observeParams, true, 'observeParams is always true');
     });
 
     test('default textContent is empty', function () {

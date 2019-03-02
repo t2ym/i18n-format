@@ -269,7 +269,10 @@ export class I18nFormat extends polyfill(HTMLElement) {
     return true;
   }
   set observeParams(value) {
-    console.warn(`${this.is}: observeParams is deprecated and has a read-only dummy value true.`);
+    if (!this.constructor._observeParamsWarned) {
+      console.warn(`${this.is}: observeParams is deprecated and has a read-only dummy value true.`);
+      this.constructor._observeParamsWarned = true;
+    }
   }
 
   connectedCallback() {
