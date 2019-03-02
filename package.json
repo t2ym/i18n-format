@@ -58,7 +58,7 @@
     "type-detect": "1.0.0"
   },
   "dependencies": {
-    "i18n-number": "^4.0.0-pre.1",
+    "i18n-number": "^4.0.0-pre",
     "lit-html": "^1.0.0",
     "make-plural": "^4.3.0",
     "wc-putty": "^0.1.0"

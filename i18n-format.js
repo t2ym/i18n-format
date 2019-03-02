@@ -220,7 +220,7 @@ export class I18nFormat extends polyfill(HTMLElement) {
      * The typical value is bound to `{{effectiveLang}}` when the containing element has
      * `BehaviorsStore.I18nBehavior`.
      */
-    this.lang = this.DEFAULT_LANG;
+    Promise.resolve().then(() => this.lang = this.DEFAULT_LANG);
     /**
      * The current preprocessed template text
      */
