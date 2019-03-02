@@ -268,6 +268,9 @@ export class I18nFormat extends polyfill(HTMLElement) {
   get observeParams() {
     return true;
   }
+  set observeParams(value) {
+    console.warn(`${this.is}: observeParams is deprecated and has a read-only dummy value true.`);
+  }
 
   connectedCallback() {
     this.render();
