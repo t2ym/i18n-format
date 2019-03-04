@@ -219,7 +219,7 @@ export class I18nFormat extends polyfill(HTMLElement) {
      * The typical value is bound to `{{effectiveLang}}` when the containing element has
      * `BehaviorsStore.I18nBehavior`.
      */
-    Promise.resolve().then(() => this.lang = this.DEFAULT_LANG);
+    //this.lang = this.DEFAULT_LANG; // Assignment of the default value is put off until connectedCallback
     /**
      * The current preprocessed template text
      */
@@ -281,6 +281,9 @@ export class I18nFormat extends polyfill(HTMLElement) {
   }
 
   connectedCallback() {
+    if (!this.lang || this.lang.match(/^{{.*}}$/) || this.lang.match(/^\[\[.*\]\]$/)) {
+      this.lang = this.DEFAULT_LANG;
+    }
     if (!this.observer) {
       this._setupParams();
     }
