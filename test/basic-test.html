@@ -374,10 +374,6 @@ suite('<i18n-format>', function () {
       assert.equal(el.shadowRoot.textContent, '', 'textContent is empty');
     });
 
-    test('importMeta property', function () {
-      assert.equal(typeof el.constructor.importMeta, 'object', 'importMeta is an object');
-    });
-
     test('root property', function () {
       assert.equal(el.root, el.shadowRoot, 'root is identical to shadowRoot');
     });

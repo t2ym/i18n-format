@@ -189,10 +189,6 @@ Styles can be specified for the containing element and the contained parameters 
 @demo demo/index.html
 */
 export class I18nFormat extends polyfill(HTMLElement) {
-  static get importMeta() {
-    return import.meta;
-  }
-
   static get is() {
     return 'i18n-format';
   }
