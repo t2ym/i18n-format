@@ -79,6 +79,26 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
       </template>
     </test-fixture>
 
+    <test-fixture id="compound-static-preprocessed">
+      <template is="dom-template">
+        <i18n-format lang="en">
+          <!-- comment -->
+          <!-- comment 2 -->
+          <!-- <complex-comment> -->
+          <!-- multiline
+            comment -->
+            
+          <json-data preprocessed></json-data>
+          <i18n-number lang="en" offset="1">2</i18n-number>
+          <span slot="2"><!-- comment -->female</span>
+          <span><!-- comment --><i>Joe</i></span>
+          <span><!-- comment -->Alice</span>
+          <span><!-- comment -->a gift</span>
+          <span><!-- comment -->{{dummy}}</span>
+        </i18n-format>
+      </template>
+    </test-fixture>
+
     <test-fixture id="bound-and-wrapped">
       <template is="dom-template" id="bound-and-wrapped-template">
         <bound-i18n-format 
@@ -119,6 +139,15 @@ Copyright (c) 2016, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
           <json-data>{
             "other": "Default number for {1}."
           }</json-data>
+          <i18n-number lang="en" offset="0">1</i18n-number>
+        </i18n-format>
+      </template>
+    </test-fixture>
+
+    <test-fixture id="default-number-category-preprocessed">
+      <template is="dom-template">
+        <i18n-format lang="en" data="{ &quot;other&quot;: &quot;Default number for {1}.&quot;}">
+          <json-data preprocessed></json-data>
           <i18n-number lang="en" offset="0">1</i18n-number>
         </i18n-format>
       </template>
@@ -435,6 +464,50 @@ suite('<i18n-format>', function () {
       ]
     },
     { 
+      suite: 'static compound template preprocessed', 
+      fixture: 'compound-static-preprocessed', 
+      model: { dummy: 'dummy' },
+      delay: 1000,
+      assign: { 
+        data: {
+          "0": "You ({3}) gave no gifts.",
+          "1": {
+            "male": "You ({3}) gave him ({4}) {5}.",
+            "female": "You ({3}) gave her ({4}) {5}.",
+            "other": "You ({3}) gave them ({4}) {5}."
+          },
+          "one": {
+            "male": "You ({3}) gave him ({4}) and one other person {5}.",
+            "female": "You ({3}) gave her ({4}) and one other person {5}.",
+            "other": "You ({3}) gave them ({4}) and one other person {5}."
+          },
+          "other": "You ({3}) gave them ({4}) and {1} other people gifts."
+        }
+      },
+      lang: lang1,
+      paramAttribute: paramAttribute1,
+      paramFormat: paramFormat1,
+      childNodes: [
+        { nodeName: '#text', data: 'You (' },
+        isV2 ? { nodeName: defaultSlotElement, name: '3' }
+             : { nodeName: defaultSlotElement, select: '[' + defaultSlotAttribute + '=\'3\']' },
+        { nodeName: '#text', data: ') gave her (' },
+        isV2 ? { nodeName: defaultSlotElement, name: '4' }
+             : { nodeName: defaultSlotElement, select: '[' + defaultSlotAttribute + '=\'4\']' },
+        { nodeName: '#text', data: ') and one other person ' },
+        isV2 ? { nodeName: defaultSlotElement, name: '5' }
+             : { nodeName: defaultSlotElement, select: '[' + defaultSlotAttribute + '=\'5\']' },
+        { nodeName: '#text', data: '.' }
+      ],
+      parameters: [
+        { select: 'i18n-number[' + defaultParamAttribute + '=\'1\']', number: 1, formatted: '1', 'shadowRoot.children.0.textContent': '1' },
+        { select: 'span[' + defaultParamAttribute + '=\'2\']', textContent: 'female' },
+        { select: 'span[' + defaultParamAttribute + '=\'3\']', textContent: 'Joe' },
+        { select: 'span[' + defaultParamAttribute + '=\'4\']', textContent: 'Alice' },
+        { select: 'span[' + defaultParamAttribute + '=\'5\']', textContent: 'a gift' }
+      ]
+    },
+    { 
       suite: 'static values', 
       fixture: 'static', 
       model: undefined, 
@@ -523,6 +596,26 @@ suite('<i18n-format>', function () {
       suite: 'default number category', 
       fixture: 'default-number-category-static', 
       model: undefined,
+      lang: lang1,
+      paramAttribute: paramAttribute1,
+      paramFormat: paramFormat1
+    },
+    { 
+      suite: 'default number category preprocessed',
+      fixture: 'default-number-category-preprocessed',
+      model: undefined,
+      lang: lang1,
+      paramAttribute: paramAttribute1,
+      paramFormat: paramFormat1
+    },
+    { 
+      suite: 'default number category preprocessed updated',
+      fixture: 'default-number-category-preprocessed', 
+      model: {
+        data: {
+          "other": "Default number for {1}."
+        }
+      },
       lang: lang1,
       paramAttribute: paramAttribute1,
       paramFormat: paramFormat1

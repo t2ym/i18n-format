@@ -173,6 +173,48 @@ categories such as '`one`', '`two`', '`other`' are matched for the value with th
 | 4       | 3   | other           | *                | .other                 |
 | n >= 3  | n - offset | other           | *                | .other                 |
 
+### Preprocessed Compound Template Format (generated via i18n-element/demo/gulpfile.js with useI18nFormatDataProperty = true)
+
+In order to avoid detours in JSON.stringify() and JSON.parse() processing for <json-data> contents,
+<i18n-format> element can take "data" property to set the parsed JSON data object directly and shortcut JSON stringificaton and parsing for <json-data>.
+i18n-element/demo/gulpfile.js can preprocess target tagged template literals to this optimized format.
+This preprocessing can be enabled by setting useI18nFormatDataProperty = true, disabled by setting useI18nFormatDataProperty = false in i18n-element/demo/gulpfile.js
+
+- Shown in an equivalent tagged template literal format
+
+    <i18n-format id="target" lang="${effectiveLang}" .data=${text['target']['0']}>
+      <json-data preprocessed></json-data>
+      <i18n-number lang="${effectiveLang}" offset="1">${this.recipients.length}</i18n-number>
+      <span>${this.recipients.0.gender}</span>
+      <span>${this.sender.name}</span>
+      <span>${this.recipients.0.name}</span>
+      <span>${text['target']['5']}</span>
+    </i18n-format>
+
+- Extracted text data
+
+    text['target'] = [
+      {
+        "0": "You ({3}) gave no gifts.",
+        "1": {
+          "male": "You ({3}) gave him ({4}) {5}.",
+          "female": "You ({3}) gave her ({4}) {5}.",
+          "other": "You ({3}) gave them ({4}) {5}."
+        },
+        "one": {
+          "male": "You ({3}) gave him ({4}) and one other person {5}.",
+          "female": "You ({3}) gave her ({4}) and one other person {5}.",
+          "other": "You ({3}) gave them ({4}) and one other person {5}."
+        },
+        "other": "You ({3}) gave them ({4}) and {1} other people gifts."
+      },
+      "{{recipients.length}}",
+      "{{recipients.0.gender}}",
+      "{{sender.name}}",
+      "{{recipients.0.name}}",
+      "a gift"
+    ];
+
 ## Styling
 
 Styles can be specified for the containing element and the contained parameters as below.
@@ -276,6 +318,19 @@ export class I18nFormat extends polyfill(HTMLElement) {
     }
   }
 
+  /**
+   * Parsed JSON data object property when the template element is `<json-data preprocessed>`
+   */
+  get data() {
+    return this._data;
+  }
+  set data(value) {
+    this._data = value;
+    if (this._preprocessed) {
+      this.render();
+    }
+  }
+
   connectedCallback() {
     if (!this.lang || this.lang.match(/^{{.*}}$/) || this.lang.match(/^\[\[.*\]\]$/)) {
       this.lang = this.DEFAULT_LANG;
@@ -303,16 +358,19 @@ export class I18nFormat extends polyfill(HTMLElement) {
     for (n = 0; n < this.elements.length; n++) {
       if (n === 0) {
         this.templateElement = this.elements[n];
-        let i = 0;
-        do {
-          this.templateTextNode = this.templateElement.childNodes[i++];
-          if (!this.templateTextNode) {
-            this.templateTextNode = this.templateElement.childNodes[0];
-            break;
+        this._preprocessed = needParamObservation && this.templateElement.hasAttribute('preprocessed');
+        if (!this._preprocessed) {
+          let i = 0;
+          do {
+            this.templateTextNode = this.templateElement.childNodes[i++];
+            if (!this.templateTextNode) {
+              this.templateTextNode = this.templateElement.childNodes[0];
+              break;
+            }
           }
+          while (this.templateTextNode.nodeType !== this.templateTextNode.TEXT_NODE);
+          this.observer.observe(this.templateTextNode, { characterData: true });
         }
-        while (this.templateTextNode.nodeType !== this.templateTextNode.TEXT_NODE);
-        this.observer.observe(this.templateTextNode, { characterData: true });
       }
       else {
         if (!this.elements[n].hasAttribute(this.paramAttribute)) {
@@ -418,11 +476,21 @@ export class I18nFormat extends polyfill(HTMLElement) {
     else if (this.templateElement.tagName.toLowerCase() === 'json-data') {
       let templateObject;
       try {
-        let data = this.templateTextNode.data;
-        templateObject = jsonCache.get(data);
-        if (!templateObject) {
-          templateObject = JSON.parse(data);
-          jsonCache.set(data, templateObject);
+        if (this._preprocessed) {
+          if (this.data) {
+            templateObject = this.data;
+          }
+          else {
+            return templateText;
+          }
+        }
+        else {
+          let data = this.templateTextNode.data;
+          templateObject = jsonCache.get(data);
+          if (!templateObject) {
+            templateObject = JSON.parse(data);
+            jsonCache.set(data, templateObject);
+          }
         }
       }
       catch (ex) {

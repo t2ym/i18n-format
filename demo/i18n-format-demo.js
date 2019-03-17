@@ -48,8 +48,8 @@ Polymer({
     }
     </style>
 
-    <i18n-format id="text" class="text" lang="{{lang}}">
-      <json-data>{{template}}</json-data>
+    <i18n-format id="text" class="text" lang="{{lang}}" data="{{rawTemplate}}">
+      <json-data preprocessed><!-- {{template}} --></json-data>
       <i18n-number lang="{{lang}}" offset="{{offset}}">{{recipients.length}}</i18n-number>
       <span>{{recipients.0.gender}}</span>
       <span>{{sender.name}}</span>
