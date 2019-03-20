@@ -239,6 +239,9 @@ export class I18nFormat extends polyfill(HTMLElement) {
     return [ 'lang' ];
   }
 
+  /**
+   * returns TemplateResult for _preprocessedTemplateText with lit-html
+   */
   __render() {
     return html([this._preprocessedTemplateText || '']);
   }
@@ -249,6 +252,11 @@ export class I18nFormat extends polyfill(HTMLElement) {
    * @event rendered
    */
 
+  /**
+   * constructor for `<i18n-format>` element
+   *
+   * Initializes this._preprocessedTemplateText with an empty text ''
+   */
   constructor() {
     super();
 
@@ -264,6 +272,11 @@ export class I18nFormat extends polyfill(HTMLElement) {
     this._preprocessedTemplateText = '';
   }
 
+  /**
+   * attributeChangedCallback for custom elements
+   *
+   * Forwards lang attribute changes to this._langChanged
+   */
   attributeChangedCallback(name, oldValue, newValue) {
     switch (name) {
     case 'lang':
@@ -331,6 +344,14 @@ export class I18nFormat extends polyfill(HTMLElement) {
     }
   }
 
+  /**
+   * connectedCallback for custom elements
+   *
+   * Tasks:
+   *  - Initializes this.lang with this.DEFAULT_LANG if not set
+   *  - Sets up and observes parameters
+   *  - Triggers rendering
+   */
   connectedCallback() {
     if (!this.lang || this.lang.match(/^{{.*}}$/) || this.lang.match(/^\[\[.*\]\]$/)) {
       this.lang = this.DEFAULT_LANG;
