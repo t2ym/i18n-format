@@ -5,7 +5,6 @@ branches:
 sudo: false
 dist: trusty
 before_script:
-  - npm install -g polymer-cli
   - 'export PATH=$PWD/node_modules/.bin:$PATH'
 env:
   global:
@@ -21,6 +20,6 @@ addons:
       - google-chrome-stable
   sauce_connect: true
 script:
-  - wct --module-resolution=node --npm
+  - wct --npm
   - 'if [ "${TRAVIS_BRANCH}" != "" ]; then lcov-result-merger ''test/coverage-report*/lcov.info'' | ./node_modules/coveralls/bin/coveralls.js || echo success; fi'
 
