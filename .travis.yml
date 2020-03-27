@@ -20,6 +20,6 @@ addons:
       - google-chrome-stable
   sauce_connect: true
 script:
-  - wct --npm
+  - wct --npm --skip-plugin sauce
   - 'if [ "${TRAVIS_BRANCH}" != "" ]; then lcov-result-merger ''test/coverage-report*/lcov.info'' | ./node_modules/coveralls/bin/coveralls.js || echo success; fi'
 
