@@ -1,5 +1,18 @@
 # Changelog
 
+## [4.0.1] 2019-3-27
+### Added
+
+### Changed
+- Update package-lock.json
+- Update test environments for Travis CI
+
+### Removed
+- test: Remove Travis CI tests on SauceLabs to avoid connection refused errors
+  - Tests pass from local to SauceLabs
+
+### Removed
+
 ## [4.0.0] 2019-3-20
 ### Added
 - Depending on `lit-html@^1.0.0`
