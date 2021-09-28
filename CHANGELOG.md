@@ -1,5 +1,17 @@
 # Changelog
 
+## [5.0.0] 2019-9-28
+### Added
+- Support lit-html@2.0.0
+
+### Changed
+- Update package-lock.json
+
+### Removed
+- ShadyDOM tests
+
+### Removed
+
 ## [4.0.1] 2019-3-27
 ### Added
 
